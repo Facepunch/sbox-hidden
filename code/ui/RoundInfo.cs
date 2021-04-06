@@ -24,18 +24,17 @@ namespace HiddenGamemode
 			var player = Sandbox.Player.Local;
 			if ( player == null ) return;
 
-			var game = GameBase.Current as Game;
+			var game = Game.Instance;
 			if ( game == null ) return;
 
-			RoundName.Text = game.RoundName;
+			var round = game.Round;
+			if ( round == null ) return;
 
-			var timeLeft = game.RoundTimeLeft;
+			RoundName.Text = round.RoundName;
 
-			if ( timeLeft  > 0f )
+			if ( round.RoundDuration > 0 )
 			{
-				var mins = Math.Round( timeLeft / 60 );
-				var secs = Math.Round( timeLeft % 60 );
-				TimeLeft.Text = string.Format( "{0}:{1}", mins, secs );
+				TimeLeft.Text = round.TimeLeftFormatted;
 				TimeLeft.SetClass( "hidden", false );
 			}
 			else

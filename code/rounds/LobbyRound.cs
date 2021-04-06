@@ -15,7 +15,10 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Started Lobby Round" );
 
-			Sandbox.Player.All.ForEach( ( player ) => (player as Player).Respawn() );
+			if ( Host.IsServer )
+			{
+				Sandbox.Player.All.ForEach( ( player ) => (player as Player).Respawn() );
+			}
 		}
 
 		protected override void OnFinish()

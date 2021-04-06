@@ -10,7 +10,7 @@ namespace HiddenGamemode
 	{
 		public Label Health;
 
-		int fireCounter;
+		private int _fireCounter;
 
 		public Crosshair()
 		{
@@ -28,17 +28,17 @@ namespace HiddenGamemode
 			base.Tick();
 			this.PositionAtCrosshair();
 
-			SetClass( "fire", fireCounter > 0 );
+			SetClass( "fire", _fireCounter > 0 );
 
-			if ( fireCounter > 0 )
-				fireCounter--;
+			if ( _fireCounter > 0 )
+				_fireCounter--;
 		}
 
 		public override void OnEvent( string eventName )
 		{
 			if ( eventName == "fire" )
 			{
-				fireCounter += 2;
+				_fireCounter += 2;
 			}
 
 			base.OnEvent( eventName );

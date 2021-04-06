@@ -7,11 +7,11 @@ namespace HiddenGamemode
 {
 	public class InventoryBar : Panel, IClientInput
 	{
-		List<InventoryColumn> columns = new();
-		List<Weapon> Weapons = new();
+		private readonly List<InventoryColumn> columns = new();
+		private readonly List<Weapon> Weapons = new();
+		private Weapon SelectedWeapon;
 
 		public bool IsOpen;
-		Weapon SelectedWeapon;
 
 		public InventoryBar()
 		{

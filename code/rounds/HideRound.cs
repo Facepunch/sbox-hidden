@@ -16,7 +16,10 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Started Hide Round" );
 
-			Sandbox.Player.All.ForEach((player) => player.Respawn());
+			if ( Host.IsServer )
+			{
+				Sandbox.Player.All.ForEach((player) => player.Respawn());
+			}
 		}
 
 		protected override void OnFinish()
@@ -28,7 +31,7 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Hide Time Up!" );
 
-			Game.CurrentRound = new HuntRound();
+			Game.Instance.ChangeRound( new HuntRound() );
 
 			base.OnTimeUp();
 		}
@@ -38,9 +41,6 @@ namespace HiddenGamemode
 			if ( Players.Contains( player ) ) return;
 
 			player.SetModel( "models/citizen/citizen.vmdl" );
-
-			player.Controller = new WalkController();
-			player.Camera = new FirstPersonCamera();
 
 			player.EnableAllCollisions = true;
 			player.EnableDrawing = true;

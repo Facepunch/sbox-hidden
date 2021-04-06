@@ -7,7 +7,6 @@ namespace HiddenGamemode
 {
 	public class Scoreboard : Sandbox.UI.Scoreboard<ScoreboardEntry>
 	{
-
 		public Scoreboard()
 		{
 			StyleSheet = StyleSheet.FromFile( "/ui/Scoreboard.scss" );
@@ -26,18 +25,18 @@ namespace HiddenGamemode
 
 	public class ScoreboardEntry : Sandbox.UI.ScoreboardEntry
 	{
-		public Label Fps;
+		public Label FPS;
 
 		public ScoreboardEntry()
 		{
-			Fps = Add.Label( "", "fps" );
+			FPS = Add.Label( "", "fps" );
 		}
 
 		public override void UpdateFrom( PlayerScore.Entry entry )
 		{
 			base.UpdateFrom( entry );
 
-			Fps.Text = entry.Get<int>( "fps", 0 ).ToString();
+			FPS.Text = entry.Get<int>( "fps", 0 ).ToString();
 		}
 	}
 }

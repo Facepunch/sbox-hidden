@@ -18,21 +18,27 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Started Hunt Round" );
 
-			Sandbox.Player.All.ForEach( ( player ) => OnPlayerStart( player as Player ) );
+			if ( Host.IsServer )
+			{
+				Sandbox.Player.All.ForEach( ( player ) => OnPlayerStart( player as Player ) );
+			}
 		}
 
 		protected override void OnFinish()
 		{
 			Log.Info( "Finished Hunt Round" );
 
-			Spectators.Clear();
+			if ( Host.IsServer )
+			{
+				Spectators.Clear();
+			}
 		}
 
 		protected override void OnTimeUp()
 		{
 			Log.Info( "Hunt Time Up!" );
 
-			Game.CurrentRound = new StatsRound();
+			Game.Instance.ChangeRound( new StatsRound() );
 
 			base.OnTimeUp();
 		}
@@ -52,7 +58,7 @@ namespace HiddenGamemode
 			if ( player.Team is HiddenTeam )
 			{
 				// TODO: The Hidden is dead! Mission accomplished!
-				Game.CurrentRound = new StatsRound();
+				Game.Instance.ChangeRound( new StatsRound() );
 
 				return;
 			}
@@ -60,7 +66,7 @@ namespace HiddenGamemode
 			if ( Players.Count <= 1 )
 			{
 				// The Hidden has won the game!
-				Game.CurrentRound = new StatsRound();
+				Game.Instance.ChangeRound( new StatsRound() );
 			}
 		}
 
@@ -73,7 +79,7 @@ namespace HiddenGamemode
 			if ( player.Team is HiddenTeam )
 			{
 				// TODO: The Hidden left the game... how frustrating for everybody (pick a random person to take over?)
-				Game.CurrentRound = new StatsRound();
+				Game.Instance.ChangeRound( new StatsRound() );
 			}
 		}
 

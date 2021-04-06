@@ -31,6 +31,9 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Military team." );
 
+			player.Controller = new WalkController();
+			player.Camera = new FirstPersonCamera();
+
 			base.OnJoin( player );
 		}
 

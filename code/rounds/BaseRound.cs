@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-    public abstract class BaseRound
+    public abstract partial class BaseRound : NetworkClass
 	{
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";
 
 		public List<Player> Players = new();
 
-		public float RoundEndTime;
+		public float RoundEndTime { get; set; }
 
 		public float TimeLeft
 		{
@@ -23,24 +24,13 @@ namespace HiddenGamemode
 			}
 		}
 
-		public string TimeLeftFormatted
-		{
-			get
-			{
-				var timeLeft = TimeLeft;
-				var mins = Math.Round( timeLeft / 60 );
-				var secs = Math.Round( timeLeft % 60 );
-
-				//var span = TimeSpan.FromSeconds( TimeLeft );
-				//return span.ToString( "mm:ss" );
-
-				return string.Format( "{0}:{1}", mins, secs );
-			}
-		}
+		// TODO: This can be done better by using a shared timestamp.
+		[NetPredicted]
+		public string TimeLeftFormatted { get; set; }
 
 		public void Start()
 		{
-			if ( RoundDuration > 0 )
+			if ( Host.IsServer && RoundDuration > 0 )
 			{
 				RoundEndTime = Sandbox.Time.Now + RoundDuration;
 			}
@@ -50,13 +40,19 @@ namespace HiddenGamemode
 
 		public void Finish()
 		{
-			RoundEndTime = 0f;
-			Players.Clear();
+			if ( Host.IsServer )
+			{
+				RoundEndTime = 0f;
+				Players.Clear();
+			}
+
 			OnFinish();
 		}
 
 		public void AddPlayer( Player player )
 		{
+			Host.AssertServer();
+
 			if ( !Players.Contains(player) )
 			{
 				Players.Add( player );
@@ -74,10 +70,24 @@ namespace HiddenGamemode
 
 		public virtual void OnSecond()
 		{
-			if ( RoundEndTime > 0 && Sandbox.Time.Now >= RoundEndTime )
+			if ( Host.IsServer )
 			{
-				RoundEndTime = 0f;
-				OnTimeUp();
+				if ( RoundEndTime > 0 && Sandbox.Time.Now >= RoundEndTime )
+				{
+					RoundEndTime = 0f;
+					OnTimeUp();
+				}
+				else
+				{
+					// TODO: We'll use TimeSpan formatting for this when it's whitelisted.
+					// Because this is very bad.
+
+					var timeLeft = TimeLeft;
+					var mins = Math.Round( timeLeft / 60 ).ToString().PadLeft( 2, '0' );
+					var secs = Math.Round( timeLeft % 60 ).ToString().PadLeft( 2, '0' );
+
+					TimeLeftFormatted = string.Format( "{0:D2}:{1:D2}", mins, secs );
+				}
 			}
 		}
 

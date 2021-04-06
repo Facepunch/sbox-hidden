@@ -27,10 +27,14 @@ namespace HiddenGamemode
 		internal void UpdateWeapon( Weapon weapon )
 		{
 			var icon = ChildrenOfType<InventoryIcon>().FirstOrDefault( x => x.Weapon == weapon );
+
 			if ( icon == null )
 			{
-				icon = new InventoryIcon( weapon );
-				icon.Parent = this;
+				icon = new InventoryIcon( weapon )
+				{
+					Parent = this
+				};
+
 				Icons.Add( icon );
 			}
 		}
@@ -43,7 +47,6 @@ namespace HiddenGamemode
 			{
 				Icons[i].TickSelection( selectedWeapon );
 			}
-
 		}
 	}
 }

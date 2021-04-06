@@ -25,7 +25,7 @@ namespace HiddenGamemode
 
 		public override void Respawn()
 		{
-			Game.CurrentRound?.OnPlayerSpawn( this );
+			Game.Instance?.Round?.OnPlayerSpawn( this );
 
 			base.Respawn();
 		}

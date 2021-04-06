@@ -26,7 +26,7 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Stats Time Up!" );
 
-			Game.CurrentRound = new HideRound();
+			Game.Instance.ChangeRound( new HideRound() );
 
 			base.OnTimeUp();
 		}

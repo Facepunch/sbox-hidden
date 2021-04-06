@@ -9,27 +9,14 @@ namespace HiddenGamemode
 		internal static MilitaryTeam MilitaryTeam;
 		internal static HiddenTeam HiddenTeam;
 
-		internal static BaseRound CurrentRound
+		public static Game Instance
 		{
-			get => _round;
-
-			set
-			{
-				if ( value != null )
-				{
-					_round?.Finish();
-					_round = value;
-					_round?.Start();
-				}
-			}
+			get => Current as Game;
 		}
 
-		[Net] public string RoundName { get; set; }
-		[Net] public float RoundTimeLeft { get; set; }
+		[NetPredicted] public BaseRound Round { get; private set; }
 
-		private static BaseRound _round;
-
-		private int MinimumPlayers = 1; // 2
+		private int _minimumPlayers = 1; // 2
 
 		public Game()
 		{
@@ -39,19 +26,20 @@ namespace HiddenGamemode
 			}
 		}
 
+		public void ChangeRound(BaseRound round)
+		{
+			Assert.NotNull( round );
+
+			Round?.Finish();
+			Round = round;
+			Round?.Start();
+		}
+
 		public async Task StartSecondTimer()
 		{
 			await Task.DelaySeconds( 1 );
 
-
-			if ( CurrentRound != null )
-			{
-				// TODO: I'm not a fan of this.
-				RoundName = CurrentRound.RoundName;
-				RoundTimeLeft = CurrentRound.TimeLeft;
-
-				CurrentRound.OnSecond();
-			}
+			Round?.OnSecond();
 
 			await StartSecondTimer();
 		}
@@ -68,7 +56,7 @@ namespace HiddenGamemode
 
 		public override void PlayerKilled( Sandbox.Player player )
 		{
-			CurrentRound?.OnPlayerKilled( player as Player );
+			Round?.OnPlayerKilled( player as Player );
 
 			base.PlayerKilled( player );
 		}
@@ -86,27 +74,27 @@ namespace HiddenGamemode
 		{
 			Log.Info( player.Name + " left, checking minimum player count..." );
 
-			CurrentRound?.OnPlayerLeave( player as Player );
+			Round?.OnPlayerLeave( player as Player );
 
 			CheckMinimumPlayers();
 
 			base.PlayerDisconnected( player, reason );
 		}
 
-		public override Player CreatePlayer() => new Player();
+		public override Player CreatePlayer() => new();
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Sandbox.Player.All.Count >= MinimumPlayers)
+			if ( Sandbox.Player.All.Count >= _minimumPlayers)
 			{
-				if ( CurrentRound is LobbyRound || CurrentRound == null )
+				if ( Round is LobbyRound || Round == null )
 				{
-					CurrentRound = new HideRound();
+					ChangeRound( new HideRound() );
 				}
 			}
-			else if ( CurrentRound is not LobbyRound )
+			else if ( Round is not LobbyRound )
 			{
-				CurrentRound = new LobbyRound();
+				ChangeRound( new LobbyRound() );
 			}
 		}
 	}

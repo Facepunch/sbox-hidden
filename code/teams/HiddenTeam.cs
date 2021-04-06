@@ -28,6 +28,9 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Hidden team." );
 
+			player.Controller = new HiddenController();
+			player.Camera = new FirstPersonCamera();
+
 			base.OnJoin( player );
 		}
 

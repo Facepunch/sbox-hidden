@@ -23,7 +23,7 @@ namespace HiddenGamemode
 
 		public void OnHit( Vector3 pos, float amount )
 		{
-			new HitPoint( amount, pos, this );
+			_ = new HitPoint( amount, pos, this );
 		}
 
 		public class HitPoint : Panel
