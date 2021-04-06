@@ -5,9 +5,9 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		Team _team;
+		BaseTeam _team;
 
-		public Team Team
+		public BaseTeam Team
 		{
 			get => _team;
 
@@ -28,7 +28,7 @@ namespace HiddenGamemode
 		[ClientRpc]
 		private void ChangeTeam( int entityId )
 		{
-			Team = FindByIndex( entityId ) as Team;
+			Team = FindByIndex( entityId ) as BaseTeam;
 			Assert.NotNull( _team );
 		}
 	}

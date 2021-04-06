@@ -6,8 +6,8 @@ namespace HiddenGamemode
 	[ClassLibrary( "sbox-hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
-		internal static MilitaryTeam MilitaryTeam;
 		internal static HiddenTeam HiddenTeam;
+		internal static IrisTeam IrisTeam;
 
 		public static Game Instance
 		{
@@ -16,7 +16,8 @@ namespace HiddenGamemode
 
 		[NetPredicted] public BaseRound Round { get; private set; }
 
-		private int _minimumPlayers = 1; // 2
+		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
+		private int _minPlayers => 1;
 
 		public Game()
 		{
@@ -46,8 +47,8 @@ namespace HiddenGamemode
 
 		public override void PostLevelLoaded()
 		{
-			MilitaryTeam = new();
 			HiddenTeam = new();
+			IrisTeam = new();
 
 			_ = StartSecondTimer();
 
@@ -85,7 +86,7 @@ namespace HiddenGamemode
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Sandbox.Player.All.Count >= _minimumPlayers)
+			if ( Sandbox.Player.All.Count >= _minPlayers)
 			{
 				if ( Round is LobbyRound || Round == null )
 				{

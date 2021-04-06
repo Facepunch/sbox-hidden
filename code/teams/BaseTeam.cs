@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public abstract class Team : Entity
+	public abstract class BaseTeam : Entity
 	{
 		protected List<Player> Players { get; set; } = new();
 
-		public Team()
+		public BaseTeam()
 		{
 			Transmit = TransmitType.Always;
 		}

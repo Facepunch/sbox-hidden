@@ -19,6 +19,24 @@ namespace HiddenGamemode
 			if ( Host.IsServer )
 			{
 				Sandbox.Player.All.ForEach((player) => player.Respawn());
+
+				if ( Players.Count == 0 ) return;
+
+				// Select a random Hidden player.
+				var hidden = Players[Rand.Int( Players.Count - 1 )];
+
+				Assert.NotNull( hidden );
+
+				hidden.Team = Game.HiddenTeam;
+
+				// Make everyone else I.R.I.S.
+				Players.ForEach( ( player ) =>
+				{
+					if ( player != hidden )
+					{
+						player.Team = Game.IrisTeam;
+					}
+				} );
 			}
 		}
 
@@ -46,15 +64,6 @@ namespace HiddenGamemode
 			player.EnableDrawing = true;
 			player.EnableHideInFirstPerson = true;
 			player.EnableShadowInFirstPerson = true;
-
-			if ( Rand.Int( 1, 2 ) == 1 )
-			{
-				player.Team = Game.HiddenTeam;
-			}
-			else
-			{
-				player.Team = Game.MilitaryTeam;
-			}
 
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();

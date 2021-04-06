@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-    class HiddenTeam : Team
+    class HiddenTeam : BaseTeam
 	{
 		public override void SupplyLoadout( Player player )
 		{

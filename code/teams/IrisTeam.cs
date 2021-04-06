@@ -7,7 +7,7 @@ using Sandbox;
 
 namespace HiddenGamemode
 {
-    class MilitaryTeam : Team
+    class IrisTeam : BaseTeam
 	{
 		public override void SupplyLoadout( Player player  )
 		{

@@ -45,6 +45,7 @@ namespace HiddenGamemode
 
 		protected void OnPlayerStart(Player player)
 		{
+			// Give everyone their starting loadouts.
 			player.Team.SupplyLoadout( player );
 		}
 
