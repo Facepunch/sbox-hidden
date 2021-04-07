@@ -35,7 +35,6 @@ namespace HiddenGamemode
 
 			player.Controller = controller;
 			player.Camera = new FirstPersonCamera();
-			//player.Camera = new ThirdPersonCamera();
 
 			base.OnJoin( player );
 		}

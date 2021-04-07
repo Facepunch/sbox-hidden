@@ -79,14 +79,7 @@ namespace HiddenGamemode
 				}
 				else
 				{
-					// TODO: We'll use TimeSpan formatting for this when it's whitelisted.
-					// Because this is very bad.
-
-					var timeLeft = TimeLeft;
-					var mins = Math.Round( timeLeft / 60 ).ToString().PadLeft( 2, '0' );
-					var secs = Math.Round( timeLeft % 60 ).ToString().PadLeft( 2, '0' );
-
-					TimeLeftFormatted = string.Format( "{0:D2}:{1:D2}", mins, secs );
+					TimeLeftFormatted = TimeSpan.FromSeconds( TimeLeft ).ToString( @"mm\:ss" );
 				}
 			}
 		}
