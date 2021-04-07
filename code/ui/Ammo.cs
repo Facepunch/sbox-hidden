@@ -22,9 +22,11 @@ namespace HiddenGamemode
 			if ( player == null ) return;
 
 			var weapon = player.ActiveChild as Weapon;
-			SetClass( "active", weapon != null );
+			var isValid = (weapon != null && !weapon.IsMelee);
 
-			if ( weapon == null ) return;
+			SetClass( "active", isValid );
+
+			if ( !isValid ) return;
 
 			Weapon.Text = $"{weapon.AmmoClip}";
 

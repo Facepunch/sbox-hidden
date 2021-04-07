@@ -15,9 +15,6 @@ namespace HiddenGamemode
 
 			player.Inventory.DeleteContents();
 			player.Inventory.Add( new Knife(), true );
-
-			player.AttachClothing( "models/citizen_clothes/dress/dress.kneelength.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/hair/hair_femalebun.black.vmdl" );
 		}
 
 		public override void OnJoin( Player player  )
@@ -33,6 +30,8 @@ namespace HiddenGamemode
 				Gravity = 400f
 			};
 
+			player.EnableShadowCasting = false;
+			player.RenderAlpha = 0.12f;
 			player.Controller = controller;
 			player.Camera = new FirstPersonCamera();
 
@@ -41,6 +40,9 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player )
 		{
+			player.EnableShadowCasting = true;
+			player.RenderAlpha = 1f;
+
 			Log.Info( $"{player.Name} left the Hidden team." );
 
 			base.OnLeave( player );

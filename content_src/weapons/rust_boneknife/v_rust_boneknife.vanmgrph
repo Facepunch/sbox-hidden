@@ -149,7 +149,7 @@
 			{
 				_class = "CSequenceAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -609.0, -190.0 ]
+				m_vecPosition = [ -609.0, -191.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1631504389
@@ -157,7 +157,7 @@
 				m_networkMode = "ClientSimulate"
 				m_tagSpans = [  ]
 				m_sequenceName = "v_boneknife@slash_2"
-				m_playbackSpeed = 1.0
+				m_playbackSpeed = 1.5
 				m_bLoop = false
 			}
 		},

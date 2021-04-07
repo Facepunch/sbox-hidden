@@ -279,6 +279,6 @@
 		]
 		model_archetype = "physics_prop_model"
 		primary_associated_entity = "prop_physics"
-		anim_graph_name = ""
+		anim_graph_name = "weapons/rust_boneknife/v_rust_boneknife.vanmgrph"
 	}
 }
