@@ -38,11 +38,21 @@ namespace HiddenGamemode
 
 		public async Task StartSecondTimer()
 		{
-			await Task.DelaySeconds( 1 );
+			while (true)
+			{
+				await Task.DelaySeconds( 1 );
+				Round?.OnSecond();
+			}
+		}
 
-			Round?.OnSecond();
+		public override void DoPlayerNoclip( Sandbox.Player player )
+		{
+			// Do nothing. The player can't noclip in this mode.
+		}
 
-			await StartSecondTimer();
+		public override void DoPlayerSuicide( Sandbox.Player player )
+		{
+			// Do nothing. The player can't suicide in this mode.
 		}
 
 		public override void PostLevelLoaded()

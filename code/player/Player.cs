@@ -49,36 +49,11 @@ namespace HiddenGamemode
 			}
 
 			if ( LifeState != LifeState.Alive )
+			{
 				return;
+			}
 
 			TickPlayerUse();
-
-			if ( Input.Pressed( InputButton.View ) )
-			{
-				if ( Camera is ThirdPersonCamera )
-				{
-					Camera = new FirstPersonCamera();
-				}
-				else
-				{
-					Camera = new ThirdPersonCamera();
-				}
-			}
-
-			if ( Input.Pressed( InputButton.Drop ) )
-			{
-				var dropped = Inventory.DropActive();
-				if ( dropped != null )
-				{
-					if ( dropped.PhysicsGroup != null )
-					{
-						dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up) * 300;
-					}
-
-					timeSinceDropped = 0;
-					SwitchToBestWeapon();
-				}
-			}
 
 			if ( ActiveChild is Weapon weapon && !weapon.IsUsable() && weapon.TimeSincePrimaryAttack > 0.5f && weapon.TimeSinceSecondaryAttack > 0.5f )
 			{

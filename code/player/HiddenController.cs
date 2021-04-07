@@ -9,6 +9,17 @@ namespace HiddenGamemode
 {
 	public class HiddenController : WalkController
 	{
-		// TODO: Here we're going to eventually add extra stuff for The Hidden. Clinging to walls and leaps and stuff.
+		public bool IsFrozen { get; set; }
+
+		public override void Tick()
+		{
+			if ( IsFrozen )
+			{
+				// We've stuck to a wall, do not simulate movement.
+				return;
+			}
+
+			base.Tick();
+		}
 	}
 }

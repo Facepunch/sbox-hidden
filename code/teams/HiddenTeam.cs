@@ -14,7 +14,6 @@ namespace HiddenGamemode
 			player.ClearAmmo();
 
 			player.Inventory.DeleteContents();
-
 			player.Inventory.Add( new Pistol(), true );
 
 			player.GiveAmmo( AmmoType.Pistol, 100 );
@@ -28,7 +27,17 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Hidden team." );
 
-			player.Controller = new HiddenController();
+			// TODO: Tweak these values to perfection.
+			var controller = new HiddenController
+			{
+				AirAcceleration = 20f,
+				SprintSpeed = 380f,
+				AirControl = 10f,
+				Gravity = 400f
+			};
+
+			player.Controller = controller;
+
 			player.Camera = new FirstPersonCamera();
 
 			base.OnJoin( player );
