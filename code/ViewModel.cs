@@ -19,7 +19,7 @@ namespace HiddenGamemode
 		private void AddCameraEffects( Camera camera )
 		{
 
-			WorldRot = Player.Local.EyeRot;
+			WorldRot = Sandbox.Player.Local.EyeRot;
 
 			var speed = Owner.Velocity.Length.LerpInverse( 0, 320 );
 			var left = camera.Rot.Left;

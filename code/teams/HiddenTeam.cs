@@ -14,10 +14,7 @@ namespace HiddenGamemode
 			player.ClearAmmo();
 
 			player.Inventory.DeleteContents();
-			player.Inventory.Add( new Pistol(), true );
-
-			player.GiveAmmo( AmmoType.Pistol, 100 );
-			player.GiveAmmo( AmmoType.Buckshot, 8 );
+			player.Inventory.Add( new Knife(), true );
 
 			player.AttachClothing( "models/citizen_clothes/dress/dress.kneelength.vmdl" );
 			player.AttachClothing( "models/citizen_clothes/hair/hair_femalebun.black.vmdl" );
@@ -37,8 +34,8 @@ namespace HiddenGamemode
 			};
 
 			player.Controller = controller;
-
 			player.Camera = new FirstPersonCamera();
+			//player.Camera = new ThirdPersonCamera();
 
 			base.OnJoin( player );
 		}

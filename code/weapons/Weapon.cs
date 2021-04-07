@@ -7,9 +7,10 @@ namespace HiddenGamemode
 		public virtual AmmoType AmmoType => AmmoType.Pistol;
 		public virtual int ClipSize => 16;
 		public virtual float ReloadTime => 3.0f;
+		public virtual bool IsMelee => false;
 		public virtual int Bucket => 1;
-
 		public virtual int BucketWeight => 100;
+		public virtual int HoldType => 1;
 
 		[NetPredicted]
 		public int AmmoClip { get; set; }
@@ -47,7 +48,7 @@ namespace HiddenGamemode
 
 		public override void Reload( Sandbox.Player owner )
 		{
-			if ( IsReloading )
+			if ( IsMelee || IsReloading )
 				return;
 
 			if ( AmmoClip >= ClipSize )
@@ -66,6 +67,12 @@ namespace HiddenGamemode
 			IsReloading = true;
 			Owner.SetAnimParam( "b_reload", true );
 			StartReloadEffects();
+		}
+
+		public override void TickPlayerAnimator( PlayerAnimator anim )
+		{
+			anim.SetParam( "holdtype", HoldType );
+			anim.SetParam( "aimat_weight", 1.0f );
 		}
 
 		public override void OnPlayerControlTick( Sandbox.Player owner )
@@ -110,24 +117,7 @@ namespace HiddenGamemode
 			TimeSinceSecondaryAttack = 0;
 
 			ShootEffects();
-
-			foreach ( var tr in TraceBullet( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 5000 ) )
-			{
-				tr.Surface.DoBulletImpact( tr );
-
-				if ( !IsServer ) continue;
-				if ( !tr.Entity.IsValid() ) continue;
-
-				using ( Prediction.Off() )
-				{
-					var damage = DamageInfo.FromBullet( tr.EndPos, owner.EyeRot.Forward * 100, 15 )
-						.UsingTraceResult( tr )
-						.WithAttacker( owner )
-						.WithWeapon( this );
-
-					tr.Entity.TakeDamage( damage );
-				}
-			}
+			ShootBullet( 0.05f, 1.5f, 9.0f, 3.0f );
 		}
 
 		[ClientRpc]
@@ -135,9 +125,12 @@ namespace HiddenGamemode
 		{
 			Host.AssertClient();
 
-			Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
+			if (!IsMelee)
+			{
+				Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
+			}
 
-			if ( Owner == Player.Local )
+			if ( Owner == Sandbox.Player.Local )
 			{
 				_ = new Sandbox.ScreenShake.Perlin();
 			}
@@ -193,25 +186,35 @@ namespace HiddenGamemode
 			if ( string.IsNullOrEmpty( ViewModelPath ) )
 				return;
 
-			ViewModelEntity = new ViewModel();
-			ViewModelEntity.WorldPos = WorldPos;
-			ViewModelEntity.Owner = Owner;
-			ViewModelEntity.EnableViewmodelRendering = true;
+			ViewModelEntity = new ViewModel
+			{
+				WorldPos = WorldPos,
+				Owner = Owner,
+				EnableViewmodelRendering = true
+			};
+
 			ViewModelEntity.SetModel( ViewModelPath );
 		}
 
 		public override void CreateHudElements()
 		{
-			if ( Hud.CurrentPanel == null ) return;
+			if ( Sandbox.Hud.CurrentPanel == null ) return;
 
-			CrosshairPanel = new Crosshair();
-			CrosshairPanel.Parent = Hud.CurrentPanel;
+			CrosshairPanel = new Crosshair
+			{
+				Parent = Sandbox.Hud.CurrentPanel
+			};
+
 			CrosshairPanel.AddClass( ClassInfo.Name );
 		}
 
 		public bool IsUsable()
 		{
-			if ( AmmoClip > 0 ) return true;
+			if ( IsMelee || ClipSize == 0 || AmmoClip > 0 )
+			{
+				return true;
+			}
+
 			return AvailableAmmo() > 0;
 		}
 	}
