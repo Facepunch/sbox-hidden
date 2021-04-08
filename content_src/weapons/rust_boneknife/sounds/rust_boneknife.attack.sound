@@ -4,7 +4,13 @@
 	{
 		sounds = 
 		[
-			"weapons/rust_boneknife/sounds/rust-knife-attack-3p.wav",
+			"weapons/rust_boneknife/sounds/rust-knife-attack-3p.vsnd",
 		]
+		UI = false
+		Volume = 1.0
+		VolumeRandom = 0.0
+		Pitch = 1.0
+		PitchRandom = 0.0
+		DistanceMax = 1000.0
 	}
 }
