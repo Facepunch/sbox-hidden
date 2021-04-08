@@ -5,7 +5,9 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		BaseTeam _team;
+		[Net] public int TeamIndex { get; set; }
+		public int LastTeamIndex { get; set; }
+		private BaseTeam _team;
 
 		public BaseTeam Team
 		{
@@ -20,17 +22,15 @@ namespace HiddenGamemode
 					_team = value;
 					_team.Join( this );
 
-					if (IsServer)
-						ChangeTeam( _team.NetworkIdent );
+					if ( IsServer )
+					{
+						TeamIndex = _team.Index;
+
+						// You have to do this for now.
+						NetworkDirty( "TeamIndex", NetVarGroup.Net );
+					}
 				}
 			}
-		}
-
-		[ClientRpc]
-		private void ChangeTeam( int entityId )
-		{
-			Team = FindByIndex( entityId ) as BaseTeam;
-			Assert.NotNull( _team );
 		}
 	}
 }

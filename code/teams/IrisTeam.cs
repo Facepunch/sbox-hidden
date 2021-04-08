@@ -28,7 +28,7 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Military team." );
 
-			if ( IsServer )
+			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
 

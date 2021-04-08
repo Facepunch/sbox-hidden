@@ -45,12 +45,12 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Hidden team." );
 
-			if ( IsServer )
+			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
 			}
 
-			if ( IsClient && player.IsLocalPlayer )
+			if ( Host.IsClient && player.IsLocalPlayer )
 			{
 				AbilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
 			}

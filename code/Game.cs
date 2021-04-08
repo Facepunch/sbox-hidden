@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HiddenGamemode
@@ -6,25 +7,49 @@ namespace HiddenGamemode
 	[ClassLibrary( "sbox-hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
-		internal static HiddenTeam HiddenTeam;
-		internal static IrisTeam IrisTeam;
-
 		public static Game Instance
 		{
 			get => Current as Game;
 		}
 
+		public HiddenTeam HiddenTeam { get; set; }
+		public IrisTeam IrisTeam { get; set; }
+		public Hud Hud { get; set; }
+
 		[Net] public BaseRound Round { get; private set; }
+
+		private List<BaseTeam> _teams;
 
 		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
 		private int _minPlayers => 2;
 
 		public Game()
 		{
+			_teams = new();
+
 			if ( IsServer )
 			{
-				_ = new Hud();
+				Hud = new Hud();
 			}
+
+			HiddenTeam = new HiddenTeam();
+			IrisTeam = new IrisTeam();
+
+			AddTeam( HiddenTeam );
+			AddTeam( IrisTeam );
+
+			_ = StartTickTimer();
+		}
+
+		public void AddTeam( BaseTeam team )
+		{
+			_teams.Add( team );
+			team.Index = _teams.Count;
+		}
+
+		public BaseTeam GetTeamByIndex( int index )
+		{
+			return _teams[index - 1];
 		}
 
 		public void ChangeRound(BaseRound round)
@@ -45,6 +70,15 @@ namespace HiddenGamemode
 			}
 		}
 
+		public async Task StartTickTimer()
+		{
+			while (true)
+			{
+				await Task.Delay( 100 );
+				OnTick();
+			}
+		}
+
 		public override void DoPlayerNoclip( Sandbox.Player player )
 		{
 			// Do nothing. The player can't noclip in this mode.
@@ -58,9 +92,6 @@ namespace HiddenGamemode
 
 		public override void PostLevelLoaded()
 		{
-			HiddenTeam = new();
-			IrisTeam = new();
-
 			_ = StartSecondTimer();
 
 			base.PostLevelLoaded();
@@ -94,6 +125,23 @@ namespace HiddenGamemode
 		}
 
 		public override Player CreatePlayer() => new();
+
+		private void OnTick()
+		{
+			if ( IsClient )
+			{
+				Sandbox.Player.All.ForEach( ( player ) =>
+				{
+					if ( player is not Player hiddenPlayer ) return;
+
+					if ( hiddenPlayer.TeamIndex != hiddenPlayer.LastTeamIndex )
+					{
+						hiddenPlayer.Team = GetTeamByIndex( hiddenPlayer.TeamIndex );
+						hiddenPlayer.LastTeamIndex = hiddenPlayer.TeamIndex;
+					}
+				} );
+			}
+		}
 
 		private void CheckMinimumPlayers()
 		{

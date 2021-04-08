@@ -49,7 +49,7 @@ namespace HiddenGamemode
 
 			AddPlayer( player );
 
-			player.Team = Game.IrisTeam;
+			player.Team = Game.Instance.IrisTeam;
 			player.Team.SupplyLoadout( player );
 
 			base.OnPlayerSpawn( player );

@@ -29,14 +29,14 @@ namespace HiddenGamemode
 
 				Assert.NotNull( hidden );
 
-				hidden.Team = Game.HiddenTeam;
+				hidden.Team = Game.Instance.HiddenTeam;
 
 				// Make everyone else I.R.I.S.
 				Players.ForEach( ( player ) =>
 				{
 					if ( player != hidden )
 					{
-						player.Team = Game.IrisTeam;
+						player.Team = Game.Instance.IrisTeam;
 					}
 				} );
 
@@ -78,7 +78,7 @@ namespace HiddenGamemode
 
 			if ( _roundStarted )
 			{
-				player.Team = Game.IrisTeam;
+				player.Team = Game.Instance.IrisTeam;
 			}
 
 			base.OnPlayerSpawn( player );

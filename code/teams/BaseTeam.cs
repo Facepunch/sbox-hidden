@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public abstract class BaseTeam : Entity
+	public abstract class BaseTeam
 	{
 		public List<Player> Players { get; set; } = new();
 
+		public int Index { get; internal set; }
+
 		public virtual bool HideNameplate => false;
 		public virtual string HudClassName => "";
-
-		public BaseTeam()
-		{
-			Transmit = TransmitType.Always;
-		}
 
 		public void Join( Player player )
 		{
