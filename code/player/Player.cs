@@ -6,7 +6,15 @@ namespace HiddenGamemode
 {
 	public partial class Player : BasePlayer
 	{
-		TimeSince timeSinceDropped;
+		[NetLocalPredicted] public SenseAbility Sense { get; set; }
+		[NetLocalPredicted] public ScreamAbility Scream { get; set; }
+
+		private TimeSince _timeSinceDropped;
+		private RealTimeSince _timeSinceLastUpdatedFrameRate;
+		private Rotation _lastCameraRot = Rotation.Identity;
+		private float _walkBob = 0;
+		private float _lean = 0;
+		private float _FOV = 0;
 
 		public Player()
 		{
@@ -37,6 +45,8 @@ namespace HiddenGamemode
 			BecomeRagdollOnClient( LastDamage.Force, GetHitboxBone( LastDamage.HitboxIndex ) );
 
 			Inventory.DeleteContents();
+
+			Team?.OnPlayerKilled( this );
 		}
 
 		protected override void Tick()
@@ -54,6 +64,11 @@ namespace HiddenGamemode
 			}
 
 			TickPlayerUse();
+
+			if ( Team != null )
+			{
+				Team.OnTick( this );
+			}
 
 			if ( ActiveChild is Weapon weapon && !weapon.IsUsable() && weapon.TimeSincePrimaryAttack > 0.5f && weapon.TimeSinceSecondaryAttack > 0.5f )
 			{
@@ -75,29 +90,25 @@ namespace HiddenGamemode
 
 		public override void StartTouch( Entity other )
 		{
-			if ( timeSinceDropped < 1 ) return;
+			if ( _timeSinceDropped < 1 ) return;
 
 			base.StartTouch( other );
 		}
-
-		RealTimeSince timeSinceUpdatedFramerate;
-
-		Rotation lastCameraRot = Rotation.Identity;
 
 		public override void PostCameraSetup( Camera camera )
 		{
 			base.PostCameraSetup( camera );
 
-			if ( lastCameraRot == Rotation.Identity )
-				lastCameraRot = Camera.Rot;
+			if ( _lastCameraRot == Rotation.Identity )
+				_lastCameraRot = Camera.Rot;
 
-			var angleDiff = Rotation.Difference( lastCameraRot, Camera.Rot );
+			var angleDiff = Rotation.Difference( _lastCameraRot, Camera.Rot );
 			var angleDiffDegrees = angleDiff.Angle();
 			var allowance = 20.0f;
 
 			if ( angleDiffDegrees > allowance )
 			{
-				lastCameraRot = Rotation.Lerp( lastCameraRot, Camera.Rot, 1.0f - (allowance / angleDiffDegrees) );
+				_lastCameraRot = Rotation.Lerp( _lastCameraRot, Camera.Rot, 1.0f - (allowance / angleDiffDegrees) );
 			}
 
 			if ( camera is FirstPersonCamera )
@@ -105,16 +116,12 @@ namespace HiddenGamemode
 				AddCameraEffects( camera );
 			}
 
-			if ( timeSinceUpdatedFramerate > 1 )
+			if ( _timeSinceLastUpdatedFrameRate > 1 )
 			{
-				timeSinceUpdatedFramerate = 0;
+				_timeSinceLastUpdatedFrameRate = 0;
 				UpdateFps( (int)(1.0f / Time.Delta) );
 			}
 		}
-
-		float walkBob = 0;
-		float lean = 0;
-		float fov = 0;
 
 		private void AddCameraEffects( Camera camera )
 		{
@@ -126,23 +133,23 @@ namespace HiddenGamemode
 
 			if ( GroundEntity != null )
 			{
-				walkBob += Time.Delta * 25.0f * speed;
+				_walkBob += Time.Delta * 25.0f * speed;
 			}
 
-			camera.Pos += up * MathF.Sin( walkBob ) * speed * 2;
-			camera.Pos += left * MathF.Sin( walkBob * 0.6f ) * speed * 1;
+			camera.Pos += up * MathF.Sin( _walkBob ) * speed * 2;
+			camera.Pos += left * MathF.Sin( _walkBob * 0.6f ) * speed * 1;
 
-			lean = lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.03f, Time.Delta * 15.0f );
+			_lean = _lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.03f, Time.Delta * 15.0f );
 
-			var appliedLean = lean;
-			appliedLean += MathF.Sin( walkBob ) * speed * 0.2f;
+			var appliedLean = _lean;
+			appliedLean += MathF.Sin( _walkBob ) * speed * 0.2f;
 			camera.Rot *= Rotation.From( 0, 0, appliedLean );
 
 			speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
 
-			fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
+			_FOV = _FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
 
-			camera.FieldOfView += fov;
+			camera.FieldOfView += _FOV;
 		}
 
 		[OwnerRpc]

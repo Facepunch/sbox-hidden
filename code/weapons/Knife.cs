@@ -96,7 +96,7 @@ namespace HiddenGamemode
 			TimeSincePrimaryAttack = 0;
 
 			ShootEffects();
-			PlaySound( "rust-knife-attack" );
+			PlaySound( "rust_boneknife.attack" );
 			MeleeStrike( 25f, 10f );
 		}
 	}

@@ -4,7 +4,7 @@
 	{
 		sounds = 
 		[
-			"weapons/rust_boneknife/sounds/rust-knife-deploy-3p.wav",
+			"sounds/scream/scream-04.wav",
 		]
 	}
 }

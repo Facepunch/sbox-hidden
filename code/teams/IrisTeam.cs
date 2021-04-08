@@ -37,6 +37,11 @@ namespace HiddenGamemode
 			base.OnJoin( player );
 		}
 
+		public override void OnPlayerKilled( Player player )
+		{
+			player.GlowActive = false;
+		}
+
 		public override void OnLeave( Player player  )
 		{
 			Log.Info( $"{player.Name} left the Military team." );

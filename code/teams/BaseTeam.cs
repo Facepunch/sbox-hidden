@@ -9,16 +9,20 @@ namespace HiddenGamemode
 {
 	public abstract class BaseTeam : Entity
 	{
-		protected List<Player> Players { get; set; } = new();
+		public List<Player> Players { get; set; } = new();
 
 		public BaseTeam()
 		{
 			Transmit = TransmitType.Always;
 		}
 
+		public virtual void OnTick( Player player ) { }
+
 		public virtual void OnLeave( Player player  ) { }
 
 		public virtual void OnJoin( Player player  ) { }
+
+		public virtual void OnPlayerKilled( Player player ) { }
 
 		public virtual void SupplyLoadout( Player player  ) { }
 	}
