@@ -17,7 +17,7 @@ namespace HiddenGamemode
 		[NetPredicted] public BaseRound Round { get; private set; }
 
 		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
-		private int _minPlayers => 1;
+		private int _minPlayers => 2;
 
 		public Game()
 		{
@@ -53,6 +53,7 @@ namespace HiddenGamemode
 		public override void DoPlayerSuicide( Sandbox.Player player )
 		{
 			// Do nothing. The player can't suicide in this mode.
+			base.DoPlayerSuicide( player );
 		}
 
 		public override void PostLevelLoaded()
