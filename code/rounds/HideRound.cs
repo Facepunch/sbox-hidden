@@ -9,8 +9,10 @@ namespace HiddenGamemode
 {
 	public class HideRound : BaseRound
 	{
-		public override string RoundName => "Hide or Prepare!";
+		public override string RoundName => "Hide / Prepare";
 		public override int RoundDuration => 20;
+
+		private bool _roundStarted;
 
 		protected override void OnStart()
 		{
@@ -37,6 +39,8 @@ namespace HiddenGamemode
 						player.Team = Game.IrisTeam;
 					}
 				} );
+
+				_roundStarted = true;
 			}
 		}
 
@@ -68,7 +72,14 @@ namespace HiddenGamemode
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
 
+			player.RemoveClothing();
+
 			AddPlayer( player );
+
+			if ( _roundStarted )
+			{
+				player.Team = Game.IrisTeam;
+			}
 
 			base.OnPlayerSpawn( player );
 		}

@@ -32,7 +32,7 @@ namespace HiddenGamemode
 
 			RoundName.Text = round.RoundName;
 
-			if ( round.RoundDuration > 0 )
+			if ( round.RoundDuration > 0 && !string.IsNullOrEmpty( round.TimeLeftFormatted ) )
 			{
 				TimeLeft.Text = round.TimeLeftFormatted;
 				TimeLeft.SetClass( "hidden", false );

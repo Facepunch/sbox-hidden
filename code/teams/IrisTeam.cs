@@ -9,6 +9,8 @@ namespace HiddenGamemode
 {
     class IrisTeam : BaseTeam
 	{
+		public override string HudClassName => "team_iris";
+
 		public override void SupplyLoadout( Player player  )
 		{
 			player.ClearAmmo();
@@ -20,16 +22,21 @@ namespace HiddenGamemode
 
 			player.GiveAmmo( AmmoType.Pistol, 100 );
 			player.GiveAmmo( AmmoType.Buckshot, 8 );
-
-			player.AttachClothing( "models/citizen_clothes/trousers/trousers.lab.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/jacket/labcoat.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/shoes/shoes.workboots.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
 		}
 
 		public override void OnJoin( Player player  )
 		{
 			Log.Info( $"{player.Name} joined the Military team." );
+
+			if ( IsServer )
+			{
+				player.RemoveClothing();
+
+				player.AttachClothing( "models/citizen_clothes/trousers/trousers.lab.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/jacket/labcoat.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/shoes.workboots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
+			}
 
 			player.Controller = new WalkController();
 			player.Camera = new FirstPersonCamera();

@@ -14,7 +14,7 @@ namespace HiddenGamemode
 			get => Current as Game;
 		}
 
-		[NetPredicted] public BaseRound Round { get; private set; }
+		[Net] public BaseRound Round { get; private set; }
 
 		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
 		private int _minPlayers => 2;

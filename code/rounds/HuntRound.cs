@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
     public class HuntRound : BaseRound
 	{
-		public override string RoundName => "Hunt and Survive!";
+		public override string RoundName => "Hunt / Survive";
 		public override int RoundDuration => 300;
 
 		public List<Player> Spectators = new();
@@ -91,6 +91,8 @@ namespace HiddenGamemode
 
 			Spectators.Add( player );
 			Players.Remove( player );
+
+			Log.Info( player.Name + " spawned in, hiding them. " );
 
 			base.OnPlayerSpawn( player );
 		}

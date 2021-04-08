@@ -25,8 +25,7 @@ namespace HiddenGamemode
 		}
 
 		// TODO: This can be done better by using a shared timestamp.
-		[NetPredicted]
-		public string TimeLeftFormatted { get; set; }
+		[Net] public string TimeLeftFormatted { get; set; }
 
 		public void Start()
 		{
@@ -80,6 +79,7 @@ namespace HiddenGamemode
 				else
 				{
 					TimeLeftFormatted = TimeSpan.FromSeconds( TimeLeft ).ToString( @"mm\:ss" );
+					NetworkDirty( "TimeLeftFormatted", NetVarGroup.Net );
 				}
 			}
 		}

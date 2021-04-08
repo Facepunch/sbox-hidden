@@ -11,9 +11,34 @@ namespace HiddenGamemode
 	{
 		public List<Player> Players { get; set; } = new();
 
+		public virtual bool HideNameplate => false;
+		public virtual string HudClassName => "";
+
 		public BaseTeam()
 		{
 			Transmit = TransmitType.Always;
+		}
+
+		public void Join( Player player )
+		{
+			if ( player.IsLocalPlayer )
+			{
+				Log.Info( "Adding " + HudClassName + " to the HUD" );
+
+				Sandbox.Hud.CurrentPanel.AddClass( HudClassName );
+			}
+
+			OnJoin( player );
+		}
+
+		public void Leave( Player player )
+		{
+			if ( player.IsLocalPlayer )
+			{
+				Sandbox.Hud.CurrentPanel.RemoveClass( HudClassName );
+			}
+
+			OnLeave( player );
 		}
 
 		public virtual void OnTick( Player player ) { }

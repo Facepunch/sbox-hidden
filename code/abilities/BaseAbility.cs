@@ -12,11 +12,10 @@ namespace HiddenGamemode
 		public virtual float Cooldown => 1;
 		public virtual string Name => "";
 
-		[NetLocalPredicted] public TimeSince TimeSinceLastUse { get; set; }
+		[NetLocal] public TimeSince TimeSinceLastUse { get; set; }
 
 		public BaseAbility()
 		{
-			// This is a bit shit.
 			TimeSinceLastUse = Cooldown;
 		}
 

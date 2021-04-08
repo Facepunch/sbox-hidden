@@ -9,6 +9,9 @@ namespace HiddenGamemode
 {
     class HiddenTeam : BaseTeam
 	{
+		public override bool HideNameplate => true;
+		public override string HudClassName => "team_hidden";
+
 		private Abilities AbilitiesHud;
 
 		public override void SupplyLoadout( Player player )
@@ -42,6 +45,16 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} joined the Hidden team." );
 
+			if ( IsServer )
+			{
+				player.RemoveClothing();
+			}
+
+			if ( IsClient && player.IsLocalPlayer )
+			{
+				AbilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
+			}
+
 			// TODO: Tweak these values to perfection.
 			var controller = new HiddenController
 			{
@@ -55,11 +68,6 @@ namespace HiddenGamemode
 			player.RenderAlpha = 0.12f;
 			player.Controller = controller;
 			player.Camera = new FirstPersonCamera();
-
-			if ( IsClient )
-			{
-				AbilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
-			}
 
 			player.Sense = new SenseAbility();
 			player.Scream = new ScreamAbility();
@@ -76,7 +84,9 @@ namespace HiddenGamemode
 
 			if ( AbilitiesHud != null )
 			{
-				AbilitiesHud.Delete();
+				Log.Info( "Deleting Ability HUD" );
+
+				AbilitiesHud.Delete( true );
 			}
 
 			player.Sense = null;

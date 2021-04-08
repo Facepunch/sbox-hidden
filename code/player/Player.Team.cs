@@ -16,11 +16,12 @@ namespace HiddenGamemode
 				// A player must be on a valid team.
 				if ( value != null )
 				{
-					_team?.OnLeave( this );
+					_team?.Leave( this );
 					_team = value;
-					_team.OnJoin( this );
+					_team.Join( this );
 
-					if (IsServer) ChangeTeam( _team.NetworkIdent );
+					if (IsServer)
+						ChangeTeam( _team.NetworkIdent );
 				}
 			}
 		}

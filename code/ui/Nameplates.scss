@@ -1,0 +1,58 @@
+﻿nameplates
+{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+
+	nameplate
+	{
+		position: absolute;
+		font-weight: 500;
+		color: white;
+		font-size: 40px;
+		transform-origin: 50% 0%;
+		border-radius: 10px;
+		align-items: center;
+		justify-content: center;
+		flex-direction: row-reverse;
+		padding: 32px;
+
+		label
+		{
+			padding: 1px 60px;
+			padding-left: 40px;
+		}
+		
+		.team_hidden
+		{
+			font-family: New Tegomin;
+		}
+		
+		.team_iris
+		{
+			font-family: Orbitron;
+		}
+	}
+}
+
+.team_iris
+{
+	nameplate
+	{
+		background-image: url( /ui/iris-panel-wide.png );
+		background-size: 100%;
+		font-family: Orbitron;
+	}
+}
+
+.team_hidden
+{
+	nameplate
+	{
+		background-image: url( /ui/grunge-wide-opacity.png );
+		background-size: 100%;
+		font-family: New Tegomin;
+	}
+}

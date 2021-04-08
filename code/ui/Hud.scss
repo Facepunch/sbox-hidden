@@ -12,8 +12,6 @@
 
 vitals
 {
-	background-image: url( /ui/grunge-wide-opacity.png );
-	background-size: 100%;
 	position: absolute;
 	bottom: 64px;
 	left: 100px;
@@ -40,8 +38,6 @@ vitals
 
 ammo
 {
-	background-image: url( /ui/grunge-wide-opacity.png );
-	background-size: 100%;
 	position: absolute;
 	bottom: 64px;
 	right: 100px;
@@ -114,8 +110,6 @@ abilities
 
 .roundContainer
 {
-	background-image: url( /ui/grunge-wide-opacity.png );
-	background-size: 100%;
 	position: absolute;
 	top: 64px;
 	margin: 0 auto;
@@ -124,7 +118,6 @@ abilities
 	width: 256px;
 	height: 96px;
 	text-align: center;
-	font-family: Roboto;
 	justify-content: center;
 	display: flex;
 	flex-direction: column;
@@ -164,6 +157,74 @@ roundInfo
 	justify-content: center;
 }
 
+.team_iris
+{
+	.roundContainer
+	{
+		background-image: url( /ui/iris-panel-wide.png );
+		background-size: 100%;
+		font-family: Orbitron;
+		font-size: 20px;
+		width: 200px;
+		height: 64px;
+	}
+	
+	.roundName
+	{
+		color: #c2f3dc;
+		font-size: 22px;
+	}
+	
+	.timeLeft
+	{
+		color: white;
+		font-size: 16px;
+	}
+	
+	vitals
+	{
+		background-image: url( /ui/iris-panel-wide.png );
+		background-size: 100%;
+		width: 200px;
+		height: 64px;
+		font-size: 26px;
+		font-family: Orbitron;
+	}
+	
+	ammo
+	{
+		background-image: url( /ui/iris-panel-wide.png );
+		background-size: 100%;
+		width: 200px;
+		height: 64px;
+		font-size: 26px;
+		font-family: Orbitron;
+	}
+}
+
+.team_hidden
+{
+	.roundContainer
+	{
+		background-image: url( /ui/grunge-wide-opacity.png );
+		background-size: 100%;
+		font-family: New Tegomin;
+	}
+	
+	ammo
+	{
+		background-image: url( /ui/grunge-wide-opacity.png );
+		background-size: 100%;
+		font-family: New Tegomin;
+	}
+	
+	vitals
+	{
+		background-image: url( /ui/grunge-wide-opacity.png );
+		background-size: 100%;
+		font-family: New Tegomin;
+	}
+}
 
 .hdn_pistol .icon
 {

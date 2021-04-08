@@ -6,8 +6,8 @@ namespace HiddenGamemode
 {
 	public partial class Player : BasePlayer
 	{
-		[NetLocalPredicted] public SenseAbility Sense { get; set; }
-		[NetLocalPredicted] public ScreamAbility Scream { get; set; }
+		[NetLocal] public SenseAbility Sense { get; set; }
+		[NetLocal] public ScreamAbility Scream { get; set; }
 
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
@@ -15,6 +15,11 @@ namespace HiddenGamemode
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
+
+		public bool HasTeam
+		{
+			get => Team != null;
+		}
 
 		public Player()
 		{

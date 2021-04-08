@@ -10,10 +10,14 @@ namespace HiddenGamemode
 		public ModelEntity AttachClothing( string modelName )
 		{
 			var entity = new ModelEntity();
+
 			entity.SetModel( modelName );
 			entity.SetParent( this, true );
 			entity.EnableShadowInFirstPerson = true;
 			entity.EnableHideInFirstPerson = true;
+
+			Clothing.Add( entity );
+
 			return entity;
 		}
 
