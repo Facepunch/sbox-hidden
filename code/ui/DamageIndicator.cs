@@ -13,7 +13,7 @@ namespace HiddenGamemode
 		public DamageIndicator()
 		{
 			Current = this;
-			StyleSheet = StyleSheet.FromFile( "/ui/DamageIndicator.scss" );
+			StyleSheet.Load( "/ui/DamageIndicator.scss" );
 		}
 
 		public void OnHit( Vector3 pos )

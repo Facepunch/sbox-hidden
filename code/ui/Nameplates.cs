@@ -12,11 +12,11 @@ namespace HiddenGamemode
 		readonly Dictionary<Player, Nameplate> ActiveTags = new();
 
 		public float MaxDrawDistance = 400;
-		public int MaxTagsToShow = 10;
+		public int MaxNameplates = 10;
 
 		public Nameplates()
 		{
-			StyleSheet = StyleSheet.FromFile( "/ui/Nameplates.scss" );
+			StyleSheet.Load( "/ui/Nameplates.scss" );
 		}
 
 		public override void Tick()
@@ -38,7 +38,7 @@ namespace HiddenGamemode
 					count++;
 				}
 
-				if ( count >= MaxTagsToShow )
+				if ( count >= MaxNameplates )
 					break;
 			}
 
@@ -79,18 +79,23 @@ namespace HiddenGamemode
 			if ( dist > MaxDrawDistance )
 				return false;
 
-			var lookDir = (labelPos - Camera.LastPos).Normal;
-
-			if ( Camera.LastRot.Forward.Dot( lookDir ) < 0.5 )
-				return false;
-
 			var localPlayer = Sandbox.Player.Local as Player;
-			var trace = Trace.Ray( localPlayer.EyePos, head.Pos )
-				.Ignore( localPlayer )
-				.Run();
 
-			if (trace.Entity != player)
-				return false;
+			// If we're not spectating only show nameplates of players we can see.
+			if ( !localPlayer.IsSpectator )
+			{
+				var lookDir = (labelPos - Camera.LastPos).Normal;
+
+				if ( Camera.LastRot.Forward.Dot( lookDir ) < 0.5 )
+					return false;
+
+				var trace = Trace.Ray( localPlayer.EyePos, head.Pos )
+					.Ignore( localPlayer )
+					.Run();
+
+				if ( trace.Entity != player )
+					return false;
+			}
 
 			var alpha = dist.LerpInverse( MaxDrawDistance, MaxDrawDistance * 0.1f, true );
 			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (Camera.LastFieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;

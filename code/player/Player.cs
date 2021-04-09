@@ -27,13 +27,20 @@ namespace HiddenGamemode
 			Animator = new StandardPlayerAnimator();
 		}
 
-		public void Hide()
+		public bool IsSpectator
 		{
-			Controller = null;
-			Camera = new FixedCamera();
+			get => (Camera is SpectateCamera);
+		}
 
+		public void MakeSpectator()
+		{
 			EnableAllCollisions = false;
 			EnableDrawing = false;
+			Controller = null;
+			Camera = new SpectateCamera
+			{
+				TimeSinceDied = 0
+			};
 		}
 
 		public override void Respawn()
@@ -56,7 +63,7 @@ namespace HiddenGamemode
 
 		protected override void Tick()
 		{
-			base.Tick();
+			TickActiveChild();
 
 			if ( Input.ActiveChild != null )
 			{
@@ -179,7 +186,6 @@ namespace HiddenGamemode
 
 			if ( info.Attacker is Player attacker && attacker != this )
 			{
-				// Note - sending this only to the attacker!
 				attacker.DidDamage( info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
@@ -198,7 +204,6 @@ namespace HiddenGamemode
 		[ClientRpc]
 		public void TookDamage( Vector3 pos )
 		{
-			//DebugOverlay.Sphere( pos, 5.0f, Color.Red, false, 50.0f );
 			DamageIndicator.Current?.OnHit( pos );
 		}
 	}

@@ -16,8 +16,10 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			var player = Sandbox.Player.Local;
+			var player = Sandbox.Player.Local as Player;
 			if ( player == null ) return;
+
+			SetClass( "hidden", player.IsSpectator );
 
 			Health.Text = $"{player.Health:n0}";
 			Health.SetClass( "danger", player.Health < 40.0f );

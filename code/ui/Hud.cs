@@ -15,7 +15,7 @@ namespace HiddenGamemode
 			if ( !IsClient )
 				return;
 
-			RootPanel.StyleSheet = StyleSheet.FromFile( "/ui/Hud.scss" );
+			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );
 
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<Vitals>();

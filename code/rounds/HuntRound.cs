@@ -45,8 +45,12 @@ namespace HiddenGamemode
 
 		protected void OnPlayerStart(Player player)
 		{
-			// Give everyone their starting loadouts.
-			player.Team?.SupplyLoadout( player );
+			// Give everyone who is alive their starting loadouts.
+			if ( player.Team != null && player.LifeState == LifeState.Alive )
+			{
+				player.Team.SupplyLoadout( player );
+				AddPlayer( player );
+			}
 		}
 
 		public override void OnPlayerKilled( Player player )
@@ -54,7 +58,7 @@ namespace HiddenGamemode
 			Players.Remove( player );
 			Spectators.Add( player );
 
-			player.Hide();
+			player.MakeSpectator();
 
 			if ( player.Team is HiddenTeam )
 			{
@@ -87,12 +91,10 @@ namespace HiddenGamemode
 		public override void OnPlayerSpawn( Player player )
 		{
 			player.SetModel( "models/citizen/citizen.vmdl" );
-			player.Hide();
+			player.MakeSpectator();
 
 			Spectators.Add( player );
 			Players.Remove( player );
-
-			Log.Info( player.Name + " spawned in, hiding them. " );
 
 			base.OnPlayerSpawn( player );
 		}

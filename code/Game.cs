@@ -52,6 +52,24 @@ namespace HiddenGamemode
 			return _teams[index - 1];
 		}
 
+		public List<Player> GetTeamPlayers<T>(bool isAlive = false) where T : BaseTeam
+		{
+			var output = new List<Player>();
+
+			Sandbox.Player.All.ForEach( ( p ) =>
+			{
+				if ( p is Player player && player.Team is T )
+				{
+					if ( !isAlive || player.LifeState == LifeState.Alive )
+					{
+						output.Add( player );
+					}
+				}
+			} );
+
+			return output;
+		}
+
 		public void ChangeRound(BaseRound round)
 		{
 			Assert.NotNull( round );

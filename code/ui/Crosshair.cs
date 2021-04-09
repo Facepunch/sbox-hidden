@@ -14,7 +14,7 @@ namespace HiddenGamemode
 
 		public Crosshair()
 		{
-			StyleSheet = StyleSheet.FromFile( "/ui/Crosshair.scss" );
+			StyleSheet.Load( "/ui/Crosshair.scss" );
 
 			for ( int i = 0; i < 5; i++ )
 			{

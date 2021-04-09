@@ -31,7 +31,9 @@ namespace HiddenGamemode
 
 		private async Task StartGlowAbility()
 		{
-			Game.Instance.IrisTeam.Players.ForEach( ( player ) =>
+			var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
+
+			players.ForEach( ( player ) =>
 			{
 				player.GlowActive = true;
 				player.GlowState = GlowStates.GlowStateOn;
@@ -41,7 +43,7 @@ namespace HiddenGamemode
 
 			await Task.Delay( TimeSpan.FromSeconds( 5 ) );
 
-			Game.Instance.IrisTeam.Players.ForEach( ( player ) =>
+			players.ForEach( ( player ) =>
 			{
 				player.GlowActive = false;
 			} );
