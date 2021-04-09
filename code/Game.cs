@@ -18,6 +18,7 @@ namespace HiddenGamemode
 
 		[Net] public BaseRound Round { get; private set; }
 
+		private BaseRound _lastRound;
 		private List<BaseTeam> _teams;
 
 		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
@@ -143,6 +144,14 @@ namespace HiddenGamemode
 		{
 			if ( IsClient )
 			{
+				// We have to hack around this for now until we can detect changes in net variables.
+				if ( _lastRound != Round )
+				{
+					_lastRound?.Finish();
+					_lastRound = Round;
+					_lastRound.Start();
+				}
+
 				Sandbox.Player.All.ForEach( ( player ) =>
 				{
 					if ( player is not Player hiddenPlayer ) return;

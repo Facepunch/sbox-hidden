@@ -63,29 +63,26 @@ namespace HiddenGamemode
 				var player = (owner as Player);
 				var controller = (player.Controller as HiddenController);
 
-				using ( Prediction.Off() )
+				if ( controller.IsFrozen )
 				{
-					if ( controller.IsFrozen )
-					{
-						controller.WishVelocity = Vector3.Zero;
-						controller.Velocity = owner.EyeRot.Forward * 400f;
-						controller.IsFrozen = false;
-						return;
-					}
+					controller.WishVelocity = Vector3.Zero;
+					controller.Velocity = owner.EyeRot.Forward * 400f;
+					controller.IsFrozen = false;
+					return;
+				}
 
-					var trace = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 40f )
-						.HitLayer( CollisionLayer.WORLD_GEOMETRY )
-						.Ignore( owner )
-						.Ignore( this )
-						.Radius( 1 )
-						.Run();
+				var trace = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 40f )
+					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
+					.Ignore( owner )
+					.Ignore( this )
+					.Radius( 1 )
+					.Run();
 
-					if ( trace.Hit )
+				if ( trace.Hit )
+				{
+					if ( controller != null )
 					{
-						if ( controller != null )
-						{
-							controller.IsFrozen = true;
-						}
+						controller.IsFrozen = true;
 					}
 				}
 			}

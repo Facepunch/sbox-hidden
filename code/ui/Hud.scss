@@ -80,34 +80,40 @@ abilities
 	align-items: center;
 	justify-content: center;
 	
-	.ability {
+	.ability
+	{
 		width: 64px;
 		height: 64px;
 		border-radius: 8px;
 		background-color: rgba(0.2, 0.2, 0.2, 0.6);
-		box-shadow: 0px 0px 32px 7px rgba(255, 46, 46, 0.58);
-		margin-left: 16px;
+		box-shadow: 0px 0px 20px 5px rgba(255, 46, 46, 0.58);
+		margin-left: 24px;
 		//transition: box-shadow 0.5s;
 		
-		.icon {
-			width: 64px
+		.icon
+		{
+			width: 64px;
 			height: 64px;
 			background-size: 100%;
 			
-			&.sense {
+			&.sense
+			{
 				background-image: url( /ui/abilities/sense.png );
 			}
 			
-			&.scream {
+			&.scream
+			{
 				background-image: url( /ui/abilities/scream.png );
 			}
 		}
 		
-		&.usable {
-			box-shadow: 0px 0px 32px 7px rgba(45, 255, 196, 0.58);
+		&.usable
+		{
+			box-shadow: 0px 0px 20px 5px rgba(45, 255, 196, 0.58);
 		}
 		
-		&.hidden {
+		&.hidden
+		{
 			display: none;
 		}
 	}

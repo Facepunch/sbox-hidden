@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
+		private DamageInfo _lastDamageInfo;
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
@@ -54,7 +55,7 @@ namespace HiddenGamemode
 		{
 			base.OnKilled();
 
-			BecomeRagdollOnClient( LastDamage.Force, GetHitboxBone( LastDamage.HitboxIndex ) );
+			BecomeRagdollOnClient( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 
 			Inventory.DeleteContents();
 
@@ -167,15 +168,12 @@ namespace HiddenGamemode
 		[OwnerRpc]
 		protected void UpdateFps( int fps )
 		{
-			Log.Info( $"{Host.Name} OwnerRPC - UpdateFPS" );
 			SetScore( "fps", fps );
 		}
 
-		DamageInfo LastDamage;
-
 		public override void TakeDamage( DamageInfo info )
 		{
-			LastDamage = info;
+			_lastDamageInfo = info;
 
 			if ( info.HitboxIndex == 0 )
 			{
@@ -186,25 +184,25 @@ namespace HiddenGamemode
 
 			if ( info.Attacker is Player attacker && attacker != this )
 			{
-				attacker.DidDamage( info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
+				attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
-			TookDamage( info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
+			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
 		}
 
 		[ClientRpc]
-		public void DidDamage( Vector3 pos, float amount, float healthinv )
+		public void DidDamage( Vector3 position, float amount, float inverseHealth )
 		{
 			Sound.FromScreen( "dm.ui_attacker" )
-				.SetPitch( 1 + healthinv * 1 );
+				.SetPitch( 1 + inverseHealth * 1 );
 
-			HitIndicator.Current?.OnHit( pos, amount );
+			HitIndicator.Current?.OnHit( position, amount );
 		}
 
 		[ClientRpc]
-		public void TookDamage( Vector3 pos )
+		public void TookDamage( Vector3 position )
 		{
-			DamageIndicator.Current?.OnHit( pos );
+			DamageIndicator.Current?.OnHit( position );
 		}
 	}
 }
