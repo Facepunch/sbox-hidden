@@ -84,7 +84,7 @@ namespace HiddenGamemode
 			while (true)
 			{
 				await Task.DelaySeconds( 1 );
-				Round?.OnSecond();
+				OnSecond();
 			}
 		}
 
@@ -122,27 +122,22 @@ namespace HiddenGamemode
 			base.PlayerKilled( player );
 		}
 
-		public override void PlayerJoined( Sandbox.Player player )
-		{
-			Log.Info( player.Name + " joined, checking minimum player count..." );
-
-			CheckMinimumPlayers();
-
-			base.PlayerJoined( player );
-		}
-
 		public override void PlayerDisconnected( Sandbox.Player player, NetworkDisconnectionReason reason )
 		{
 			Log.Info( player.Name + " left, checking minimum player count..." );
 
 			Round?.OnPlayerLeave( player as Player );
 
-			CheckMinimumPlayers();
-
 			base.PlayerDisconnected( player, reason );
 		}
 
 		public override Player CreatePlayer() => new();
+
+		private void OnSecond()
+		{
+			CheckMinimumPlayers();
+			Round?.OnSecond();
+		}
 
 		private void OnTick()
 		{

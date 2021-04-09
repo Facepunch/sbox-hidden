@@ -65,7 +65,7 @@ namespace HiddenGamemode
 			};
 
 			player.EnableShadowCasting = false;
-			player.RenderAlpha = 0.12f;
+			player.RenderAlpha = 0.15f;
 			player.Controller = controller;
 			player.Camera = new FirstPersonCamera();
 
