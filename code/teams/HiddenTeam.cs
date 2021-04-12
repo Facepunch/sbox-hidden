@@ -52,7 +52,10 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
-				_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
+				if ( _abilitiesHud == null )
+					_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
+				else
+					_abilitiesHud.SetClass( "hidden", false );
 			}
 
 			// TODO: Tweak these values to perfection.
@@ -82,9 +85,9 @@ namespace HiddenGamemode
 
 			Log.Info( $"{player.Name} left the Hidden team." );
 
-			if ( _abilitiesHud != null )
+			if ( _abilitiesHud != null && player.IsLocalPlayer )
 			{
-				_abilitiesHud.Delete( true );
+				_abilitiesHud.SetClass( "hidden", true );
 			}
 
 			player.Sense = null;

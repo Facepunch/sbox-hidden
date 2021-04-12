@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
 	public class Nameplates : Panel
 	{
-		readonly Dictionary<Player, Nameplate> ActiveTags = new();
+		private readonly Dictionary<Player, Nameplate> _activeNameplates = new();
 
 		public float MaxDrawDistance = 400;
 		public int MaxNameplates = 10;
@@ -26,7 +26,7 @@ namespace HiddenGamemode
 			var deleteList = new List<Player>();
 			var count = 0;
 
-			deleteList.AddRange( ActiveTags.Keys );
+			deleteList.AddRange( _activeNameplates.Keys );
 
 			foreach ( var v in Sandbox.Player.All.OrderBy( x => Vector3.DistanceBetween( x.EyePos, Camera.LastPos ) ) )
 			{
@@ -44,8 +44,8 @@ namespace HiddenGamemode
 
 			foreach ( var player in deleteList )
 			{
-				ActiveTags[player].Delete();
-				ActiveTags.Remove( player );
+				_activeNameplates[player].Delete();
+				_activeNameplates.Remove( player );
 			}
 		}
 
@@ -102,10 +102,10 @@ namespace HiddenGamemode
 
 			objectSize = objectSize.Clamp( 0.05f, 1.0f );
 
-			if ( !ActiveTags.TryGetValue( player, out var tag ) )
+			if ( !_activeNameplates.TryGetValue( player, out var tag ) )
 			{
 				tag = CreateNameplate( player );
-				ActiveTags[player] = tag;
+				_activeNameplates[player] = tag;
 			}
 
 			var screenPos = labelPos.ToScreen();

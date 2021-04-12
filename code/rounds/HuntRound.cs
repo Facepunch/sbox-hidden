@@ -91,6 +91,23 @@ namespace HiddenGamemode
 			}
 		}
 
+		public override void OnTick()
+		{
+			if ( Host.IsClient && Sandbox.Player.Local is Player local )
+			{
+				var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().First();
+
+				if ( hidden != null && hidden.IsValid() && hidden != local )
+				{
+					var distance = local.Pos.Distance( hidden.Pos );
+
+					hidden.RenderAlpha = 0.2f - ((0.2f / 1500f) * distance);
+				}
+			}
+
+			base.OnTick();
+		}
+
 		public override void OnPlayerLeave( Player player )
 		{
 			base.OnPlayerLeave( player );

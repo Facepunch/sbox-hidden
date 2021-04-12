@@ -10,6 +10,11 @@
 	}
 }
 
+chatbox
+{
+	bottom: 350px;
+}
+
 vitals
 {
 	position: absolute;
@@ -87,7 +92,7 @@ abilities
 	height: 96px;
 	align-items: center;
 	justify-content: center;
-	
+
 	.ability
 	{
 		width: 64px;
@@ -97,33 +102,38 @@ abilities
 		box-shadow: 0px 0px 20px 5px rgba(255, 46, 46, 0.58);
 		margin-left: 24px;
 		//transition: box-shadow 0.5s;
-		
+
 		.icon
 		{
 			width: 64px;
 			height: 64px;
 			background-size: 100%;
-			
+
 			&.sense
 			{
 				background-image: url( /ui/abilities/sense.png );
 			}
-			
+
 			&.scream
 			{
 				background-image: url( /ui/abilities/scream.png );
 			}
 		}
-		
+
 		&.usable
 		{
 			box-shadow: 0px 0px 20px 5px rgba(45, 255, 196, 0.58);
 		}
-		
+
 		&.hidden
 		{
 			display: none;
 		}
+	}
+
+	&.hidden
+	{
+		display: none;
 	}
 }
 

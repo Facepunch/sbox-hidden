@@ -160,6 +160,8 @@ namespace HiddenGamemode
 
 		private void OnTick()
 		{
+			Round?.OnTick();
+
 			if ( IsClient )
 			{
 				// We have to hack around this for now until we can detect changes in net variables.

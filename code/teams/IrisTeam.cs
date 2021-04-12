@@ -42,7 +42,10 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
-				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
+				if ( _radarHud == null )
+					_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
+				else
+					_radarHud.SetClass( "hidden", false );
 			}
 
 			player.Controller = new WalkController();
@@ -60,10 +63,8 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} left the Military team." );
 
-			if ( _radarHud != null )
-			{
-				_radarHud.Delete( true );
-			}
+			if ( _radarHud != null && player.IsLocalPlayer )
+				_radarHud.SetClass( "hidden", true );
 
 			base.OnLeave( player );
 		}

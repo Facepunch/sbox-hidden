@@ -67,6 +67,8 @@ namespace HiddenGamemode
 			Players.Remove( player );
 		}
 
+		public virtual void OnTick() { }
+
 		public virtual void OnSecond()
 		{
 			if ( Host.IsServer )

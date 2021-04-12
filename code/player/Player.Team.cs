@@ -16,7 +16,7 @@ namespace HiddenGamemode
 			set
 			{
 				// A player must be on a valid team.
-				if ( value != null )
+				if ( value != null && value != _team )
 				{
 					_team?.Leave( this );
 					_team = value;
