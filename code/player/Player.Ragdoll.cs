@@ -4,10 +4,9 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		static readonly EntityLimit RagdollLimit = new EntityLimit { MaxTotal = 20 };
+		public ModelEntity RagdollEntity { get; set; }
 
-		[ClientRpc]
-		void BecomeRagdollOnClient( Vector3 force, int forceBone )
+		private void BecomeRagdollOnServer( Vector3 force, int forceBone )
 		{
 			var ragdoll = new ModelEntity
 			{
@@ -25,7 +24,6 @@ namespace HiddenGamemode
 			ragdoll.CopyBonesFrom( this );
 			ragdoll.TakeDecalsFrom( this );
 			ragdoll.SetRagdollVelocityFrom( this );
-			ragdoll.DeleteAsync( 20.0f );
 
 			foreach ( var child in Children )
 			{
@@ -58,9 +56,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			Corpse = ragdoll;
-
-			RagdollLimit.Watch( ragdoll );
+			RagdollEntity = ragdoll;
 		}
 	}
 }

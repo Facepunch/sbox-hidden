@@ -58,6 +58,8 @@ namespace HiddenGamemode
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
 
+			RemoveRagdollEntity();
+
 			Stamina = 100f;
 
 			base.Respawn();
@@ -69,7 +71,7 @@ namespace HiddenGamemode
 
 			ShowFlashlight( false );
 
-			BecomeRagdollOnClient( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
+			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 
 			Inventory.DeleteContents();
 
@@ -179,12 +181,6 @@ namespace HiddenGamemode
 			camera.FieldOfView += _FOV;
 		}
 
-		[OwnerRpc]
-		protected void UpdateFps( int fps )
-		{
-			SetScore( "fps", fps );
-		}
-
 		public override void TakeDamage( DamageInfo info )
 		{
 			_lastDamageInfo = info;
@@ -204,6 +200,15 @@ namespace HiddenGamemode
 			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
 		}
 
+		public void RemoveRagdollEntity()
+		{
+			if ( RagdollEntity != null && RagdollEntity.IsValid() )
+			{
+				RagdollEntity.Delete();
+				RagdollEntity = null;
+			}
+		}
+
 		[ClientRpc]
 		public void DidDamage( Vector3 position, float amount, float inverseHealth )
 		{
@@ -217,6 +222,19 @@ namespace HiddenGamemode
 		public void TookDamage( Vector3 position )
 		{
 			DamageIndicator.Current?.OnHit( position );
+		}
+
+		protected override void OnRemove()
+		{
+			RemoveRagdollEntity();
+
+			base.OnRemove();
+		}
+
+		[OwnerRpc]
+		protected void UpdateFps( int fps )
+		{
+			SetScore( "fps", fps );
 		}
 	}
 }
