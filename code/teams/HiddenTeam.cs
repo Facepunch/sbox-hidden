@@ -12,7 +12,7 @@ namespace HiddenGamemode
 		public override bool HideNameplate => true;
 		public override string HudClassName => "team_hidden";
 
-		private Abilities AbilitiesHud;
+		private Abilities _abilitiesHud;
 
 		public override void SupplyLoadout( Player player )
 		{
@@ -52,7 +52,7 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
-				AbilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
+				_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
 			}
 
 			// TODO: Tweak these values to perfection.
@@ -82,11 +82,9 @@ namespace HiddenGamemode
 
 			Log.Info( $"{player.Name} left the Hidden team." );
 
-			if ( AbilitiesHud != null )
+			if ( _abilitiesHud != null )
 			{
-				Log.Info( "Deleting Ability HUD" );
-
-				AbilitiesHud.Delete( true );
+				_abilitiesHud.Delete( true );
 			}
 
 			player.Sense = null;

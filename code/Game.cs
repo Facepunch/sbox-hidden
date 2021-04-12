@@ -7,14 +7,32 @@ namespace HiddenGamemode
 	[ClassLibrary( "sbox-hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
+		public HiddenTeam HiddenTeam { get; set; }
+		public IrisTeam IrisTeam { get; set; }
+		public Hud Hud { get; set; }
+
 		public static Game Instance
 		{
 			get => Current as Game;
 		}
 
-		public HiddenTeam HiddenTeam { get; set; }
-		public IrisTeam IrisTeam { get; set; }
-		public Hud Hud { get; set; }
+		[ServerCmd( "+iv_flashlight" )]
+		private static void EnableFlashlight()
+		{
+			if ( ConsoleSystem.Caller is Player player )
+			{
+				player.ShowFlashlight( true );
+			}
+		}
+
+		[ServerCmd( "-iv_flashlight" )]
+		private static void DisableFlashlight()
+		{
+			if ( ConsoleSystem.Caller is Player player )
+			{
+				player.ShowFlashlight( false );
+			}
+		}
 
 		[Net] public BaseRound Round { get; private set; }
 

@@ -13,6 +13,7 @@ namespace HiddenGamemode
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
+		private SpotLight _flashlight;
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
@@ -44,6 +45,14 @@ namespace HiddenGamemode
 			};
 		}
 
+		public void ShowFlashlight( bool shouldShow )
+		{
+			if ( ActiveChild is Weapon weapon )
+			{
+				weapon.ShowFlashlight( shouldShow );
+			}
+		}
+
 		public override void Respawn()
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
@@ -54,6 +63,8 @@ namespace HiddenGamemode
 		public override void OnKilled()
 		{
 			base.OnKilled();
+
+			ShowFlashlight( false );
 
 			BecomeRagdollOnClient( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 

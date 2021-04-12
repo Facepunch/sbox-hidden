@@ -15,23 +15,23 @@
 			var eyeRot = player.EyeRot;
 
 			var tr = Trace.Ray( eyePos, eyePos + eyeRot.Forward * 1000 )
-							.Size( 1.0f )
-							.Ignore( player )
-							.UseHitboxes()
-							.Run();
+				.Size( 1.0f )
+				.Ignore( player )
+				.UseHitboxes()
+				.Run();
 
 			panel.PositionAtWorld( tr.EndPos );
 		}
 
-		public static void PositionAtWorld( this Panel panel, Vector3 pos )
+		public static void PositionAtWorld( this Panel panel, Vector3 position )
 		{
-			var screenpos = pos.ToScreen();
+			var screenPos = position.ToScreen();
 
-			if ( screenpos.z < 0 )
+			if ( screenPos.z < 0 )
 				return;
 
-			panel.Style.Left = Length.Fraction( screenpos.x );
-			panel.Style.Top = Length.Fraction( screenpos.y );
+			panel.Style.Left = Length.Fraction( screenPos.x );
+			panel.Style.Top = Length.Fraction( screenPos.y );
 			panel.Style.Dirty();
 		}
 	}

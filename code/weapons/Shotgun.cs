@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		public override AmmoType AmmoType => AmmoType.Buckshot;
 		public override int ClipSize => 8;
 		public override float ReloadTime => 0.5f;
+		public override bool HasFlashlight => true;
 		public override int Bucket => 3;
 
 		public override void Spawn()

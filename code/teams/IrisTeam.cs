@@ -11,6 +11,8 @@ namespace HiddenGamemode
 	{
 		public override string HudClassName => "team_iris";
 
+		private Radar _radarHud;
+
 		public override void SupplyLoadout( Player player  )
 		{
 			player.ClearAmmo();
@@ -38,6 +40,11 @@ namespace HiddenGamemode
 				player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
 			}
 
+			if ( Host.IsClient && player.IsLocalPlayer )
+			{
+				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
+			}
+
 			player.Controller = new WalkController();
 			player.Camera = new FirstPersonCamera();
 
@@ -52,6 +59,11 @@ namespace HiddenGamemode
 		public override void OnLeave( Player player  )
 		{
 			Log.Info( $"{player.Name} left the Military team." );
+
+			if ( _radarHud != null )
+			{
+				_radarHud.Delete( true );
+			}
 
 			base.OnLeave( player );
 		}

@@ -10,6 +10,7 @@ namespace HiddenGamemode
 		public virtual bool IsMelee => false;
 		public virtual int Bucket => 1;
 		public virtual int BucketWeight => 100;
+		public virtual bool HasFlashlight => false;
 		public virtual int HoldType => 1;
 
 		[NetPredicted]
@@ -24,17 +25,28 @@ namespace HiddenGamemode
 		[NetPredicted]
 		public TimeSince TimeSinceDeployed { get; set; }
 
+		protected SpotLight _flashlight;
+
 		public int AvailableAmmo()
 		{
 			if ( Owner is not Player owner ) return 0;
 			return owner.AmmoCount( AmmoType );
 		}
 
-		public override void ActiveStart( Entity ent )
+		public override void ActiveStart( Entity owner )
 		{
-			base.ActiveStart( ent );
+			base.ActiveStart( owner );
 
 			TimeSinceDeployed = 0;
+
+			ShowFlashlight( false );
+		}
+
+		public override void ActiveEnd( Entity owner, bool wasDropped )
+		{
+			ShowFlashlight( false );
+
+			base.ActiveEnd( owner, wasDropped );
 		}
 
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
@@ -161,6 +173,18 @@ namespace HiddenGamemode
 
 					tr.Entity.TakeDamage( damageInfo );
 				}
+			}
+		}
+
+		public void ShowFlashlight( bool shouldShow )
+		{
+			if ( HasFlashlight && shouldShow )
+			{
+				// Create or enable the spot light.
+			}
+			else
+			{
+				// Disable the spot light.
 			}
 		}
 
