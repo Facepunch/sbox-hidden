@@ -36,11 +36,15 @@ namespace HiddenGamemode
 			OnLeave( player );
 		}
 
+		public virtual void OnTick() { }
+
 		public virtual void OnTick( Player player ) { }
 
 		public virtual void OnLeave( Player player  ) { }
 
 		public virtual void OnJoin( Player player  ) { }
+
+		public virtual void OnStart( Player player ) { }
 
 		public virtual void OnPlayerKilled( Player player ) { }
 

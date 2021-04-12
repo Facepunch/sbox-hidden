@@ -18,45 +18,6 @@ namespace HiddenGamemode
 		private string _firstDeath;
 		private int _hiddenKills;
 
-		protected override void OnStart()
-		{
-			Log.Info( "Started Hunt Round" );
-
-			if ( Host.IsServer )
-			{
-				Sandbox.Player.All.ForEach( ( player ) => OnPlayerStart( player as Player ) );
-			}
-		}
-
-		protected override void OnFinish()
-		{
-			Log.Info( "Finished Hunt Round" );
-
-			if ( Host.IsServer )
-			{
-				Spectators.Clear();
-			}
-		}
-
-		protected override void OnTimeUp()
-		{
-			Log.Info( "Hunt Time Up!" );
-
-			LoadStatsRound( "I.R.I.S. Survived Long Enough" );
-
-			base.OnTimeUp();
-		}
-
-		protected void OnPlayerStart(Player player)
-		{
-			// Give everyone who is alive their starting loadouts.
-			if ( player.Team != null && player.LifeState == LifeState.Alive )
-			{
-				player.Team.SupplyLoadout( player );
-				AddPlayer( player );
-			}
-		}
-
 		public override void OnPlayerKilled( Player player )
 		{
 			Players.Remove( player );
@@ -91,23 +52,6 @@ namespace HiddenGamemode
 			}
 		}
 
-		public override void OnTick()
-		{
-			if ( Host.IsClient && Sandbox.Player.Local is Player local )
-			{
-				var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().First();
-
-				if ( hidden != null && hidden.IsValid() && hidden != local )
-				{
-					var distance = local.Pos.Distance( hidden.Pos );
-
-					hidden.RenderAlpha = 0.2f - ((0.2f / 1500f) * distance);
-				}
-			}
-
-			base.OnTick();
-		}
-
 		public override void OnPlayerLeave( Player player )
 		{
 			base.OnPlayerLeave( player );
@@ -129,6 +73,45 @@ namespace HiddenGamemode
 			Players.Remove( player );
 
 			base.OnPlayerSpawn( player );
+		}
+
+		protected override void OnStart()
+		{
+			Log.Info( "Started Hunt Round" );
+
+			if ( Host.IsServer )
+			{
+				Sandbox.Player.All.ForEach( ( player ) => SupplyLoadouts( player as Player ) );
+			}
+		}
+
+		protected override void OnFinish()
+		{
+			Log.Info( "Finished Hunt Round" );
+
+			if ( Host.IsServer )
+			{
+				Spectators.Clear();
+			}
+		}
+
+		protected override void OnTimeUp()
+		{
+			Log.Info( "Hunt Time Up!" );
+
+			LoadStatsRound( "I.R.I.S. Survived Long Enough" );
+
+			base.OnTimeUp();
+		}
+
+		private void SupplyLoadouts( Player player )
+		{
+			// Give everyone who is alive their starting loadouts.
+			if ( player.Team != null && player.LifeState == LifeState.Alive )
+			{
+				player.Team.SupplyLoadout( player );
+				AddPlayer( player );
+			}
 		}
 
 		private void LoadStatsRound(string winner)

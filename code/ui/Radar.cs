@@ -61,12 +61,12 @@ namespace HiddenGamemode
 			if ( player.LifeState != LifeState.Alive )
 				return false;
 
-			if ( Sandbox.Player.Local is not Player local )
+			if ( Sandbox.Player.Local is not Player localPlayer )
 				return false;
 
 			var radarRange = 2048f;
 
-			if ( player.Pos.Distance( local.Pos ) > radarRange )
+			if ( player.Pos.Distance( localPlayer.Pos ) > radarRange )
 				return false;
 
 			if ( !_radarDots.TryGetValue( player, out var tag ) )
@@ -77,7 +77,7 @@ namespace HiddenGamemode
 
 			// This is probably fucking awful maths but it works.
 
-			var difference = player.WorldPos - local.WorldPos;
+			var difference = player.WorldPos - localPlayer.WorldPos;
 			var radarSize = 256f;
 
 			var x = (radarSize / radarRange) * difference.x * 0.5f;

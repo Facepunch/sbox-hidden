@@ -162,6 +162,11 @@ namespace HiddenGamemode
 		{
 			Round?.OnTick();
 
+			for (var i = 0; i < _teams.Count; i++)
+			{
+				_teams[i].OnTick();
+			}
+
 			if ( IsClient )
 			{
 				// We have to hack around this for now until we can detect changes in net variables.

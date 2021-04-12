@@ -26,19 +26,26 @@ namespace HiddenGamemode
 			player.GiveAmmo( AmmoType.Buckshot, 8 );
 		}
 
-		public override void OnJoin( Player player  )
+		public override void OnStart( Player player )
 		{
-			Log.Info( $"{player.Name} joined the Military team." );
-
 			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
-
 				player.AttachClothing( "models/citizen_clothes/trousers/trousers.lab.vmdl" );
 				player.AttachClothing( "models/citizen_clothes/jacket/labcoat.vmdl" );
 				player.AttachClothing( "models/citizen_clothes/shoes/shoes.workboots.vmdl" );
 				player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
 			}
+
+			Log.Info( "OnStart: " + player.Name );
+
+			player.Controller = new WalkController();
+			player.Camera = new FirstPersonCamera();
+		}
+
+		public override void OnJoin( Player player  )
+		{
+			Log.Info( $"{player.Name} joined the Military team." );
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
@@ -47,9 +54,6 @@ namespace HiddenGamemode
 				else
 					_radarHud.SetClass( "hidden", false );
 			}
-
-			player.Controller = new WalkController();
-			player.Camera = new FirstPersonCamera();
 
 			base.OnJoin( player );
 		}
