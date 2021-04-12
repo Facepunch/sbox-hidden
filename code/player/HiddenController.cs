@@ -21,6 +21,8 @@ namespace HiddenGamemode
 				return;
 			}
 
+			// TODO: We'll implement jump stamina here. We can't do it yet.
+
 			/*
 			if ( !IsSliding && Input.Pressed( InputButton.Duck) )
 			{

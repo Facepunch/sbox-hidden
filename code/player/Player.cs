@@ -6,6 +6,7 @@ namespace HiddenGamemode
 {
 	public partial class Player : BasePlayer
 	{
+		[NetPredicted] public float Stamina { get; set; }
 		[NetLocal] public SenseAbility Sense { get; set; }
 		[NetLocal] public ScreamAbility Scream { get; set; }
 
@@ -56,6 +57,8 @@ namespace HiddenGamemode
 		public override void Respawn()
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
+
+			Stamina = 100f;
 
 			base.Respawn();
 		}

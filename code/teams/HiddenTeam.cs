@@ -86,10 +86,7 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
-				if ( _abilitiesHud == null )
-					_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
-				else
-					_abilitiesHud.SetClass( "hidden", false );
+				_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
 			}
 
 			player.EnableShadowCasting = false;
@@ -110,7 +107,8 @@ namespace HiddenGamemode
 
 			if ( _abilitiesHud != null && player.IsLocalPlayer )
 			{
-				_abilitiesHud.SetClass( "hidden", true );
+				_abilitiesHud.Delete( true );
+				_abilitiesHud = null;
 			}
 
 			player.Sense = null;

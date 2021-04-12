@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public override string HudClassName => "team_iris";
 
+		private Battery _batteryHud;
 		private Radar _radarHud;
 
 		public override void SupplyLoadout( Player player  )
@@ -39,7 +40,7 @@ namespace HiddenGamemode
 
 			Log.Info( "OnStart: " + player.Name );
 
-			player.Controller = new WalkController();
+			player.Controller = new IrisController();
 			player.Camera = new FirstPersonCamera();
 		}
 
@@ -49,10 +50,8 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
-				if ( _radarHud == null )
-					_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
-				else
-					_radarHud.SetClass( "hidden", false );
+				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
+				_batteryHud = Sandbox.Hud.CurrentPanel.AddChild<Battery>();
 			}
 
 			base.OnJoin( player );
@@ -67,8 +66,20 @@ namespace HiddenGamemode
 		{
 			Log.Info( $"{player.Name} left the Military team." );
 
-			if ( _radarHud != null && player.IsLocalPlayer )
-				_radarHud.SetClass( "hidden", true );
+			if ( player.IsLocalPlayer )
+			{
+				if ( _radarHud != null )
+				{
+					_radarHud.Delete( true );
+					_radarHud = null;
+				}
+
+				if ( _batteryHud != null )
+				{
+					_batteryHud.Delete( true );
+					_batteryHud = null;
+				}
+			}
 
 			base.OnLeave( player );
 		}

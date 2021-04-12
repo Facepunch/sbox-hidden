@@ -1,0 +1,41 @@
+﻿battery
+{
+	position: absolute;
+	top: 108px;
+	left: 100px;
+	color: #fff;
+	width: 256px;
+	height: 32px;
+
+	.outerBar
+	{
+		background-color: rgba(50, 50, 50, 0.8);
+		border-radius: 16px;
+		margin-top: 16px;
+		padding: 2px;
+		width: 200px;
+		height: 20px;
+	}
+
+	.innerBar
+	{
+		border-radius: 16px;
+		background-color: rgba(102, 130, 161, 0.9);
+		width: 100%;
+		min-width: 16px;
+		height: 100%;
+	}
+
+	.icon
+	{
+		background-image: url( /ui/battery.png );
+		background-size: 100%;
+		width: 48px;
+		height: 48px;
+	}
+
+	&.hidden
+	{
+		display: none;
+	}
+}
