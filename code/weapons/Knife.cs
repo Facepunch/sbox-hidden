@@ -109,7 +109,7 @@ namespace HiddenGamemode
 
 			ShootEffects();
 			PlaySound( "rust_boneknife.attack" );
-			MeleeStrike( 25f, 10f );
+			MeleeStrike( 25f, 1.5f );
 		}
 
 		private void ProcessRagdollPickup( Sandbox.Player owner )
