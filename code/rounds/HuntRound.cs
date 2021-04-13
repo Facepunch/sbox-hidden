@@ -23,7 +23,7 @@ namespace HiddenGamemode
 			Players.Remove( player );
 			Spectators.Add( player );
 
-			player.MakeSpectator();
+			player.MakeSpectator( player.EyePos );
 
 			if ( player.Team is HiddenTeam )
 			{

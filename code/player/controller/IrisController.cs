@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public class IrisController : WalkController
+	public class IrisController : CustomWalkController
 	{
 		public float MaxSprintSpeed = 300f;
 

@@ -5,6 +5,7 @@ namespace HiddenGamemode
 	public partial class SpectateCamera : BaseCamera
 	{
 		[NetPredicted] public TimeSince TimeSinceDied { get; set; }
+		[NetPredicted] public Vector3 DeathPosition { get; set; }
 
 		public Player TargetPlayer { get; set; }
 
@@ -45,22 +46,13 @@ namespace HiddenGamemode
 
 		private Vector3 GetSpectatePoint()
 		{
-			if ( Sandbox.Player.Local is not Player player )
-				return LastPos;
+			if ( Sandbox.Player.Local is not Player )
+				return DeathPosition;
 
-			if ( TimeSinceDied < 3 )
+			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
 			{
-				return player.Corpse.PhysicsGroup.MassCenter;
-			}
-
-			if ( TargetPlayer == null || !TargetPlayer.IsValid() )
-			{
-				if ( player.Corpse != null && player.Corpse.IsValid() )
-				{
-					return player.Corpse.PhysicsGroup.MassCenter;
-				}
-
-				return LastPos;
+				if ( DeathPosition != Vector3.Zero )
+					return DeathPosition;
 			}
 
 			return TargetPlayer.EyePos;

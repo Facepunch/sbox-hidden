@@ -14,6 +14,8 @@ namespace HiddenGamemode
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
+		private PhysicsBody _ragdollBody;
+		private WeldJoint _ragdollWeld;
 		private SpotLight _flashlight;
 		private float _walkBob = 0;
 		private float _lean = 0;
@@ -35,13 +37,14 @@ namespace HiddenGamemode
 			get => (Camera is SpectateCamera);
 		}
 
-		public void MakeSpectator()
+		public void MakeSpectator( Vector3 position = default )
 		{
 			EnableAllCollisions = false;
 			EnableDrawing = false;
 			Controller = null;
 			Camera = new SpectateCamera
 			{
+				DeathPosition = position,
 				TimeSinceDied = 0
 			};
 		}
@@ -93,6 +96,14 @@ namespace HiddenGamemode
 			}
 
 			TickPlayerUse();
+
+			if ( IsServer )
+			{
+				using ( Prediction.Off() )
+				{
+					TickPickupRagdoll();
+				}
+			}
 
 			if ( Team != null )
 			{
@@ -152,6 +163,60 @@ namespace HiddenGamemode
 			}
 		}
 
+		private void TickPickupRagdoll()
+		{
+			if ( !Input.Pressed( InputButton.Use ) ) return;
+
+			var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 80f )
+				.HitLayer( CollisionLayer.Debris )
+				.Ignore( ActiveChild )
+				.Ignore( this )
+				.Radius( 2 )
+				.Run();
+
+			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
+			{
+				if ( !_ragdollWeld.IsValid() )
+				{
+					_ragdollBody = trace.Body;
+					_ragdollWeld = PhysicsJoint.Weld
+						.From( PhysicsBody, PhysicsBody.Transform.PointToLocal( EyePos + EyeRot.Forward * 40f ) )
+						.To( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
+						.WithLinearSpring( 20f, 1f, 0.0f )
+						.WithAngularSpring( 0.0f, 0.0f, 0.0f )
+						.Create();
+
+					return;
+				}
+			}
+
+			if ( _ragdollWeld.IsValid() )
+			{
+				trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 40f )
+					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
+					.Ignore( ActiveChild )
+					.Ignore( this )
+					.Radius( 2 )
+					.Run();
+
+				if ( trace.Hit && _ragdollBody != null && _ragdollBody.IsValid() )
+				{
+					// TODO: This should be a weld joint to the world but it doesn't work right now.
+					_ragdollBody.BodyType = PhysicsBodyType.Static;
+					_ragdollBody.Pos = trace.EndPos - (trace.Direction * 2.5f);
+
+					/*
+					PhysicsJoint.Weld
+						.From( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
+						.To( _ragdollBody, _ragdollBody.Transform.PointToLocal( trace.EndPos ) )
+						.Create();
+					*/
+				}
+
+				_ragdollWeld.Remove();
+			}
+		}
+
 		private void AddCameraEffects( Camera camera )
 		{
 			var speed = Velocity.Length.LerpInverse( 0, 320 );
@@ -202,10 +267,10 @@ namespace HiddenGamemode
 
 		public void RemoveRagdollEntity()
 		{
-			if ( RagdollEntity != null && RagdollEntity.IsValid() )
+			if ( Ragdoll != null && Ragdoll.IsValid() )
 			{
-				RagdollEntity.Delete();
-				RagdollEntity = null;
+				Ragdoll.Delete();
+				Ragdoll = null;
 			}
 		}
 

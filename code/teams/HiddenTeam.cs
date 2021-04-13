@@ -29,15 +29,7 @@ namespace HiddenGamemode
 				player.RemoveClothing();
 			}
 
-			var controller = new HiddenController
-			{
-				AirAcceleration = 20f,
-				SprintSpeed = 380f,
-				AirControl = 10f,
-				Gravity = 400f
-			};
-
-			player.Controller = controller;
+			player.Controller = new HiddenController();
 			player.Camera = new FirstPersonCamera();
 		}
 
