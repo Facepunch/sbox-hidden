@@ -40,7 +40,7 @@ namespace HiddenGamemode
 		private List<BaseTeam> _teams;
 
 		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
-		private int _minPlayers => 2;
+		public static int MinPlayers { get; set; } = 2;
 
 		public Game()
 		{
@@ -192,7 +192,7 @@ namespace HiddenGamemode
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Sandbox.Player.All.Count >= _minPlayers)
+			if ( Sandbox.Player.All.Count >= MinPlayers)
 			{
 				if ( Round is LobbyRound || Round == null )
 				{

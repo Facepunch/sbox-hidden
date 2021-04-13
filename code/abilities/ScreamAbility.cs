@@ -20,7 +20,7 @@ namespace HiddenGamemode
 			"scream-04"
 		};
 
-		public override void OnUse( Player player )
+		protected override void OnUse( Player player )
 		{
 			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );
 
@@ -32,8 +32,6 @@ namespace HiddenGamemode
 				{
 					PlayScreamSound( player );
 				}
-
-				NetworkDirty( "TimeSinceLastUse", NetVarGroup.NetLocalPredicted );
 			}
 		}
 

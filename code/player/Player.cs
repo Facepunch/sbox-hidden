@@ -263,6 +263,18 @@ namespace HiddenGamemode
 			}
 
 			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
+
+			if ( (info.Flags & DamageFlags.Fall) == DamageFlags.Fall )
+			{
+				PlaySound( "fall" );
+			}
+			else if ( (info.Flags & DamageFlags.Bullet) == DamageFlags.Bullet )
+			{
+				if ( !Team?.PlayPainSounds( this) == false )
+				{
+					PlaySound( "grunt" + Rand.Int( 1, 4 ) );
+				}
+			}
 		}
 
 		public void RemoveRagdollEntity()

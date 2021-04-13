@@ -59,7 +59,7 @@ namespace HiddenGamemode
 			{
 				if ( player.Sense?.IsUsable() == true )
 				{
-					player.Sense.OnUse( player );
+					player.Sense.Use( player );
 				}
 			}
 
@@ -67,9 +67,16 @@ namespace HiddenGamemode
 			{
 				if ( player.Scream?.IsUsable() == true )
 				{
-					player.Scream.OnUse( player );
+					player.Scream.Use( player );
 				}
 			}
+		}
+
+		public override bool PlayPainSounds( Player player )
+		{
+			player.PlaySound( "hidden_grunt" + Rand.Int( 1, 2 ) );
+
+			return true;
 		}
 
 		public override void OnJoin( Player player  )

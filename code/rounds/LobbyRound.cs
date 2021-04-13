@@ -35,7 +35,11 @@ namespace HiddenGamemode
 
 		public override void OnPlayerSpawn( Player player )
 		{
-			if ( Players.Contains( player ) ) return;
+			if ( Players.Contains( player ) )
+			{
+				player.Team.SupplyLoadout( player );
+				return;
+			}
 
 			player.SetModel( "models/citizen/citizen.vmdl" );
 

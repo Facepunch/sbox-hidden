@@ -12,20 +12,15 @@ namespace HiddenGamemode
 		public override float Cooldown => 20;
 		public override string Name => "Sense";
 
-		public override void OnUse( Player player )
+		protected override void OnUse( Player player )
 		{
 			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );
 
 			TimeSinceLastUse = 0;
 
-			if ( Host.IsServer )
+			if ( Host.IsClient )
 			{
-				using ( Prediction.Off() )
-				{
-					_ = StartGlowAbility();
-				}
-
-				NetworkDirty( "TimeSinceLastUse", NetVarGroup.NetLocalPredicted );
+				_ = StartGlowAbility();
 			}
 		}
 

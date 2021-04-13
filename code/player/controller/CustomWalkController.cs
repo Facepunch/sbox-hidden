@@ -225,6 +225,8 @@ namespace HiddenGamemode
 
 			bool stayOnGround = false;
 
+			OnPreTickMove();
+
 			if ( Swimming )
 			{
 				ApplyFriction( 1 );
@@ -254,6 +256,12 @@ namespace HiddenGamemode
 
 			SaveGroundPos();
 		}
+
+		protected virtual void OnPostCategorizePosition( bool stayOnGround, TraceResult trace ) { }
+
+		protected virtual void OnNewGroundEntity( Entity entity, Vector3 velocity ) { }
+
+		protected virtual void OnPreTickMove() { }
 
 		protected virtual void AddJumpVelocity() { }
 
@@ -517,7 +525,7 @@ namespace HiddenGamemode
 			}
 		}
 
-		private void CategorizePosition( bool bStayOnGround )
+		private void CategorizePosition( bool stayOnGround )
 		{
 			_surfaceFriction = 1.0f;
 
@@ -531,7 +539,7 @@ namespace HiddenGamemode
 				moveToEndPos = true;
 				point.z -= StepSize;
 			}
-			else if ( bStayOnGround )
+			else if ( stayOnGround )
 			{
 				moveToEndPos = true;
 				point.z -= StepSize;
@@ -543,6 +551,7 @@ namespace HiddenGamemode
 				return;
 			}
 
+			var hasGroundEntity = (GroundEntity != null && GroundEntity.IsValid());
 			var pm = TraceBBox( bumpOrigin, point, 4.0f );
 
 			if ( pm.Entity == null || pm.Normal.z < GroundNormalZ )
@@ -556,12 +565,19 @@ namespace HiddenGamemode
 			else
 			{
 				UpdateGroundEntity( pm );
+
+				if ( !hasGroundEntity && GroundEntity != null && GroundEntity.IsValid() )
+				{
+					OnNewGroundEntity( GroundEntity, Velocity );
+				}
 			}
 
 			if ( moveToEndPos && !pm.StartedSolid && pm.Fraction > 0.0f && pm.Fraction < 1.0f )
 			{
 				Pos = pm.EndPos;
 			}
+
+			OnPostCategorizePosition( stayOnGround, pm );
 		}
 
 		public void UpdateGroundEntity( TraceResult tr )

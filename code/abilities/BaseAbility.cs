@@ -12,19 +12,33 @@ namespace HiddenGamemode
 		public virtual float Cooldown => 1;
 		public virtual string Name => "";
 
-		[NetLocal] public TimeSince TimeSinceLastUse { get; set; }
+		[NetLocalPredicted] public TimeSince TimeSinceLastUse { get; set; }
 
 		public BaseAbility()
 		{
 			TimeSinceLastUse = Cooldown;
 		}
 
+		public void Use( Player player )
+		{
+			OnUse( player );
+
+			if ( Host.IsServer )
+			{
+				using ( Prediction.Off() )
+				{
+					NetworkDirty( "TimeSinceLastUse", NetVarGroup.NetLocalPredicted );
+				}
+			}
+		}
+
+
 		public virtual bool IsUsable()
 		{
 			return TimeSinceLastUse > Cooldown;
 		}
 
-		public virtual void OnUse( Player player ) { }
+		protected virtual void OnUse( Player player ) { }
 	}
 }
 

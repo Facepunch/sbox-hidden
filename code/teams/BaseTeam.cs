@@ -49,5 +49,10 @@ namespace HiddenGamemode
 		public virtual void OnPlayerKilled( Player player ) { }
 
 		public virtual void SupplyLoadout( Player player  ) { }
+
+		public virtual bool PlayPainSounds( Player player )
+		{
+			return false;
+		}
 	}
 }
