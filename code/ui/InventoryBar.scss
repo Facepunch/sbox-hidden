@@ -1,16 +1,15 @@
 ﻿inventorybar
 {
 	position: absolute;
-	left: 200px;
-	top: 80px;
+	left: 100px;
+	top: 250px;
 	font-family: Roboto;
 	opacity: 0;
 	transition: all 0.2s ease-out;
 
-
 	&.active
 	{
-		top: 100px;
+		top: 300px;
 		transition: all 0.1s ease-out;
 		opacity: 1;
 	}
@@ -20,13 +19,13 @@ inventorycolumn
 {
 	margin-right: 5px;
 	mix-blend-mode: lighten;
-	color: #fc0;
+	color: #568069;
 	flex-direction: column;
-	align-items: flex-start; // align to the left, don't stretch
+	align-items: flex-start;
 
 	.slot-number
 	{
-		background-color: #fa02;
+		background-color: #568069;
 		padding: 22px 15px 0px 10px;
 		font-size: 20px;
 		font-weight: bolder;
@@ -80,8 +79,8 @@ inventoryicon
 {
 	margin-top: 5px;
 	mix-blend-mode: lighten;
-	color: #fc0;
-	background-color: #fa04;
+	color: #568069;
+	background-color: #3A6C50;
 	font-size: 40px;
 	font-weight: lighter;
 	padding: 10px;

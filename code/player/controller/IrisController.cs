@@ -12,6 +12,8 @@ namespace HiddenGamemode
 		public float FallDamageVelocity = 550f;
 		public float FallDamageScale = 0.25f;
 		public float MaxSprintSpeed = 300f;
+		public float StaminaLossPerSecond = 15f;
+		public float StaminaGainPerSecond = 20f;
 
 		private float _fallVelocity;
 
@@ -21,11 +23,11 @@ namespace HiddenGamemode
 			{
 				if ( Input.Down( InputButton.Run ) && Velocity.Length >= (SprintSpeed * 0.8f) )
 				{
-					player.Stamina = MathF.Max( player.Stamina - (15f * Time.Delta), 0f );
+					player.Stamina = MathF.Max( player.Stamina - (StaminaLossPerSecond * Time.Delta), 0f );
 				}
 				else
 				{
-					player.Stamina = MathF.Min( player.Stamina + (10f * Time.Delta), 100f );
+					player.Stamina = MathF.Min( player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
 				}
 
 				SprintSpeed = WalkSpeed + (((MaxSprintSpeed - WalkSpeed) / 100f) * player.Stamina) + 40f;

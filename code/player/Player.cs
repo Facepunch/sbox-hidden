@@ -116,6 +116,11 @@ namespace HiddenGamemode
 			}
 		}
 
+		protected override void UseFail()
+		{
+			// Do nothing. By default this plays a sound that we don't want.
+		}
+
 		public void SwitchToBestWeapon()
 		{
 			var best = Children.Select( x => x as Weapon )
