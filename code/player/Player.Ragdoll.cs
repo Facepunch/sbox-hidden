@@ -4,7 +4,7 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		[Net] public PlayerCorpse Ragdoll { get; set; }
+		public PlayerCorpse Ragdoll { get; set; }
 
 		private void BecomeRagdollOnServer( Vector3 force, int forceBone )
 		{
