@@ -10,6 +10,7 @@ namespace HiddenGamemode
 		public virtual bool IsMelee => false;
 		public virtual int Bucket => 1;
 		public virtual int BucketWeight => 100;
+		public virtual bool UnlimitedAmmo => false;
 		public virtual bool HasFlashlight => false;
 		public virtual int HoldType => 1;
 
@@ -70,8 +71,11 @@ namespace HiddenGamemode
 
 			if ( Owner is Player player )
 			{
-				if ( player.AmmoCount( AmmoType ) <= 0 )
-					return;
+				if ( !UnlimitedAmmo )
+				{
+					if ( player.AmmoCount( AmmoType ) <= 0 )
+						return;
+				}
 
 				StartReloadEffects();
 			}
@@ -109,11 +113,19 @@ namespace HiddenGamemode
 
 			if ( Owner is Player player )
 			{
-				var ammo = player.TakeAmmo( AmmoType, ClipSize - AmmoClip );
-				if ( ammo == 0 )
-					return;
+				if ( !UnlimitedAmmo )
+				{
+					var ammo = player.TakeAmmo( AmmoType, ClipSize - AmmoClip );
 
-				AmmoClip += ammo;
+					if ( ammo == 0 )
+						return;
+
+					AmmoClip += ammo;
+				}
+				else
+				{
+					AmmoClip = ClipSize;
+				}
 			}
 		}
 

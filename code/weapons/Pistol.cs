@@ -8,6 +8,8 @@ namespace HiddenGamemode
 	{
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
+		public override bool UnlimitedAmmo => true;
+		public override int ClipSize => 10;
 		public override float PrimaryRate => 15.0f;
 		public override float SecondaryRate => 1.0f;
 		public override float ReloadTime => 3.0f;
@@ -19,7 +21,7 @@ namespace HiddenGamemode
 
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 
-			AmmoClip = 12;
+			AmmoClip = 10;
 		}
 
 		public override bool CanPrimaryAttack( Sandbox.Player owner )
