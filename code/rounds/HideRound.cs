@@ -9,6 +9,9 @@ namespace HiddenGamemode
 {
 	public class HideRound : BaseRound
 	{
+		[ServerVar( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
+		public static bool HostAlwaysHidden { get; set; } = false;
+
 		public override string RoundName => "Hide / Prepare";
 		public override int RoundDuration => 20;
 
@@ -26,6 +29,11 @@ namespace HiddenGamemode
 
 				// Select a random Hidden player.
 				var hidden = Players[Rand.Int( Players.Count - 1 )];
+
+				if ( HostAlwaysHidden )
+				{
+					hidden = Players[0];
+				}
 
 				Assert.NotNull( hidden );
 

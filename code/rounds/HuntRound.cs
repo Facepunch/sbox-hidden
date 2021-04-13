@@ -16,6 +16,7 @@ namespace HiddenGamemode
 
 		private string _hiddenHunter;
 		private string _firstDeath;
+		private bool _isGameOver;
 		private int _hiddenKills;
 
 		public override void OnPlayerKilled( Player player )
@@ -32,7 +33,7 @@ namespace HiddenGamemode
 					_hiddenHunter = attacker.Name;
 				}
 
-				LoadStatsRound( "I.R.I.S. Eliminated The Hidden" );
+				_ = LoadStatsRound( "I.R.I.S. Eliminated The Hidden" );
 
 				return;
 			}
@@ -48,7 +49,7 @@ namespace HiddenGamemode
 
 			if ( Players.Count <= 1 )
 			{
-				LoadStatsRound( "The Hidden Eliminated I.R.I.S." );
+				_ = LoadStatsRound( "The Hidden Eliminated I.R.I.S." );
 			}
 		}
 
@@ -60,7 +61,7 @@ namespace HiddenGamemode
 
 			if ( player.Team is HiddenTeam )
 			{
-				LoadStatsRound( "The Hidden Disconnected" );
+				_ = LoadStatsRound( "The Hidden Disconnected" );
 			}
 		}
 
@@ -97,9 +98,11 @@ namespace HiddenGamemode
 
 		protected override void OnTimeUp()
 		{
+			if ( _isGameOver ) return;
+
 			Log.Info( "Hunt Time Up!" );
 
-			LoadStatsRound( "I.R.I.S. Survived Long Enough" );
+			_ = LoadStatsRound( "I.R.I.S. Survived Long Enough" );
 
 			base.OnTimeUp();
 		}
@@ -114,8 +117,12 @@ namespace HiddenGamemode
 			}
 		}
 
-		private void LoadStatsRound(string winner)
+		private async Task LoadStatsRound(string winner, int delay = 3)
 		{
+			_isGameOver = true;
+
+			await Task.Delay( delay * 1000 );
+
 			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().First();
 
 			Game.Instance.ChangeRound( new StatsRound

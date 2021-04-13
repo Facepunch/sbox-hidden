@@ -253,17 +253,18 @@ namespace HiddenGamemode
 
 		public override void TakeDamage( DamageInfo info )
 		{
-			_lastDamageInfo = info;
-
 			if ( info.HitboxIndex == 0 )
 			{
 				info.Damage *= 2.0f;
 			}
 
-			base.TakeDamage( info );
-
 			if ( info.Attacker is Player attacker && attacker != this )
 			{
+				if ( !Game.AllowFriendlyFire )
+				{
+					return;
+				}
+
 				attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
@@ -275,11 +276,15 @@ namespace HiddenGamemode
 			}
 			else if ( (info.Flags & DamageFlags.Bullet) == DamageFlags.Bullet )
 			{
-				if ( !Team?.PlayPainSounds( this) == false )
+				if ( !Team?.PlayPainSounds( this ) == false )
 				{
 					PlaySound( "grunt" + Rand.Int( 1, 4 ) );
 				}
 			}
+
+			_lastDamageInfo = info;
+
+			base.TakeDamage( info );
 		}
 
 		public void RemoveRagdollEntity()

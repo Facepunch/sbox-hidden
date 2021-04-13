@@ -39,8 +39,11 @@ namespace HiddenGamemode
 		private BaseRound _lastRound;
 		private List<BaseTeam> _teams;
 
-		[ServerVar( "hdn_min_players", Help = "The minimum players required to start.", Name = "Minimum Players" )]
+		[ServerVar( "hdn_min_players", Help = "The minimum players required to start." )]
 		public static int MinPlayers { get; set; } = 2;
+
+		[ServerVar( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
+		public static bool AllowFriendlyFire { get; set; } = true;
 
 		public Game()
 		{
