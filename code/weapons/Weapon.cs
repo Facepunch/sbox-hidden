@@ -56,6 +56,8 @@ namespace HiddenGamemode
 		{
 			base.Spawn();
 
+			AmmoClip = ClipSize;
+
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
 
@@ -76,13 +78,13 @@ namespace HiddenGamemode
 					if ( player.AmmoCount( AmmoType ) <= 0 )
 						return;
 				}
-
-				StartReloadEffects();
 			}
 
 			IsReloading = true;
+
 			Owner.SetAnimParam( "b_reload", true );
-			StartReloadEffects();
+
+			DoClientReload();
 		}
 
 		public override void TickPlayerAnimator( PlayerAnimator anim )
@@ -130,7 +132,7 @@ namespace HiddenGamemode
 		}
 
 		[ClientRpc]
-		public virtual void StartReloadEffects()
+		public virtual void DoClientReload()
 		{
 			ViewModelEntity?.SetAnimParam( "reload", true );
 		}
@@ -207,12 +209,6 @@ namespace HiddenGamemode
 
 			AmmoClip -= amount;
 			return true;
-		}
-
-		[ClientRpc]
-		public virtual void DryFire()
-		{
-			
 		}
 
 		public override void CreateViewModel()

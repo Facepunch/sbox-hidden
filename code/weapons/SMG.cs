@@ -19,8 +19,6 @@ namespace HiddenGamemode
 			base.Spawn();
 
 			SetModel( "weapons/rust_smg/rust_smg.vmdl" );
-
-			AmmoClip = 20;
 		}
 
 		public override void AttackPrimary( Sandbox.Player owner )
@@ -30,7 +28,7 @@ namespace HiddenGamemode
 
 			if ( !TakeAmmo( 1 ) )
 			{
-				DryFire();
+				PlaySound( "pistol.dryfire" );
 				return;
 			}
 

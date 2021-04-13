@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public override bool HideNameplate => true;
 		public override string HudClassName => "team_hidden";
+		public Player CurrentPlayer { get; set; }
 
 		private Abilities _abilitiesHud;
 
@@ -50,6 +51,24 @@ namespace HiddenGamemode
 					var distance = localPlayer.Pos.Distance( hidden.Pos );
 					hidden.RenderAlpha = 0.2f - ((0.2f / 1500f) * distance);
 				}
+			}
+			else
+			{
+				// TODO: When possible, here we're gonna make lights flicker when The Hidden is near them.
+
+				/*
+				var player = CurrentPlayer;
+
+				if ( player != null && player.IsValid() )
+				{
+					var overlaps = Overlap.Sphere( player.Pos, 1024f );
+
+					for ( int i = 0; i < overlaps.Count; ++i )
+					{
+						
+					}
+				}
+				*/
 			}
 		}
 
@@ -94,6 +113,8 @@ namespace HiddenGamemode
 			player.Sense = new SenseAbility();
 			player.Scream = new ScreamAbility();
 
+			CurrentPlayer = player;
+
 			base.OnJoin( player );
 		}
 
@@ -111,6 +132,8 @@ namespace HiddenGamemode
 			}
 
 			player.Sense = null;
+
+			CurrentPlayer = null;
 
 			base.OnLeave( player );
 		}
