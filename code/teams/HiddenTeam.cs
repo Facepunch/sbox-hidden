@@ -18,17 +18,27 @@ namespace HiddenGamemode
 		public override void SupplyLoadout( Player player )
 		{
 			player.ClearAmmo();
-
 			player.Inventory.DeleteContents();
+
 			player.Inventory.Add( new Knife(), true );
 		}
 
 		public override void OnStart( Player player )
 		{
+			player.ClearAmmo();
+			player.Inventory.DeleteContents();
+
 			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
 			}
+
+			player.SetModel( "models/citizen/citizen.vmdl" );
+
+			player.EnableAllCollisions = true;
+			player.EnableDrawing = true;
+			player.EnableHideInFirstPerson = true;
+			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new HiddenController();
 			player.Camera = new FirstPersonCamera();
@@ -108,6 +118,7 @@ namespace HiddenGamemode
 			}
 
 			player.EnableShadowCasting = false;
+			player.EnableShadowReceive = false;
 			player.RenderAlpha = 0.15f;
 
 			player.Sense = new SenseAbility();
@@ -120,6 +131,7 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player )
 		{
+			player.EnableShadowReceive = true;
 			player.EnableShadowCasting = true;
 			player.RenderAlpha = 1f;
 

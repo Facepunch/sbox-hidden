@@ -72,16 +72,6 @@ namespace HiddenGamemode
 		{
 			if ( Players.Contains( player ) ) return;
 
-			player.SetModel( "models/citizen/citizen.vmdl" );
-
-			player.EnableAllCollisions = true;
-			player.EnableDrawing = true;
-			player.EnableHideInFirstPerson = true;
-			player.EnableShadowInFirstPerson = true;
-
-			player.ClearAmmo();
-			player.Inventory.DeleteContents();
-
 			AddPlayer( player );
 
 			if ( _roundStarted )

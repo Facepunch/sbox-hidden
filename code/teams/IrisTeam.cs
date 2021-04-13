@@ -17,7 +17,6 @@ namespace HiddenGamemode
 		public override void SupplyLoadout( Player player  )
 		{
 			player.ClearAmmo();
-
 			player.Inventory.DeleteContents();
 
 			player.Inventory.Add( new Pistol(), true );
@@ -30,6 +29,11 @@ namespace HiddenGamemode
 
 		public override void OnStart( Player player )
 		{
+			player.ClearAmmo();
+			player.Inventory.DeleteContents();
+
+			player.SetModel( "models/citizen/citizen.vmdl" );
+
 			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
@@ -39,7 +43,10 @@ namespace HiddenGamemode
 				player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
 			}
 
-			Log.Info( "OnStart: " + player.Name );
+			player.EnableAllCollisions = true;
+			player.EnableDrawing = true;
+			player.EnableHideInFirstPerson = true;
+			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new IrisController();
 			player.Camera = new FirstPersonCamera();

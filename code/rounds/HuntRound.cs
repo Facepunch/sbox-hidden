@@ -67,7 +67,6 @@ namespace HiddenGamemode
 
 		public override void OnPlayerSpawn( Player player )
 		{
-			player.SetModel( "models/citizen/citizen.vmdl" );
 			player.MakeSpectator();
 
 			Spectators.Add( player );

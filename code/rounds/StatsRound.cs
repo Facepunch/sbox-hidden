@@ -82,7 +82,6 @@ namespace HiddenGamemode
 		{
 			if ( Players.Contains( player ) ) return;
 
-			player.SetModel( "models/citizen/citizen.vmdl" );
 			player.MakeSpectator();
 
 			AddPlayer( player );
