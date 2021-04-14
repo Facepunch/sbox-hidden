@@ -14,6 +14,7 @@ namespace HiddenGamemode
 		public virtual bool HasFlashlight => false;
 		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
+		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
 		[NetPredicted]
 		public int AmmoClip { get; set; }
@@ -50,8 +51,6 @@ namespace HiddenGamemode
 
 			base.ActiveEnd( owner, wasDropped );
 		}
-
-		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
 		public override void Spawn()
 		{

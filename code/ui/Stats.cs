@@ -22,7 +22,7 @@ namespace HiddenGamemode
 
 		public Stats()
 		{
-			StyleSheet.Load( "/ui/stats.scss" );
+			StyleSheet.Load( "/ui/Stats.scss" );
 			Container = Add.Panel( "statsContainer" );
 			Winner = Add.Label( "Winner", "winner" );
 		}

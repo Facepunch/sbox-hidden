@@ -9,7 +9,7 @@ namespace HiddenGamemode
 		[NetPredicted] public float Stamina { get; set; }
 		[NetLocal] public SenseAbility Sense { get; set; }
 		[NetLocal] public ScreamAbility Scream { get; set; }
-		[NetLocal] public DeploymentType Deployment { get; set; }
+		[NetLocal] public DeploymentType Deployment { get; set; } = DeploymentType.Brawler;
 
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
@@ -269,13 +269,13 @@ namespace HiddenGamemode
 				attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
-			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
+			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos, info.Flags );
 
-			if ( (info.Flags & DamageFlags.Fall) == DamageFlags.Fall )
+			if ( info.Flags.HasFlag( DamageFlags.Fall ) )
 			{
 				PlaySound( "fall" );
 			}
-			else if ( (info.Flags & DamageFlags.Bullet) == DamageFlags.Bullet )
+			else if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
 			{
 				if ( !Team?.PlayPainSounds( this ) == false )
 				{
@@ -307,8 +307,11 @@ namespace HiddenGamemode
 		}
 
 		[ClientRpc]
-		public void TookDamage( Vector3 position )
+		public void TookDamage( Vector3 position, DamageFlags flags )
 		{
+			if ( flags.HasFlag(DamageFlags.Fall) )
+				_ = new Sandbox.ScreenShake.Perlin(2f, 1f, 1.5f, 0.8f);
+
 			DamageIndicator.Current?.OnHit( position );
 		}
 
