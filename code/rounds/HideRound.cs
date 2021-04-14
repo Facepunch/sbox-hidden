@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public class HideRound : BaseRound
+	public partial class HideRound : BaseRound
 	{
 		[ServerVar( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
 		public static bool HostAlwaysHidden { get; set; } = false;
@@ -15,7 +15,80 @@ namespace HiddenGamemode
 		public override string RoundName => "Hide / Prepare";
 		public override int RoundDuration => 20;
 
+		private Deployment _deploymentPanel;
 		private bool _roundStarted;
+
+		[ServerCmd( "hdn_select_deployment" )]
+		private static void SelectDeploymentCmd( string type )
+		{
+			if ( ConsoleSystem.Caller is Player player )
+			{
+				if ( Game.Instance.Round is HideRound )
+					player.Deployment = Enum.Parse<DeploymentType>( type );
+			}
+		}
+
+		[ClientCmd( "hdn_open_deployment", CanBeCalledFromServer = true) ]
+		private static void OpenDeploymentCmd()
+		{
+			if ( Game.Instance.Round is HideRound round )
+			{
+				round.OpenDeployment();
+			}
+		}
+
+		public static void SelectDeployment( DeploymentType type )
+		{
+			SelectDeploymentCmd( type.ToString() );
+		}
+
+		public void OpenDeployment()
+		{
+			CloseDeploymentPanel();
+
+			_deploymentPanel = Sandbox.Hud.CurrentPanel.AddChild<Deployment>();
+
+			_deploymentPanel.AddDeployment( new DeploymentInfo
+			{
+				Title = "Assault",
+				Description = "Sprints faster and is equipped with a high firerate SMG.",
+				ClassName = "assault",
+				OnDeploy = () =>
+				{
+					SelectDeployment( DeploymentType.Assault );
+					CloseDeploymentPanel();
+				}
+			} );
+
+			_deploymentPanel.AddDeployment( new DeploymentInfo
+			{
+				Title = "Brawler",
+				Description = "Moves slower and is equipped with a high damage shotgun.",
+				ClassName = "brawler",
+				OnDeploy = () =>
+				{
+					SelectDeployment( DeploymentType.Brawler );
+					CloseDeploymentPanel();
+				}
+			} );
+		}
+
+		public override void OnPlayerSpawn( Player player )
+		{
+			if ( Players.Contains( player ) ) return;
+
+			AddPlayer( player );
+
+			if ( _roundStarted )
+			{
+				player.Team = Game.Instance.IrisTeam;
+				player.Team.OnStart( player );
+
+				OpenDeploymentCmd( player );
+			}
+
+			base.OnPlayerSpawn( player );
+		}
 
 		protected override void OnStart()
 		{
@@ -47,6 +120,8 @@ namespace HiddenGamemode
 					{
 						player.Team = Game.Instance.IrisTeam;
 						player.Team.OnStart( player );
+
+						OpenDeploymentCmd( player );
 					}
 				} );
 
@@ -57,6 +132,8 @@ namespace HiddenGamemode
 		protected override void OnFinish()
 		{
 			Log.Info( "Finished Hide Round" );
+
+			CloseDeploymentPanel();
 		}
 
 		protected override void OnTimeUp()
@@ -68,19 +145,13 @@ namespace HiddenGamemode
 			base.OnTimeUp();
 		}
 
-		public override void OnPlayerSpawn( Player player )
+		private void CloseDeploymentPanel()
 		{
-			if ( Players.Contains( player ) ) return;
-
-			AddPlayer( player );
-
-			if ( _roundStarted )
+			if ( _deploymentPanel != null )
 			{
-				player.Team = Game.Instance.IrisTeam;
-				player.Team.OnStart( player );
+				_deploymentPanel.Delete();
+				_deploymentPanel = null;
 			}
-
-			base.OnPlayerSpawn( player );
 		}
 	}
 }

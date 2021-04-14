@@ -14,6 +14,8 @@ namespace HiddenGamemode
 
 		public RoundInfo()
 		{
+			StyleSheet.Load( "/ui/RoundInfo.scss" );
+
 			Container = Add.Panel( "roundContainer" );
 			RoundName = Container.Add.Label( "Round", "roundName" );
 			TimeLeft = Container.Add.Label( "00:00", "timeLeft" );

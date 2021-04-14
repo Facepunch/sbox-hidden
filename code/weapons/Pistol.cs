@@ -13,6 +13,7 @@ namespace HiddenGamemode
 		public override float PrimaryRate => 15.0f;
 		public override float SecondaryRate => 1.0f;
 		public override float ReloadTime => 3.0f;
+		public override int BaseDamage => 8;
 		public override int Bucket => 1;
 
 		public override void Spawn()
@@ -40,7 +41,7 @@ namespace HiddenGamemode
 
 			ShootEffects();
 			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 0.05f, 1.5f, 9.0f, 3.0f );
+			ShootBullet( 0.05f, 1.5f, BaseDamage, 3.0f );
 		}
 	}
 }

@@ -1,0 +1,96 @@
+﻿deployment
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, rgba(82,102,76,1) 0%, rgba(51,61,45,1) 35%, rgba(57,67,69,1) 100%);
+    transition: ease-in-out 1s;
+    pointer-events: all;
+    z-index: 1;
+
+    .title
+    {
+        position: absolute;
+        font-family: Orbitron;
+        font-size: 32px;
+        color: white;
+        top: 25%;
+    }
+}
+
+.deploymentContainer
+{
+    padding: 8px;
+    font-family: Orbitron;
+
+    .deploymentPanel
+    {
+        width: 300px;
+        height: 250px;
+        margin: 8px;
+        border-radius: 16px;
+        background-color: rgba(20, 20, 20, 0.5);
+        box-shadow: 0px 0px 40px 5px rgba(20, 20, 20, 0.4);
+        border: 4px solid rgba(45, 255, 196, 0.1);
+        font-family: Roboto;
+        justify-content: center;
+
+        &:hover
+        {
+            box-shadow: 0px 0px 40px 5px rgba(51, 61, 45, 0.2);
+        }
+
+        .deploymentTitle
+        {
+            position: absolute;
+            font-family: Orbitron;
+            font-size: 30px;
+            text-align: center;
+            color: #68A478;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+        }
+
+        .deploymentDesc
+        {
+            position: absolute;
+            top: 60px;
+            color: white;
+            font-size: 16px;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+        }
+
+        .deploymentButton
+        {
+            box-shadow: 0px 0px 16px 1px rgba(45, 255, 196, 0.05);
+            background-color: #68A478;
+            border-radius: 16px;
+            position: absolute;
+            bottom: 32px;
+            width: 70%;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            label
+            {
+                font-family: Orbitron;
+                font-size: 16px;
+                color: white;
+            }
+
+            &:hover
+            {
+                box-shadow: 0px 0px 32px 1px rgba(45, 255, 196, 0.07);
+                background-color: #72B985;
+            }
+        }
+    }
+}

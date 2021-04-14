@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
 	public partial class SenseAbility : BaseAbility
 	{
-		public override float Cooldown => 20;
+		public override float Cooldown => 5;
 		public override string Name => "Sense";
 
 		protected override void OnUse( Player player )
@@ -36,7 +36,7 @@ namespace HiddenGamemode
 				player.GlowColor = Color.Green;
 			} );
 
-			await Task.Delay( TimeSpan.FromSeconds( 5 ) );
+			await Task.Delay( TimeSpan.FromSeconds( 3 ) );
 
 			players.ForEach( ( player ) =>
 			{

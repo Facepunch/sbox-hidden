@@ -12,6 +12,8 @@ namespace HiddenGamemode
 		public float FallDamageVelocity = 550f;
 		public float FallDamageScale = 0.25f;
 		public float MaxSprintSpeed = 300f;
+		public float MaxDefaultSpeed = 190f;
+		public float MaxWalkSpeed = 150f;
 		public float StaminaLossPerSecond = 15f;
 		public float StaminaGainPerSecond = 20f;
 
@@ -21,9 +23,20 @@ namespace HiddenGamemode
 		{
 			if ( Player is Player player )
 			{
+				var staminaLossPerSecond = StaminaLossPerSecond;
+
+				if ( player.Deployment == DeploymentType.Brawler )
+				{
+					staminaLossPerSecond *= 1.3f;
+
+					MaxSprintSpeed = 250f;
+					MaxDefaultSpeed = 170f;
+					MaxWalkSpeed = 120f;
+				}
+
 				if ( Input.Down( InputButton.Run ) && Velocity.Length >= (SprintSpeed * 0.8f) )
 				{
-					player.Stamina = MathF.Max( player.Stamina - (StaminaLossPerSecond * Time.Delta), 0f );
+					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
 				}
 				else
 				{

@@ -20,11 +20,17 @@ namespace HiddenGamemode
 			player.Inventory.DeleteContents();
 
 			player.Inventory.Add( new Pistol(), true );
-			player.Inventory.Add( new SMG() );
-			player.Inventory.Add( new Shotgun() );
 
-			player.GiveAmmo( AmmoType.Pistol, 100 );
-			player.GiveAmmo( AmmoType.Buckshot, 8 );
+			if ( player.Deployment == DeploymentType.Assault )
+			{
+				player.Inventory.Add( new SMG(), true );
+				player.GiveAmmo( AmmoType.Pistol, 120 );
+			}
+			else
+			{
+				player.Inventory.Add( new Shotgun(), true );
+				player.GiveAmmo( AmmoType.Buckshot, 16 );
+			}
 		}
 
 		public override void OnStart( Player player )

@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		public override bool IsMelee => true;
 		public override int HoldType => 0;
 		public override int Bucket => 1;
+		public override int BaseDamage => 35;
 		public virtual int MeleeDistance => 80;
 
 		public override void Spawn()
@@ -83,7 +84,7 @@ namespace HiddenGamemode
 
 			ShootEffects();
 			PlaySound( "rust_boneknife.attack" );
-			MeleeStrike( 25f, 1.5f );
+			MeleeStrike( BaseDamage, 1.5f );
 		}
 	}
 }

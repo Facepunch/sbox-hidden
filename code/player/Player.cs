@@ -9,6 +9,7 @@ namespace HiddenGamemode
 		[NetPredicted] public float Stamina { get; set; }
 		[NetLocal] public SenseAbility Sense { get; set; }
 		[NetLocal] public ScreamAbility Scream { get; set; }
+		[NetLocal] public DeploymentType Deployment { get; set; }
 
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;

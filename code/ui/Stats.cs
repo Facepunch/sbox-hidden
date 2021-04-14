@@ -27,18 +27,6 @@ namespace HiddenGamemode
 			Winner = Add.Label( "Winner", "winner" );
 		}
 
-		public override void Tick()
-		{
-			var player = Sandbox.Player.Local;
-			if ( player == null ) return;
-
-			var game = Game.Instance;
-			if ( game == null ) return;
-
-			var round = game.Round;
-			if ( round == null ) return;
-		}
-
 		public void AddStat( StatInfo info )
 		{
 			var panel = Container.Add.Panel( "statPanel" );

@@ -7,11 +7,12 @@ namespace HiddenGamemode
 	{
 		public override string ViewModelPath => "weapons/rust_smg/v_rust_smg.vmdl";
 
-		public override float PrimaryRate => 15.0f;
+		public override float PrimaryRate => 10.0f;
 		public override float SecondaryRate => 1.0f;
 		public override int ClipSize => 30;
 		public override float ReloadTime => 4.0f;
 		public override bool HasFlashlight => true;
+		public override int BaseDamage => 5;
 		public override int Bucket => 2;
 
 		public override void Spawn()
@@ -36,7 +37,7 @@ namespace HiddenGamemode
 
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" );
-			ShootBullet( 0.1f, 1.5f, 5.0f, 3.0f );
+			ShootBullet( 0.1f, 1.5f, BaseDamage, 3.0f );
 		}
 
 		[ClientRpc]

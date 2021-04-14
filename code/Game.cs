@@ -17,7 +17,7 @@ namespace HiddenGamemode
 		}
 
 		[ServerCmd( "+iv_flashlight" )]
-		private static void EnableFlashlight()
+		private static void EnableFlashlightCmd()
 		{
 			if ( ConsoleSystem.Caller is Player player )
 			{
@@ -26,7 +26,7 @@ namespace HiddenGamemode
 		}
 
 		[ServerCmd( "-iv_flashlight" )]
-		private static void DisableFlashlight()
+		private static void DisableFlashlightCmd()
 		{
 			if ( ConsoleSystem.Caller is Player player )
 			{

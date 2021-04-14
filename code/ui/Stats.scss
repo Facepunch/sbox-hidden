@@ -6,7 +6,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 1);
+    background: linear-gradient(90deg, rgba(82,102,76,1) 0%, rgba(51,61,45,1) 35%, rgba(57,67,69,1) 100%);
+    transition: ease-in-out 1s;
+    z-index: 1;
 
     .winner
     {

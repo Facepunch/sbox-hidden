@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		public virtual int BucketWeight => 100;
 		public virtual bool UnlimitedAmmo => false;
 		public virtual bool HasFlashlight => false;
+		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
 
 		[NetPredicted]
@@ -143,7 +144,7 @@ namespace HiddenGamemode
 			TimeSinceSecondaryAttack = 0;
 
 			ShootEffects();
-			ShootBullet( 0.05f, 1.5f, 9.0f, 3.0f );
+			ShootBullet( 0.05f, 1.5f, BaseDamage, 3.0f );
 		}
 
 		[ClientRpc]

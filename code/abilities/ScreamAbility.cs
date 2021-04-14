@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
 	public partial class ScreamAbility : BaseAbility
 	{
-		public override float Cooldown => 20;
+		public override float Cooldown => 10;
 		public override string Name => "Scream";
 
 		private string[] _screamSounds = new string[]

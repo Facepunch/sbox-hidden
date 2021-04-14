@@ -65,7 +65,7 @@ namespace HiddenGamemode
 
 			if ( _statsPanel != null )
 			{
-				_statsPanel.Delete( true );
+				_statsPanel.Delete( );
 			}
 		}
 

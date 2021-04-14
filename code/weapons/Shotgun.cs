@@ -13,6 +13,7 @@ namespace HiddenGamemode
 		public override int ClipSize => 8;
 		public override float ReloadTime => 0.5f;
 		public override bool HasFlashlight => true;
+		public override int BaseDamage => 6; // This is per bullet, so 6 x 10 for the shotgun.
 		public override int Bucket => 3;
 
 		public override void Spawn()
@@ -40,7 +41,7 @@ namespace HiddenGamemode
 
 			for ( int i = 0; i < 10; i++ )
 			{
-				ShootBullet( 0.15f, 0.3f, 9.0f, 3.0f );
+				ShootBullet( 0.15f, 0.3f, BaseDamage, 3.0f );
 			}
 		}
 

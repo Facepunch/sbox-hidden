@@ -1,0 +1,117 @@
+﻿.roundContainer
+{
+    position: absolute;
+    top: 64px;
+    margin: 0 auto;
+    font-size: 30px;
+    color: #ff0;
+    width: 256px;
+    height: 96px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    label
+    {
+        text-shadow: 0px 0px 20px #000;
+    }
+
+    .roundName
+    {
+        color: #FFFBD8;
+        font-size: 30px;
+    }
+
+    .timeLeft
+    {
+        color: white;
+        font-size: 20px;
+
+        &.hidden
+        {
+            display: none;
+        }
+    }
+}
+
+roundInfo
+{
+    width: 100%;
+    min-height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team_iris
+{
+    .roundContainer
+    {
+        background-image: url( /ui/iris-panel-wide.png );
+        background-size: 100%;
+        font-family: Orbitron;
+        font-size: 20px;
+        width: 200px;
+        height: 64px;
+    }
+
+    .roundName
+    {
+        color: #c2f3dc;
+        font-size: 22px;
+    }
+
+    .timeLeft
+    {
+        color: white;
+        font-size: 16px;
+    }
+
+    vitals
+    {
+        background-image: url( /ui/iris-panel-wide.png );
+        background-size: 100%;
+        width: 200px;
+        height: 64px;
+        font-size: 26px;
+        font-family: Orbitron;
+    }
+
+    ammo
+    {
+        background-image: url( /ui/iris-panel-wide.png );
+        background-size: 100%;
+        width: 200px;
+        height: 64px;
+        font-size: 26px;
+        font-family: Orbitron;
+    }
+}
+
+.team_hidden
+{
+    .roundContainer
+    {
+        background-image: url( /ui/grunge-wide-opacity.png );
+        background-size: 100%;
+        font-family: New Tegomin;
+    }
+
+    ammo
+    {
+        background-image: url( /ui/grunge-wide-opacity.png );
+        background-size: 100%;
+        font-family: New Tegomin;
+    }
+
+    vitals
+    {
+        background-image: url( /ui/grunge-wide-opacity.png );
+        background-size: 100%;
+        font-family: New Tegomin;
+    }
+}
