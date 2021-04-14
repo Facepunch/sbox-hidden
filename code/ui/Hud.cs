@@ -21,6 +21,7 @@ namespace HiddenGamemode
 			RootPanel.AddChild<Vitals>();
 			RootPanel.AddChild<Stamina>();
 			RootPanel.AddChild<Ammo>();
+			RootPanel.AddChild<VoiceList>();
 			RootPanel.AddChild<Nameplates>();
 			RootPanel.AddChild<DamageIndicator>();
 			RootPanel.AddChild<HitIndicator>();

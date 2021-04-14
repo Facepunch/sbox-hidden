@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HiddenGamemode
@@ -44,6 +45,9 @@ namespace HiddenGamemode
 
 		[ServerVar( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
 		public static bool AllowFriendlyFire { get; set; } = true;
+
+		[ServerVar( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
+		public static int VoiceRadius { get; set; } = 2048;
 
 		public Game()
 		{
@@ -128,6 +132,24 @@ namespace HiddenGamemode
 		{
 			// Do nothing. The player can't suicide in this mode.
 			base.DoPlayerSuicide( player );
+		}
+
+		public override void PlayerVoiceIn( Sandbox.Player speaker, byte[] voiceData )
+		{
+			foreach ( var receiver in Sandbox.Player.All
+				.Where( x => Vector3.DistanceBetween( x.WorldPos, speaker.WorldPos ) < VoiceRadius ) )
+			{
+				OutputPlayerVoice( receiver, speaker, voiceData );
+			}
+		}
+
+		public override void PlayerVoiceOut( Sandbox.Player speaker, byte[] voiceData )
+		{
+			// We never want to hear ourselves.
+			if ( speaker.IsLocalPlayer )
+				return;
+
+			speaker.PlayVoice( voiceData );
 		}
 
 		public override void PostLevelLoaded()
