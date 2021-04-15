@@ -118,7 +118,7 @@ namespace HiddenGamemode
 		{
 			while (true)
 			{
-				await Task.Delay( 100 );
+				await Task.Delay( 16 );
 				OnTick();
 			}
 		}
@@ -212,6 +212,15 @@ namespace HiddenGamemode
 						hiddenPlayer.LastTeamIndex = hiddenPlayer.TeamIndex;
 					}
 				} );
+			}
+
+			// We need to update each player's laser dot if they should have one.
+			for ( var i = 0; i < Sandbox.Player.All.Count; i++ )
+			{
+				if ( Sandbox.Player.All[i] is Player player )
+				{
+					player.UpdateLaserDot();
+				}
 			}
 		}
 

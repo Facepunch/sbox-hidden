@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		public virtual int BucketWeight => 100;
 		public virtual bool UnlimitedAmmo => false;
 		public virtual bool HasFlashlight => false;
+		public virtual bool HasLaserDot => false;
 		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
@@ -95,9 +96,6 @@ namespace HiddenGamemode
 
 		public override void OnPlayerControlTick( Sandbox.Player owner )
 		{
-			if ( TimeSinceDeployed < 0.6f )
-				return;
-
 			if ( !IsReloading )
 			{
 				base.OnPlayerControlTick( owner );
@@ -232,12 +230,15 @@ namespace HiddenGamemode
 		{
 			if ( Sandbox.Hud.CurrentPanel == null ) return;
 
-			CrosshairPanel = new Crosshair
+			if ( !HasLaserDot )
 			{
-				Parent = Sandbox.Hud.CurrentPanel
-			};
+				CrosshairPanel = new Crosshair
+				{
+					Parent = Sandbox.Hud.CurrentPanel
+				};
 
-			CrosshairPanel.AddClass( ClassInfo.Name );
+				CrosshairPanel.AddClass( ClassInfo.Name );
+			}
 		}
 
 		public bool IsUsable()
