@@ -18,7 +18,7 @@ namespace HiddenGamemode
 		private PhysicsBody _ragdollBody;
 		private WeldJoint _ragdollWeld;
 		private SpotLight _flashlight;
-		private Particles _laserDot;
+		private LaserDot _laserDot;
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
@@ -49,40 +49,6 @@ namespace HiddenGamemode
 				DeathPosition = position,
 				TimeSinceDied = 0
 			};
-		}
-
-		public void CreateLaserDot()
-		{
-			DestroyLaserDot();
-			_laserDot = Particles.Create( "particles/laserdot.vpcf" );
-		}
-
-		public void DestroyLaserDot()
-		{
-			if ( _laserDot != null )
-				_laserDot.Destory( true );
-		}
-
-		public void UpdateLaserDot()
-		{
-			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
-			{
-				if ( _laserDot == null )
-					CreateLaserDot();
-
-				var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 4096f )
-					.Radius( 2f )
-					.Ignore( weapon )
-					.Ignore( this )
-					.Run();
-
-				if ( trace.Hit )
-					_laserDot.SetPos( 0, trace.EndPos );
-			}	
-			else
-			{
-				DestroyLaserDot();
-			}
 		}
 
 		public void ShowFlashlight( bool shouldShow )
@@ -128,6 +94,9 @@ namespace HiddenGamemode
 
 			if ( LifeState != LifeState.Alive )
 			{
+				if ( IsServer )
+					DestroyLaserDot();
+
 				return;
 			}
 
@@ -139,6 +108,8 @@ namespace HiddenGamemode
 				{
 					TickPickupRagdoll();
 				}
+
+				UpdateLaserDot();
 			}
 
 			if ( Team != null )
@@ -255,6 +226,43 @@ namespace HiddenGamemode
 				}
 
 				_ragdollWeld.Remove();
+			}
+		}
+
+		private void CreateLaserDot()
+		{
+			DestroyLaserDot();
+			_laserDot = new LaserDot();
+		}
+
+		private void DestroyLaserDot()
+		{
+			if ( _laserDot != null )
+			{
+				_laserDot.Delete();
+				_laserDot = null;
+			}
+		}
+
+		private void UpdateLaserDot()
+		{
+			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
+			{
+				if ( _laserDot == null )
+					CreateLaserDot();
+
+				var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 4096f )
+					.Radius( 2f )
+					.Ignore( weapon )
+					.Ignore( this )
+					.Run();
+
+				if ( trace.Hit )
+					_laserDot.Pos = trace.EndPos;
+			}
+			else
+			{
+				DestroyLaserDot();
 			}
 		}
 
