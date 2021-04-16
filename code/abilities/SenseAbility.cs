@@ -12,6 +12,11 @@ namespace HiddenGamemode
 		public override float Cooldown => 5;
 		public override string Name => "Sense";
 
+		public override string GetKeybind()
+		{
+			return "G";
+		}
+
 		protected override void OnUse( Player player )
 		{
 			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );

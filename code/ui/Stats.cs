@@ -29,14 +29,17 @@ namespace HiddenGamemode
 
 		public void AddStat( StatInfo info )
 		{
-			var panel = Container.Add.Panel( "statPanel" );
-			panel.Add.Label( info.Title, "statTitle" );
+			var panel = Container.Add.Panel( "item" );
+			panel.Add.Label( info.Title, "title" );
 
-			panel.Add.Label( info.PlayerName, "statPlayerName" )
+			panel.Add.Label( info.PlayerName, "playerName" )
 				.AddClass( info.TeamClass );
 
-			panel.Add.Label( info.Text, "statText" );
-			panel.AddClass( info.ImageClass );
+			panel.Add.Label( info.Text, "text" );
+
+			panel.Add.Panel( "icon" )
+				.AddClass( info.ImageClass );
+
 			panel.AddClass( info.TeamClass );
 		}
 	}

@@ -13,10 +13,9 @@
     .winner
     {
         position: absolute;
-        font-family: Roboto;
         font-size: 32px;
-        color: white;
-        top: 30%;
+        color: #1CB179;
+        top: 25%;
     }
 }
 
@@ -24,56 +23,67 @@
 {
     padding: 8px;
 
-    .statPanel
+    .item
     {
-        width: 200px;
-        height: 200px;
+        background-image: url( /ui/green/box.png );
+        background-size: 100%;
+        width: 300px;
+        height: 300px;
         margin: 8px;
-        border-radius: 16px;
-        box-shadow: 0px 0px 40px 5px rgba(20, 20, 20, 0.4);
-        border: 4px solid rgba(45, 255, 196, 0.1);
         font-family: Roboto;
         justify-content: center;
 
-        .statTitle
+        .title
         {
-            position: absolute;
-            font-size: 20px;
-            text-align: center;
-            color: white;
-            top: 16px;
+            font-size: 18px;
+            top: 150px;
+            color: #CCDCC7;
         }
 
-        .statPlayerName
+        .playerName
         {
-            font-size: 25px;
-            align-items: center;
-            color: #A58B38;
+            position: absolute;
+            font-size: 32px;
+            margin-top: 64px;
+            bottom: 80px;
+            color: #EDCD25;
+        }
 
-            &.team_iris
+        .icon
+        {
+            position: absolute;
+            margin-top: 64px;
+            width: 60px;
+            height: 60px;
+            bottom: 0px;
+            top: 0px;
+
+            &.first_death
             {
-                color: #52D068;
+                background-image: url( /ui/icons/icon-death.png );
+                background-size: 100%;
+            }
+
+            &.hidden_killer
+            {
+                background-image: url( /ui/icons/icon-hunter.png );
+                background-size: 100%;
             }
         }
 
-        .statText
+        .text
         {
             position: absolute;
-            color: white;
-            font-size: 20px;
-            bottom: 20px;
-        }
-
-        &.team_hidden
-        {
-            border: 4px solid rgba(208, 108, 82, 0.1);
+            margin-top: 72px;
+            color: #CCDCC7;
+            font-size: 40px;
         }
     }
 }
 
 .team_iris
 {
-    .statPanel
+    .item
     {
         font-family: Days One;
     }
@@ -86,13 +96,15 @@
 
 .team_hidden
 {
-    .statPanel
+    .item
     {
+        background-image: url( /ui/grayscale/box-gs.png );
         font-family: Syne Mono;
     }
 
     .winner
     {
         font-family: Syne Mono;
+        color: #B1841C;
     }
 }

@@ -32,9 +32,9 @@ namespace HiddenGamemode
 
 				_statsPanel.AddStat( new StatInfo
 				{
-					Title = "# Hidden Kills",
+					Title = "Hidden Kills",
 					PlayerName = HiddenName,
-					ImageClass = "statKills",
+					ImageClass = "kills",
 					TeamClass = "team_hidden",
 					Text = HiddenKills.ToString()
 				} );
@@ -43,7 +43,7 @@ namespace HiddenGamemode
 				{
 					Title = "Hidden Hunter",
 					PlayerName = !string.IsNullOrEmpty( HiddenHunter ) ? HiddenHunter : "N/A",
-					ImageClass = "statHiddenKiller",
+					ImageClass = "hidden_killer",
 					TeamClass = "team_iris",
 					Text = ""
 				} );
@@ -52,7 +52,7 @@ namespace HiddenGamemode
 				{
 					Title = "First Death",
 					PlayerName = !string.IsNullOrEmpty( FirstDeath ) ? FirstDeath : "N/A",
-					ImageClass = "statFirstDeath",
+					ImageClass = "first_death",
 					TeamClass = "team_iris",
 					Text = ""
 				} );

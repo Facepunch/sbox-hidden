@@ -20,6 +20,11 @@ namespace HiddenGamemode
 			"scream-04"
 		};
 
+		public override string GetKeybind()
+		{
+			return "V";
+		}
+
 		protected override void OnUse( Player player )
 		{
 			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );

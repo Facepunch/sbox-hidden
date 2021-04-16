@@ -64,7 +64,7 @@ ammo
 	right: 64px;
 	width: 206px;
 	height: 95px;
-	font-family: Syno Mono;
+	font-family: Syne Mono;
 	align-items: center;
 	justify-content: center;
 	display: none;
@@ -101,6 +101,11 @@ ammo
 	ammo
 	{
 		background-image: url( /ui/grayscale/ammo-gs.png );
+
+		.inventory
+		{
+			color: #79612C;
+		}
 	}
 }
 
@@ -144,7 +149,7 @@ abilities
 		{
 			position: absolute;
 			background-color: #971515;
-			font-family: Syno Mono;
+			font-family: Syne Mono;
 			border-radius: 4px;
 			bottom: 4px;
 			padding: 8px;
@@ -157,9 +162,9 @@ abilities
 				color: white;
 			}
 
-			&.hidden
+			&.usable
 			{
-				display: none;
+				background-color: #B1841C;
 			}
 		}
 

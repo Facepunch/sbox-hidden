@@ -23,16 +23,16 @@ namespace HiddenGamemode
 		{
 			StyleSheet.Load( "/ui/deployment.scss" );
 			Container = Add.Panel( "deploymentContainer" );
-			Title = Add.Label( "Select Deployment", "title" );
+			Title = Add.Label( "SELECT DEPLOYMENT", "title" );
 		}
 
 		public void AddDeployment( DeploymentInfo info )
 		{
-			var panel = Container.Add.Panel( "deploymentPanel" );
+			var panel = Container.Add.Panel( "item" );
 
-			panel.Add.Label( info.Title, "deploymentTitle" );
-			panel.Add.Label( info.Description, "deploymentDesc" );
-			panel.Add.Button( "Deploy", "deploymentButton", () => info.OnDeploy() );
+			panel.Add.Label( info.Title, "title" );
+			panel.Add.Label( info.Description, "desc" );
+			panel.Add.Button( "DEPLOY", "button", () => info.OnDeploy() );
 
 			panel.AddClass( info.ClassName );
 		}

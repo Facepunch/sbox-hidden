@@ -40,6 +40,10 @@ namespace HiddenGamemode
 			}
 		}
 
+		public virtual string GetKeybind()
+		{
+			return "";
+		}
 
 		public virtual bool IsUsable()
 		{

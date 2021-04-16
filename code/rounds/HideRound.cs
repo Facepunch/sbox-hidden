@@ -50,7 +50,7 @@ namespace HiddenGamemode
 
 			_deploymentPanel.AddDeployment( new DeploymentInfo
 			{
-				Title = "Assault",
+				Title = "ASSAULT",
 				Description = "Sprints faster and is equipped with a high firerate SMG.",
 				ClassName = "assault",
 				OnDeploy = () =>
@@ -62,7 +62,7 @@ namespace HiddenGamemode
 
 			_deploymentPanel.AddDeployment( new DeploymentInfo
 			{
-				Title = "Brawler",
+				Title = "BRAWLER",
 				Description = "Moves slower and is equipped with a high damage shotgun.",
 				ClassName = "brawler",
 				OnDeploy = () =>
@@ -133,7 +133,7 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Finished Hide Round" );
 
-			CloseDeploymentPanel();
+			//CloseDeploymentPanel();
 		}
 
 		protected override void OnTimeUp()

@@ -54,9 +54,15 @@ namespace HiddenGamemode
 
 			if ( ability == null ) return;
 
-			info.Panel.SetClass( "usable", ability.IsUsable() );
-			info.CooldownPanel.SetClass( "hidden", ability.IsUsable() );
-			info.CooldownLabel.Text = ((int)ability.CooldownTimeLeft).ToString();
+			var isUsable = ability.IsUsable();
+
+			info.Panel.SetClass( "usable", isUsable );
+			info.CooldownPanel.SetClass( "usable", isUsable );
+
+			if ( isUsable )
+				info.CooldownLabel.Text = ability.GetKeybind();
+			else
+				info.CooldownLabel.Text = ((int)ability.CooldownTimeLeft).ToString();
 		}
 	}
 }
