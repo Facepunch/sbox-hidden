@@ -1,62 +1,45 @@
 ﻿stamina
 {
 	position: absolute;
-	top: 64px;
-	left: 100px;
+	top: 24px;
+	left: 12px;
 	color: #fff;
-	width: 256px;
-	height: 32px;
 
 	.outerBar
 	{
 		background-color: rgba(50, 50, 50, 0.8);
-		border-radius: 16px;
-		margin-top: 16px;
-		padding: 2px;
-		width: 200px;
-		height: 20px;
+		margin-top: 4px;
+		width: 180px;
+		height: 8px;
 	}
 
 	.innerBar
 	{
-		border-radius: 16px;
-		background-color: rgba(102, 162, 127, 0.9);
+		background-color: #2D8EC5;
 		width: 100%;
-		min-width: 16px;
 		height: 100%;
+		min-width: 1px;
+	}
+
+	.text
+	{
+		font-size: 14px;
+		margin-left: 6px;
+		margin-top: -2px;
+		font-family: Syno Mono;
 	}
 
 	.icon
 	{
-		background-image: url( /ui/sprint.png );
+		background-image: url( /ui/icons/icon-sprint.png );
 		background-size: 100%;
-		width: 48px;
-		height: 48px;
+		margin-right: 4px;
+		width: 16px;
+		height: 16px;
 	}
 
 	&.hidden
 	{
 		display: none;
-	}
-}
-
-.team_hidden
-{
-	stamina
-	{
-		background-image: url( /ui/grunge-wide-opacity.png );
-		background-size: 100%;
-		height: 48px;
-
-		.innerBar
-		{
-			background-color: rgba(109, 161, 102, 0.5);
-		}
-
-		.icon
-		{
-			background-image: url( /ui/jump.png );
-			margin-right: -10px;
-		}
 	}
 }

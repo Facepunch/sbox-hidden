@@ -14,6 +14,14 @@ namespace HiddenGamemode
 
 		[NetLocalPredicted] public TimeSince TimeSinceLastUse { get; set; }
 
+		public float CooldownTimeLeft
+		{
+			get
+			{
+				return Cooldown - TimeSinceLastUse;
+			}
+		}
+
 		public BaseAbility()
 		{
 			TimeSinceLastUse = Cooldown;

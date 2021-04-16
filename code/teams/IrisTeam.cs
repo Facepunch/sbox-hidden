@@ -65,7 +65,7 @@ namespace HiddenGamemode
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
 				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
-				_batteryHud = Sandbox.Hud.CurrentPanel.AddChild<Battery>();
+				//_batteryHud = Sandbox.Hud.CurrentPanel.AddChild<Battery>();
 			}
 
 			base.OnJoin( player );

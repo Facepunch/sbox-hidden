@@ -20,6 +20,10 @@ namespace HiddenGamemode
 		{
 			base.Tick();
 
+			if ( Sandbox.Player.Local is not Player localPlayer ) return;
+
+			SetClass( "hidden", localPlayer.LifeState != LifeState.Alive );
+
 			var deleteList = new List<Player>();
 			var count = 0;
 

@@ -1,12 +1,11 @@
 ﻿.roundContainer
 {
     position: absolute;
-    top: 64px;
+    top: 48px;
     margin: 0 auto;
-    font-size: 30px;
     color: #ff0;
-    width: 256px;
-    height: 96px;
+    width: 254px;
+    height: 85px;
     text-align: center;
     justify-content: center;
     display: flex;
@@ -20,14 +19,15 @@
 
     .roundName
     {
-        color: #FFFBD8;
-        font-size: 30px;
+        color: #1CB179;
+        margin-left: -40px;
+        margin-top: 4px;
     }
 
     .timeLeft
     {
         color: white;
-        font-size: 20px;
+        margin-left: -40px;
 
         &.hidden
         {
@@ -51,44 +51,20 @@ roundInfo
 {
     .roundContainer
     {
-        background-image: url( /ui/iris-panel-wide.png );
+        background-image: url( /ui/green/mode.png );
         background-size: 100%;
-        font-family: Orbitron;
-        font-size: 20px;
-        width: 200px;
-        height: 64px;
+        font-family: Days One;
     }
 
     .roundName
     {
-        color: #c2f3dc;
-        font-size: 22px;
+        color: #1CB179;
+        font-size: 16px;
     }
 
     .timeLeft
     {
-        color: white;
         font-size: 16px;
-    }
-
-    vitals
-    {
-        background-image: url( /ui/iris-panel-wide.png );
-        background-size: 100%;
-        width: 200px;
-        height: 64px;
-        font-size: 26px;
-        font-family: Orbitron;
-    }
-
-    ammo
-    {
-        background-image: url( /ui/iris-panel-wide.png );
-        background-size: 100%;
-        width: 200px;
-        height: 64px;
-        font-size: 26px;
-        font-family: Orbitron;
     }
 }
 
@@ -96,22 +72,18 @@ roundInfo
 {
     .roundContainer
     {
-        background-image: url( /ui/grunge-wide-opacity.png );
+        background-image: url( /ui/grayscale/mode-gs.png );
         background-size: 100%;
-        font-family: New Tegomin;
+        font-family: Syne Mono;
     }
 
-    ammo
+    .roundName
     {
-        background-image: url( /ui/grunge-wide-opacity.png );
-        background-size: 100%;
-        font-family: New Tegomin;
+        font-size: 16px;
     }
 
-    vitals
+    .timeLeft
     {
-        background-image: url( /ui/grunge-wide-opacity.png );
-        background-size: 100%;
-        font-family: New Tegomin;
+        font-size: 16px;
     }
 }

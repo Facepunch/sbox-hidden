@@ -3,7 +3,7 @@
 	background-color: rgba( #333, 0 );
 	transition: background-color 0.2s ease-in;
 	transform-origin: 50% 50%;
-	
+
 	&.devcamera
 	{
 		display: none;
@@ -17,17 +17,19 @@ chatbox
 
 vitals
 {
+	background-image: url( /ui/green/player.png );
+	background-size: 100%;
 	position: absolute;
-	bottom: 64px;
-	left: 100px;
+	bottom: 32px;
+	left: 64px;
 	font-size: 40px;
 	color: #fff;
-	width: 256px;
-	height: 96px;
+	width: 305px;
+	height: 85px;
 	font-family: Roboto;
 	align-items: center;
 	justify-content: center;
-	
+
 	label
 	{
 		text-shadow: 0px 0px 20px #000;
@@ -38,90 +40,132 @@ vitals
 			text-shadow: 0px 0px 10px #f005;
 		}
 	}
-	
+
 	&.hidden
 	{
 		display: none;
 	}
 }
 
-.team_iris
+.team_hidden
 {
 	vitals
 	{
-		left: 376px;
+		background-image: url( /ui/grayscale/player-gs.png );
 	}
 }
 
-
 ammo
 {
+	background-image: url( /ui/green/ammo.png );
+	background-size: 100%;
 	position: absolute;
-	bottom: 64px;
-	right: 100px;
-	font-size: 40px;
-	color: #ff0;
-	width: 256px;
-	height: 96px;
-	font-family: Roboto;
+	bottom: 32px;
+	right: 64px;
+	width: 206px;
+	height: 95px;
+	font-family: Syno Mono;
 	align-items: center;
 	justify-content: center;
 	display: none;
-	
+
 	label
 	{
 		text-shadow: 0px 0px 20px #000;
-
-		&.danger
-		{
-			color: #f00;
-		}
 	}
-	
+
+	.weapon
+	{
+		margin-left: -60px;
+		margin-top: -8px;
+		font-size: 34px;
+		color: white;
+	}
+
+	.inventory
+	{
+		color: #2C795C;
+		font-size: 19px;
+		margin-left: 4px;
+		margin-top: -4px;
+	}
+
 	&.active
 	{
 		display: auto;
 	}
 }
 
+.team_hidden
+{
+	ammo
+	{
+		background-image: url( /ui/grayscale/ammo-gs.png );
+	}
+}
+
 abilities
 {
 	position: absolute;
-	bottom: 64px;
-	right: 100px;
-	height: 96px;
+	bottom: 32px;
+	left: 0;
+	right: 0;
 	align-items: center;
 	justify-content: center;
 
 	.ability
 	{
-		width: 64px;
-		height: 64px;
-		border-radius: 8px;
-		background-color: rgba(0.2, 0.2, 0.2, 0.6);
-		box-shadow: 0px 0px 20px 5px rgba(255, 46, 46, 0.58);
+		width: 90px;
+		height: 90px;
+		background-image: url( /ui/grayscale/power-unavailable-gs.png );
+		background-size: 100%;
 		margin-left: 24px;
+		align-items: center;
+		justify-content: center;
 
 		.icon
 		{
-			width: 64px;
-			height: 64px;
+			width: 40px;
+			height: 40px;
 			background-size: 100%;
 
 			&.sense
 			{
-				background-image: url( /ui/abilities/sense.png );
+				background-image: url( /ui/icons/icon-ability-1.png );
 			}
 
 			&.scream
 			{
-				background-image: url( /ui/abilities/scream.png );
+				background-image: url( /ui/icons/icon-ability-2.png );
+			}
+		}
+
+		.cooldown
+		{
+			position: absolute;
+			background-color: #971515;
+			font-family: Syno Mono;
+			border-radius: 4px;
+			bottom: 4px;
+			padding: 8px;
+			height: 10px;
+
+			.text
+			{
+				font-size: 12px;
+				align-items: center;
+				color: white;
+			}
+
+			&.hidden
+			{
+				display: none;
 			}
 		}
 
 		&.usable
 		{
-			box-shadow: 0px 0px 20px 5px rgba(45, 255, 196, 0.58);
+			background-image: url( /ui/grayscale/power-available-gs.png );
 		}
 
 		&.hidden
@@ -133,46 +177,6 @@ abilities
 	&.hidden
 	{
 		display: none;
-	}
-}
-
-.team_iris
-{
-	vitals
-	{
-		background-image: url( /ui/iris-panel-wide.png );
-		background-size: 100%;
-		width: 200px;
-		height: 64px;
-		font-size: 26px;
-		font-family: Orbitron;
-	}
-
-	ammo
-	{
-		background-image: url( /ui/iris-panel-wide.png );
-		background-size: 100%;
-		width: 200px;
-		height: 64px;
-		font-size: 26px;
-		font-family: Orbitron;
-	}
-}
-
-.team_hidden
-{
-	ammo
-	{
-		background-image: url( /ui/grunge-wide-opacity.png );
-		background-size: 100%;
-		font-family: New Tegomin;
-	}
-
-	vitals
-	{
-		background-image: url( /ui/grunge-wide-opacity.png );
-		background-size: 100%;
-		font-family: New Tegomin;
 	}
 }
 

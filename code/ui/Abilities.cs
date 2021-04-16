@@ -7,8 +7,15 @@ namespace HiddenGamemode
 {
 	public class Abilities : Panel
 	{
-		public Panel Sense;
-		public Panel Scream;
+		public class AbilityInfo
+		{
+			public Panel Panel;
+			public Panel CooldownPanel;
+			public Label CooldownLabel;
+		}
+
+		public AbilityInfo Sense;
+		public AbilityInfo Scream;
 
 		public Abilities()
 		{
@@ -22,24 +29,34 @@ namespace HiddenGamemode
 
 			if ( player.Team is not HiddenTeam ) return;
 
+			SetClass( "hidden", player.LifeState != LifeState.Alive );
+
 			UpdateAbility( Sense, player.Sense );
 			UpdateAbility( Scream, player.Scream );
 		}
 
-		private Panel MakeAbilityPanel( string className)
+		private AbilityInfo MakeAbilityPanel( string className )
 		{
-			var panel = Add.Panel( $"ability {className}" );
-			panel.Add.Panel( $"icon {className}" );
-			return panel;
+			var ability = new AbilityInfo();
+
+			ability.Panel = Add.Panel( $"ability {className}" );
+			ability.Panel.Add.Panel( $"icon {className}" );
+
+			ability.CooldownPanel = ability.Panel.Add.Panel( "cooldown " );
+			ability.CooldownLabel = ability.CooldownPanel.Add.Label( "0", "text " );
+
+			return ability;
 		}
 
-		private void UpdateAbility( Panel panel, BaseAbility ability )
+		private void UpdateAbility( AbilityInfo info, BaseAbility ability )
 		{
-			panel.SetClass( "hidden", ability == null );
+			info.Panel.SetClass( "hidden", ability == null );
 
 			if ( ability == null ) return;
 
-			panel.SetClass( "usable", ability.IsUsable() );
+			info.Panel.SetClass( "usable", ability.IsUsable() );
+			info.CooldownPanel.SetClass( "hidden", ability.IsUsable() );
+			info.CooldownLabel.Text = ((int)ability.CooldownTimeLeft).ToString();
 		}
 	}
 }

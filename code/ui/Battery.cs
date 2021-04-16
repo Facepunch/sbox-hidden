@@ -10,6 +10,7 @@ namespace HiddenGamemode
 		public Panel InnerBar;
 		public Panel OuterBar;
 		public Panel Icon;
+		public Label Text;
 
 		public Battery()
 		{
@@ -18,12 +19,12 @@ namespace HiddenGamemode
 			Icon = Add.Panel( "icon" );
 			OuterBar = Add.Panel( "outerBar" );
 			InnerBar = OuterBar.Add.Panel( "innerBar" );
+			Text = Add.Label( "0", "text" );
 		}
 
 		public override void Tick()
 		{
-			if ( Sandbox.Player.Local is not Player player )
-				return;
+			if ( Sandbox.Player.Local is not Player player ) return;
 
 			SetClass( "hidden", player.LifeState != LifeState.Alive );
 		}

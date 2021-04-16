@@ -7,22 +7,23 @@ namespace HiddenGamemode
 {
 	public class Vitals : Panel
 	{
-		public Label Health;
+		public Stamina Stamina;
+		public Health Health;
 
 		public Vitals()
 		{
-			Health = Add.Label( "100", "health" );
+			Health = AddChild<Health>();
+			Stamina = AddChild<Stamina>();
 		}
 
 		public override void Tick()
 		{
-			var player = Sandbox.Player.Local as Player;
-			if ( player == null ) return;
+			if ( Sandbox.Player.Local is not Player player ) return;
 
 			SetClass( "hidden", player.IsSpectator );
 
-			Health.Text = $"{player.Health:n0}";
-			Health.SetClass( "danger", player.Health < 40.0f );
+			Health.Tick();
+			Stamina.Tick();
 		}
 	}
 }
