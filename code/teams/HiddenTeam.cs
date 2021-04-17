@@ -13,6 +13,7 @@ namespace HiddenGamemode
 		public override string HudClassName => "team_hidden";
 		public Player CurrentPlayer { get; set; }
 
+		private float _nextLightFlicker;
 		private Abilities _abilitiesHud;
 
 		public override void SupplyLoadout( Player player )
@@ -64,22 +65,47 @@ namespace HiddenGamemode
 			}
 			else
 			{
-				// TODO: When possible, here we're gonna make lights flicker when The Hidden is near them.
-
-				/*
-				var player = CurrentPlayer;
-
-				if ( player != null && player.IsValid() )
+				if ( Sandbox.Time.Now > _nextLightFlicker )
 				{
-					var overlaps = Overlap.Sphere( player.Pos, 1024f );
+					var player = CurrentPlayer;
 
-					for ( int i = 0; i < overlaps.Count; ++i )
+					if ( player != null && player.IsValid() )
 					{
-						
+						var overlaps = Overlap.Sphere( player.Pos, 2048f );
+						var eligible = new List<SpotLightEntity>();
+
+						for ( int i = 0; i < overlaps.Count; ++i )
+						{
+							if ( overlaps.Element( i ).Entity is SpotLightEntity light )
+							{
+								eligible.Add( light );
+							}
+						}
+
+						if ( eligible.Count > 0 )
+						{
+							var random = eligible[Rand.Int( 0, eligible.Count - 1 )];
+							_ = FlickerLight( random );
+						}
 					}
+
+					_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 5f, 20f );
 				}
-				*/
 			}
+		}
+
+		private async Task FlickerLight( SpotLightEntity light )
+		{
+			var wasFlickering = light.Flicker;
+			var oldBrightness = light.Brightness;
+
+			light.Flicker = true;
+			light.Brightness = Rand.Float( 0f, 1f );
+
+			await Task.Delay( Rand.Int( 50, 500 ) );
+
+			light.Brightness = oldBrightness;
+			light.Flicker = wasFlickering;
 		}
 
 		public override void OnTick( Player player )
