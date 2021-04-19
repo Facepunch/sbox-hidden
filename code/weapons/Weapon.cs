@@ -52,7 +52,7 @@ namespace HiddenGamemode
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
 
-		public override void Reload( Sandbox.Player owner )
+		public override void Reload()
 		{
 			if ( IsMelee || IsReloading )
 				return;
@@ -125,7 +125,7 @@ namespace HiddenGamemode
 			ViewModelEntity?.SetAnimParam( "reload", true );
 		}
 
-		public override void AttackPrimary( Sandbox.Player owner )
+		public override void AttackPrimary()
 		{
 			TimeSincePrimaryAttack = 0;
 			TimeSinceSecondaryAttack = 0;

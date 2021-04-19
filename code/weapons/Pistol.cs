@@ -24,12 +24,12 @@ namespace HiddenGamemode
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
 
-		public override bool CanPrimaryAttack( Sandbox.Player owner )
+		public override bool CanPrimaryAttack()
 		{
-			return base.CanPrimaryAttack( owner ) && owner.Input.Pressed( InputButton.Attack1 );
+			return base.CanPrimaryAttack() && Owner.Input.Pressed( InputButton.Attack1 );
 		}
 
-		public override void AttackPrimary( Sandbox.Player owner )
+		public override void AttackPrimary()
 		{
 			TimeSincePrimaryAttack = 0;
 			TimeSinceSecondaryAttack = 0;

@@ -23,7 +23,7 @@ namespace HiddenGamemode
 			SetModel( "weapons/rust_smg/rust_smg.vmdl" );
 		}
 
-		public override void AttackPrimary( Sandbox.Player owner )
+		public override void AttackPrimary()
 		{
 			TimeSincePrimaryAttack = 0;
 			TimeSinceSecondaryAttack = 0;
