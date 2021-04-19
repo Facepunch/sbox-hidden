@@ -30,8 +30,6 @@ namespace HiddenGamemode
 		[NetPredicted]
 		public TimeSince TimeSinceDeployed { get; set; }
 
-		protected Flashlight _flashlight;
-
 		public int AvailableAmmo()
 		{
 			if ( Owner is not Player owner ) return 0;
@@ -43,15 +41,6 @@ namespace HiddenGamemode
 			base.ActiveStart( owner );
 
 			TimeSinceDeployed = 0;
-
-			ShowFlashlight( false );
-		}
-
-		public override void ActiveEnd( Entity owner, bool wasDropped )
-		{
-			ShowFlashlight( false );
-
-			base.ActiveEnd( owner, wasDropped );
 		}
 
 		public override void Spawn()
@@ -105,26 +94,6 @@ namespace HiddenGamemode
 			if ( IsReloading && TimeSinceReload > ReloadTime )
 			{
 				OnReloadFinish();
-			}
-
-			if ( IsServer && HasFlashlight && owner is Player player )
-			{
-				if ( _flashlight != null )
-				{
-					player.FlashlightBattery = MathF.Max( player.FlashlightBattery - 10f * Sandbox.Time.Delta, 0f );
-
-					using ( Prediction.Off() )
-					{
-						var shouldTurnOff = _flashlight.UpdateFromBattery( player.FlashlightBattery );
-
-						if ( shouldTurnOff )
-							ShowFlashlight( false );
-					}
-				}
-				else
-				{
-					player.FlashlightBattery = MathF.Min( player.FlashlightBattery + 15f * Sandbox.Time.Delta, 100f );
-				}
 			}
 		}
 
@@ -206,40 +175,6 @@ namespace HiddenGamemode
 
 					tr.Entity.TakeDamage( damageInfo );
 				}
-			}
-		}
-
-		public void ToggleFlashlight()
-		{
-			ShowFlashlight( _flashlight == null );
-		}
-
-		public void ShowFlashlight( bool shouldShow, bool playSounds = true )
-		{
-			if ( Owner is not Player player ) return;
-
-			if ( _flashlight != null && _flashlight.IsValid() )
-			{
-				_flashlight.Delete();
-				_flashlight = null;
-			}
-
-			if ( !HasFlashlight ) return;
-
-			if ( shouldShow )
-			{
-				_flashlight = new Flashlight();
-				_flashlight.UpdateFromBattery( player.FlashlightBattery );
-				_flashlight.Rot = Owner.EyeRot;
-				_flashlight.SetParent( this, "muzzle" );
-				_flashlight.Pos = Vector3.Zero;
-
-				if ( playSounds )
-					PlaySound( "flashlight-on" );
-			}
-			else if ( playSounds )
-			{
-				PlaySound( "flashlight-off" );
 			}
 		}
 

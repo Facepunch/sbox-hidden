@@ -11,15 +11,12 @@ namespace HiddenGamemode
 		[NetLocal] public ScreamAbility Scream { get; set; }
 		[NetLocal] public DeploymentType Deployment { get; set; }
 
-		public float FlashlightBattery { get; set; } = 100f;
-
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
 		private WeldJoint _ragdollWeld;
-		private LaserDot _laserDot;
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
@@ -52,22 +49,6 @@ namespace HiddenGamemode
 			};
 		}
 
-		public void ShowFlashlight( bool shouldShow )
-		{
-			if ( ActiveChild is Weapon weapon )
-			{
-				weapon.ShowFlashlight( shouldShow );
-			}
-		}
-
-		public void ToggleFlashlight()
-		{
-			if ( ActiveChild is Weapon weapon )
-			{
-				weapon.ToggleFlashlight();
-			}
-		}
-
 		public override void Respawn()
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
@@ -95,6 +76,7 @@ namespace HiddenGamemode
 		protected override void Tick()
 		{
 			TickActiveChild();
+			TickFlashlight();
 
 			if ( Input.ActiveChild != null )
 			{
@@ -147,6 +129,16 @@ namespace HiddenGamemode
 			if ( best == null ) return;
 
 			ActiveChild = best;
+		}
+
+		public override void OnActiveChildChanged( Entity from, Entity to )
+		{
+			if ( to is Weapon weapon && HasFlashlightEntity )
+			{
+				ShowFlashlight( false );
+			}
+
+			base.OnActiveChildChanged( from, to );
 		}
 
 		public override void StartTouch( Entity other )
@@ -235,43 +227,6 @@ namespace HiddenGamemode
 				}
 
 				_ragdollWeld.Remove();
-			}
-		}
-
-		private void CreateLaserDot()
-		{
-			DestroyLaserDot();
-			_laserDot = new LaserDot();
-		}
-
-		private void DestroyLaserDot()
-		{
-			if ( _laserDot != null )
-			{
-				_laserDot.Delete();
-				_laserDot = null;
-			}
-		}
-
-		private void UpdateLaserDot()
-		{
-			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
-			{
-				if ( _laserDot == null )
-					CreateLaserDot();
-
-				var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 4096f )
-					.Radius( 2f )
-					.Ignore( weapon )
-					.Ignore( this )
-					.Run();
-
-				if ( trace.Hit )
-					_laserDot.Pos = trace.EndPos;
-			}
-			else
-			{
-				DestroyLaserDot();
 			}
 		}
 

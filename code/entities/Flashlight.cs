@@ -27,6 +27,11 @@ namespace HiddenGamemode
 			Range = 512f;
 		}
 
+		public void Reset()
+		{
+			_didPlayFlickerSound = false;
+		}
+
 		public bool UpdateFromBattery( float battery )
 		{
 			Brightness = 0.01f + ((0.69f / 100f) * battery);
