@@ -16,7 +16,7 @@
 		"gamemodes":
 		[
 				{
-						"name": "sbox-hidden",
+						"name": "hidden",
 						"title": "Hidden",
 						"description": "Evade and eliminate the hidden threat before they eliminate you"
 				}
