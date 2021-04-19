@@ -35,7 +35,7 @@ namespace HiddenGamemode
 		public bool UpdateFromBattery( float battery )
 		{
 			Brightness = 0.01f + ((0.69f / 100f) * battery);
-			Flicker = (battery <= 15 && battery >= 11);
+			Flicker = (battery <= 10);
 
 			if ( Flicker && !_didPlayFlickerSound )
 			{
