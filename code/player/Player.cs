@@ -172,7 +172,7 @@ namespace HiddenGamemode
 			if ( _timeSinceLastUpdatedFrameRate > 1 )
 			{
 				_timeSinceLastUpdatedFrameRate = 0;
-				UpdateFps( (int)(1.0f / Time.Delta) );
+			//	UpdateFps( (int)(1.0f / Time.Delta) );
 			}
 		}
 
@@ -328,12 +328,6 @@ namespace HiddenGamemode
 			DestroyLaserDot();
 
 			base.OnRemove();
-		}
-
-		[OwnerRpc]
-		protected void UpdateFps( int fps )
-		{
-			SetScore( "fps", fps );
 		}
 	}
 }
