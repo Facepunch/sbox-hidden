@@ -57,8 +57,8 @@ voicelist
 	{
 		voiceentry
 		{
-			background-color: rgba(51, 61, 45, 0.6);
-			border: 2px rgba(0, 0, 0, 0.8);
+			background-image: url( /ui/green/player.png );
+			background-size: 100%;
 			font-family: Days One;
 			padding: 0px;
 		}
@@ -71,7 +71,7 @@ voicelist
 	{
 		voiceentry
 		{
-			background-image: url( /ui/grunge-wide-opacity.png );
+			background-image: url( /ui/grayscale/player-gs.png );
 			background-size: 100%;
 			padding: 0px;
 

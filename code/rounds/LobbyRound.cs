@@ -28,9 +28,16 @@ namespace HiddenGamemode
 
 		public override void OnPlayerKilled( Player player )
 		{
-			player.Respawn();
+			_ = StartRespawnTimer( player );
 
 			base.OnPlayerKilled( player );
+		}
+
+		private async Task StartRespawnTimer( Player player )
+		{
+			await Task.Delay( 1000 );
+
+			player.Respawn();
 		}
 
 		public override void OnPlayerSpawn( Player player )
