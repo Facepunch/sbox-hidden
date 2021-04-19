@@ -314,12 +314,12 @@ namespace HiddenGamemode
 			DamageIndicator.Current?.OnHit( position );
 		}
 
-		protected override void OnRemove()
+		protected override void OnDestroy()
 		{
 			RemoveRagdollEntity();
 			DestroyLaserDot();
 
-			base.OnRemove();
+			base.OnDestroy();
 		}
 	}
 }
