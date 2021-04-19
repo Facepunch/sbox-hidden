@@ -50,16 +50,16 @@ namespace HiddenGamemode
 			}
 		}
 
-		public override bool CanPrimaryAttack( Sandbox.Player owner )
+		public override bool CanPrimaryAttack()
 		{
-			return base.CanPrimaryAttack( owner ) && owner.Input.Pressed( InputButton.Attack1 );
+			return base.CanPrimaryAttack() && Owner.Input.Pressed( InputButton.Attack1 );
 		}
 
-		public override void AttackSecondary( Sandbox.Player owner )
+		public override void AttackSecondary()
 		{
 			TimeSinceSecondaryAttack = 0;
 
-			var player = (owner as Player);
+			var player = Owner as Player;
 
 			if ( player.Controller is not HiddenController controller )
 				return;
@@ -67,9 +67,9 @@ namespace HiddenGamemode
 			if ( controller.IsFrozen )
 				return;
 
-			var trace = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 40f )
+			var trace = Trace.Ray( Owner.EyePos, Owner.EyePos + Owner.EyeRot.Forward * 40f )
 				.HitLayer( CollisionLayer.WORLD_GEOMETRY )
-				.Ignore( owner )
+				.Ignore( Owner )
 				.Ignore( this )
 				.Radius( 1 )
 				.Run();
@@ -78,7 +78,7 @@ namespace HiddenGamemode
 				controller.IsFrozen = true;
 		}
 
-		public override void AttackPrimary( Sandbox.Player owner )
+		public override void AttackPrimary()
 		{
 			TimeSincePrimaryAttack = 0;
 

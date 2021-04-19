@@ -24,7 +24,7 @@ namespace HiddenGamemode
 			SetModel( "weapons/rust_pumpshotgun/rust_pumpshotgun.vmdl" );
 		}
 
-		public override void AttackPrimary( Sandbox.Player owner )
+		public override void AttackPrimary()
 		{
 			TimeSincePrimaryAttack = 0;
 			TimeSinceSecondaryAttack = 0;
@@ -84,7 +84,7 @@ namespace HiddenGamemode
 
 				if ( AmmoClip < ClipSize )
 				{
-					Reload( Owner );
+					Reload();
 				}
 				else
 				{
