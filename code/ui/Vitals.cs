@@ -22,8 +22,7 @@ namespace HiddenGamemode
 
 			SetClass( "hidden", player.IsSpectator );
 
-			Health.Tick();
-			Stamina.Tick();
+			base.Tick();
 		}
 	}
 }

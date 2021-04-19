@@ -22,7 +22,7 @@ namespace HiddenGamemode
 		{
 			if ( ConsoleSystem.Caller is Player player )
 			{
-				player.ShowFlashlight( true );
+				player.ToggleFlashlight();
 			}
 		}
 
@@ -31,7 +31,7 @@ namespace HiddenGamemode
 		{
 			if ( ConsoleSystem.Caller is Player player )
 			{
-				player.ShowFlashlight( false );
+				// Do nothing, we toggle the flashlight.
 			}
 		}
 

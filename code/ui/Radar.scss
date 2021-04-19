@@ -20,6 +20,15 @@
 		width: 8px;
 	}
 
+	.anchor
+	{
+		background-image: url( /ui/green/map-lines.png );
+		background-size: 100%;
+		width: 100%;
+		height: 100%;
+		opacity: 0.2;
+	}
+
 	&.hidden
 	{
 		display: none;

@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 
 namespace HiddenGamemode
 {
@@ -29,7 +30,7 @@ namespace HiddenGamemode
 		[NetPredicted]
 		public TimeSince TimeSinceDeployed { get; set; }
 
-		protected SpotLight _flashlight;
+		protected Flashlight _flashlight;
 
 		public int AvailableAmmo()
 		{
@@ -104,6 +105,23 @@ namespace HiddenGamemode
 			if ( IsReloading && TimeSinceReload > ReloadTime )
 			{
 				OnReloadFinish();
+			}
+
+			if ( IsServer && HasFlashlight && owner is Player player )
+			{
+				if ( _flashlight != null )
+				{
+					player.FlashlightBattery = MathF.Max( player.FlashlightBattery - 10f * Sandbox.Time.Delta, 0f );
+
+					var shouldTurnOff = _flashlight.UpdateFromBattery( player.FlashlightBattery );
+
+					if ( shouldTurnOff )
+						ShowFlashlight( false );
+				}
+				else
+				{
+					player.FlashlightBattery = MathF.Min( player.FlashlightBattery + 15f * Sandbox.Time.Delta, 100f );
+				}
 			}
 		}
 
@@ -188,15 +206,28 @@ namespace HiddenGamemode
 			}
 		}
 
+		public void ToggleFlashlight()
+		{
+			ShowFlashlight( _flashlight == null );
+		}
+
 		public void ShowFlashlight( bool shouldShow )
 		{
+			if ( Owner is not Player player ) return;
+
+			if ( _flashlight != null && _flashlight.IsValid() )
+			{
+				_flashlight.Delete();
+				_flashlight = null;
+			}
+
 			if ( HasFlashlight && shouldShow )
 			{
-				// Create or enable the spot light.
-			}
-			else
-			{
-				// Disable the spot light.
+				_flashlight = new Flashlight();
+				_flashlight.UpdateFromBattery( player.FlashlightBattery );
+				_flashlight.Rot = Owner.EyeRot;
+				_flashlight.SetParent( this, "muzzle" );
+				_flashlight.Pos = Vector3.Zero;
 			}
 		}
 

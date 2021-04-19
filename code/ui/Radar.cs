@@ -11,9 +11,13 @@ namespace HiddenGamemode
 	{
 		private readonly Dictionary<Player, RadarDot> _radarDots = new();
 
+		public Panel Anchor;
+
 		public Radar()
 		{
 			StyleSheet.Load( "/ui/Radar.scss" );
+
+			Anchor = Add.Panel( "anchor" );
 		}
 
 		public override void Tick()

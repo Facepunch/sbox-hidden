@@ -11,13 +11,14 @@ namespace HiddenGamemode
 		[NetLocal] public ScreamAbility Scream { get; set; }
 		[NetLocal] public DeploymentType Deployment { get; set; }
 
+		public float FlashlightBattery { get; set; } = 100f;
+
 		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
 		private WeldJoint _ragdollWeld;
-		private SpotLight _flashlight;
 		private LaserDot _laserDot;
 		private float _walkBob = 0;
 		private float _lean = 0;
@@ -56,6 +57,14 @@ namespace HiddenGamemode
 			if ( ActiveChild is Weapon weapon )
 			{
 				weapon.ShowFlashlight( shouldShow );
+			}
+		}
+
+		public void ToggleFlashlight()
+		{
+			if ( ActiveChild is Weapon weapon )
+			{
+				weapon.ToggleFlashlight();
 			}
 		}
 

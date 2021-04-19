@@ -65,6 +65,8 @@ namespace HiddenGamemode
 			if ( Host.IsClient && player.IsLocalPlayer )
 			{
 				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
+				
+				// TODO: Let's try not having a battery HUD. Does it make it spookier?
 				//_batteryHud = Sandbox.Hud.CurrentPanel.AddChild<Battery>();
 			}
 
