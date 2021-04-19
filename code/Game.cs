@@ -130,8 +130,13 @@ namespace HiddenGamemode
 
 		public override void DoPlayerSuicide( Sandbox.Player player )
 		{
-			// Do nothing. The player can't suicide in this mode.
-			base.DoPlayerSuicide( player );
+			if ( player.LifeState == LifeState.Alive && Round?.CanPlayerSuicide == true )
+			{
+				// This simulates the player being killed.
+				player.LifeState = LifeState.Dead;
+				player.OnKilled();
+				PlayerKilled( player );
+			}
 		}
 
 		public override void PlayerVoiceIn( Sandbox.Player speaker, byte[] voiceData )

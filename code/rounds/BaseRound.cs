@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";
+		public virtual bool CanPlayerSuicide => false;
 
 		public List<Player> Players = new();
 

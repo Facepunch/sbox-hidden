@@ -64,7 +64,7 @@ namespace HiddenGamemode
 		{
 			base.OnKilled();
 
-			ShowFlashlight( false );
+			ShowFlashlight( false, false );
 
 			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 

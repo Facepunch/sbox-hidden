@@ -20,7 +20,7 @@ namespace HiddenGamemode
 		{
 			if ( Sandbox.Player.Local is not Player player ) return;
 
-			SetClass( "hidden", player.IsSpectator );
+			SetClass( "hidden", player.LifeState != LifeState.Alive );
 
 			base.Tick();
 		}

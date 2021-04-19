@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public override string RoundName => "Hunt / Survive";
 		public override int RoundDuration => 300;
+		public override bool CanPlayerSuicide => true;
 
 		public List<Player> Spectators = new();
 

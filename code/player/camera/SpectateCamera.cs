@@ -10,6 +10,7 @@ namespace HiddenGamemode
 		public Player TargetPlayer { get; set; }
 
 		private Vector3 _focusPoint;
+		public int _targetIdx;
 
 		public override void Activated()
 		{
@@ -31,7 +32,10 @@ namespace HiddenGamemode
 
 				if ( players != null && players.Count > 0 )
 				{
-					TargetPlayer = players[Rand.Int( players.Count - 1 )];
+					if ( ++_targetIdx >= players.Count )
+						_targetIdx = 0;
+
+					TargetPlayer = players[_targetIdx];
 				}
 			}
 
