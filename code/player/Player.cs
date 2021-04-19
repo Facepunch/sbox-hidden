@@ -11,7 +11,6 @@ namespace HiddenGamemode
 		[NetLocal] public ScreamAbility Scream { get; set; }
 		[NetLocal] public DeploymentType Deployment { get; set; }
 
-		private TimeSince _timeSinceDropped;
 		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
@@ -139,13 +138,6 @@ namespace HiddenGamemode
 			}
 
 			base.OnActiveChildChanged( from, to );
-		}
-
-		public override void StartTouch( Entity other )
-		{
-			if ( _timeSinceDropped < 1 ) return;
-
-			base.StartTouch( other );
 		}
 
 		public override void PostCameraSetup( Camera camera )

@@ -59,7 +59,8 @@ namespace HiddenGamemode
 		{
 			TimeSinceSecondaryAttack = 0;
 
-			var player = Owner as Player;
+			if ( Owner is not Player player )
+				return;
 
 			if ( player.Controller is not HiddenController controller )
 				return;
@@ -67,9 +68,9 @@ namespace HiddenGamemode
 			if ( controller.IsFrozen )
 				return;
 
-			var trace = Trace.Ray( Owner.EyePos, Owner.EyePos + Owner.EyeRot.Forward * 40f )
+			var trace = Trace.Ray( player.EyePos, player.EyePos + player.EyeRot.Forward * 40f )
 				.HitLayer( CollisionLayer.WORLD_GEOMETRY )
-				.Ignore( Owner )
+				.Ignore( player )
 				.Ignore( this )
 				.Radius( 1 )
 				.Run();
