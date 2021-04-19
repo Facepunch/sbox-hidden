@@ -133,7 +133,7 @@ namespace HiddenGamemode
 		{
 			Log.Info( "Finished Hide Round" );
 
-			//CloseDeploymentPanel();
+			CloseDeploymentPanel();
 		}
 
 		protected override void OnTimeUp()

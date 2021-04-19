@@ -118,7 +118,7 @@ namespace HiddenGamemode
 		{
 			while (true)
 			{
-				await Task.Delay( 16 );
+				await Task.NextPhysicsFrame();
 				OnTick();
 			}
 		}
