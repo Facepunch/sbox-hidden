@@ -113,10 +113,13 @@ namespace HiddenGamemode
 				{
 					player.FlashlightBattery = MathF.Max( player.FlashlightBattery - 10f * Sandbox.Time.Delta, 0f );
 
-					var shouldTurnOff = _flashlight.UpdateFromBattery( player.FlashlightBattery );
+					using ( Prediction.Off() )
+					{
+						var shouldTurnOff = _flashlight.UpdateFromBattery( player.FlashlightBattery );
 
-					if ( shouldTurnOff )
-						ShowFlashlight( false );
+						if ( shouldTurnOff )
+							ShowFlashlight( false );
+					}
 				}
 				else
 				{
@@ -211,7 +214,7 @@ namespace HiddenGamemode
 			ShowFlashlight( _flashlight == null );
 		}
 
-		public void ShowFlashlight( bool shouldShow )
+		public void ShowFlashlight( bool shouldShow, bool playSounds = true )
 		{
 			if ( Owner is not Player player ) return;
 
@@ -221,13 +224,22 @@ namespace HiddenGamemode
 				_flashlight = null;
 			}
 
-			if ( HasFlashlight && shouldShow )
+			if ( !HasFlashlight ) return;
+
+			if ( shouldShow )
 			{
 				_flashlight = new Flashlight();
 				_flashlight.UpdateFromBattery( player.FlashlightBattery );
 				_flashlight.Rot = Owner.EyeRot;
 				_flashlight.SetParent( this, "muzzle" );
 				_flashlight.Pos = Vector3.Zero;
+
+				if ( playSounds )
+					PlaySound( "flashlight-on" );
+			}
+			else if ( playSounds )
+			{
+				PlaySound( "flashlight-off" );
 			}
 		}
 

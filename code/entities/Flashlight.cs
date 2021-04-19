@@ -10,6 +10,8 @@ namespace HiddenGamemode
 	[ClassLibrary("flashlight")]
 	public partial class Flashlight : SpotLightEntity
 	{
+		private bool _didPlayFlickerSound;
+
 		public Flashlight() : base()
 		{
 			Transmit = TransmitType.Always;
@@ -28,7 +30,15 @@ namespace HiddenGamemode
 		public bool UpdateFromBattery( float battery )
 		{
 			Brightness = 0.01f + ((0.69f / 100f) * battery);
-			Flicker = (battery <= 10 && battery >= 8);
+			Flicker = (battery <= 15 && battery >= 11);
+
+			if ( Flicker && !_didPlayFlickerSound )
+			{
+				_didPlayFlickerSound = true;
+				
+				var sound = PlaySound( "flashlight-flicker" );
+				sound.SetVolume( 0.5f );
+			}
 
 			return (battery <= 0f);
 		}
