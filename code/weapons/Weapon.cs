@@ -41,6 +41,8 @@ namespace HiddenGamemode
 			base.ActiveStart( owner );
 
 			TimeSinceDeployed = 0;
+
+			IsReloading = false;
 		}
 
 		public override void Spawn()
