@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary("flashlight")]
+	[Library("flashlight")]
 	public partial class Flashlight : SpotLightEntity
 	{
 		private bool _didPlayFlickerSound;

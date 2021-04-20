@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary]
+	[Library]
 	public partial class Hud : Sandbox.Hud
 	{
 		public Hud()

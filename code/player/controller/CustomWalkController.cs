@@ -3,7 +3,7 @@ using System;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary]
+	[Library]
 	public class CustomWalkController : BasePlayerController
 	{
 		public virtual float SprintSpeed { get; set; } = 320f;

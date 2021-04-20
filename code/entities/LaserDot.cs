@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary("laserdot")]
+	[Library("laserdot")]
 	public partial class LaserDot : Entity
 	{
 		private Particles _particles;

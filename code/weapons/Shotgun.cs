@@ -3,7 +3,7 @@
 
 namespace HiddenGamemode
 {
-	[ClassLibrary( "hdn_shotgun", Title = "SPAS-12" )]
+	[Library( "hdn_shotgun", Title = "SPAS-12" )]
 	partial class Shotgun : Weapon
 	{
 		public override string ViewModelPath => "weapons/rust_pumpshotgun/v_rust_pumpshotgun.vmdl";

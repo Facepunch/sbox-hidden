@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary( "hidden", Title = "Hidden" )]
+	[Library( "hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
 		public HiddenTeam HiddenTeam { get; set; }

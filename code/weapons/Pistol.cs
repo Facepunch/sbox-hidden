@@ -3,7 +3,7 @@ using System;
 
 namespace HiddenGamemode
 {
-	[ClassLibrary( "hdn_pistol", Title = "Baretta" )]
+	[Library( "hdn_pistol", Title = "Baretta" )]
 	partial class Pistol : Weapon
 	{
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
