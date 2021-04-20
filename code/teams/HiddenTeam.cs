@@ -124,40 +124,20 @@ namespace HiddenGamemode
 					if ( player != null && player.IsValid() )
 					{
 						var overlaps = Overlap.Sphere( player.Pos, 2048f );
-						var eligible = new List<SpotLightEntity>();
 
 						for ( int i = 0; i < overlaps.Count; ++i )
 						{
 							if ( overlaps.Element( i ).Entity is SpotLightEntity light )
 							{
-								eligible.Add( light );
+								if ( Rand.Float( 0f, 1f ) >= 0.5f )
+									Game.Instance.LightFlickers.Add( light, Rand.Float( 0.5f, 2f ) );
 							}
-						}
-
-						if ( eligible.Count > 0 )
-						{
-							var random = eligible[Rand.Int( 0, eligible.Count - 1 )];
-							_ = FlickerLight( random );
 						}
 					}
 
-					_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 5f, 20f );
+					_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
 				}
 			}
-		}
-
-		private async Task FlickerLight( SpotLightEntity light )
-		{
-			var wasFlickering = light.Flicker;
-			var oldBrightness = light.Brightness;
-
-			light.Flicker = true;
-			light.Brightness = Rand.Float( 0f, 1f );
-
-			await Task.Delay( Rand.Int( 50, 500 ) );
-
-			light.Brightness = oldBrightness;
-			light.Flicker = wasFlickering;
 		}
 
 		public override void OnTick( Player player )

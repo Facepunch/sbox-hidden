@@ -8,6 +8,7 @@ namespace HiddenGamemode
 	[Library( "hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
+		public LightFlickers LightFlickers { get; set; }
 		public HiddenTeam HiddenTeam { get; set; }
 		public IrisTeam IrisTeam { get; set; }
 		public Hud Hud { get; set; }
@@ -55,11 +56,12 @@ namespace HiddenGamemode
 
 			if ( IsServer )
 			{
-				Hud = new Hud();
+				Hud = new();
 			}
 
-			HiddenTeam = new HiddenTeam();
-			IrisTeam = new IrisTeam();
+			LightFlickers = new();
+			HiddenTeam = new();
+			IrisTeam = new();
 
 			AddTeam( HiddenTeam );
 			AddTeam( IrisTeam );
@@ -192,10 +194,12 @@ namespace HiddenGamemode
 		{
 			Round?.OnTick();
 
-			for (var i = 0; i < _teams.Count; i++)
+			for ( var i = 0; i < _teams.Count; i++ )
 			{
 				_teams[i].OnTick();
 			}
+
+			LightFlickers?.OnTick();
 
 			if ( IsClient )
 			{
