@@ -19,10 +19,10 @@ namespace HiddenGamemode
 			if ( IsClient )
 			{
 				_particles = Particles.Create( "particles/laserdot.vpcf" );
-				_particles.SetEntity( 0, this, true );
-			}
 
-			PhysicsClear();
+				if ( _particles != null )
+					_particles.SetEntity( 0, this, true );
+			}
 		}
 
 		protected override void OnDestroy()

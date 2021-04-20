@@ -99,6 +99,7 @@ namespace HiddenGamemode
 		{
 			if ( Host.IsClient )
 			{
+				/*
 				if ( Sandbox.Player.Local is not Player localPlayer )
 					return;
 
@@ -112,6 +113,7 @@ namespace HiddenGamemode
 					var distance = localPlayer.Pos.Distance( hidden.Pos );
 					hidden.RenderAlpha = 0.2f - ((0.2f / 1500f) * distance);
 				}
+				*/
 			}
 			else
 			{

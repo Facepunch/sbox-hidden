@@ -30,7 +30,7 @@ namespace HiddenGamemode
 			var forward = Owner.EyeRot.Forward;
 			forward = forward.Normal;
 
-			foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + forward * MeleeDistance, 3f ) )
+			foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + forward * MeleeDistance, 10f ) )
 			{
 				if ( !tr.Entity.IsValid() ) continue;
 

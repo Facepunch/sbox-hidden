@@ -127,9 +127,8 @@ namespace HiddenGamemode
 				using ( Prediction.Off() )
 				{
 					TickPickupRagdoll();
+					UpdateLaserDot();
 				}
-
-				UpdateLaserDot();
 			}
 
 			if ( Team != null )
