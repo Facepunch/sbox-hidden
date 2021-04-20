@@ -50,11 +50,14 @@ namespace HiddenGamemode
 
 		private void UpdateAbility( AbilityInfo info, BaseAbility ability )
 		{
+			if ( Sandbox.Player.Local is not Player player )
+				return;
+
 			info.Panel.SetClass( "hidden", ability == null );
 
 			if ( ability == null ) return;
 
-			var isUsable = ability.IsUsable();
+			var isUsable = ability.IsUsable( player );
 
 			info.Panel.SetClass( "usable", isUsable );
 			info.CooldownPanel.SetClass( "usable", isUsable );
@@ -62,7 +65,7 @@ namespace HiddenGamemode
 			if ( isUsable )
 				info.CooldownLabel.Text = ability.GetKeybind();
 			else
-				info.CooldownLabel.Text = ((int)ability.CooldownTimeLeft).ToString();
+				info.CooldownLabel.Text = ((int)ability.GetCooldownTimeLeft( player )).ToString();
 		}
 	}
 }

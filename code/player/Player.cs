@@ -35,6 +35,37 @@ namespace HiddenGamemode
 			get => (Camera is SpectateCamera);
 		}
 
+		public Vector3 SpectatorDeathPosition
+		{
+			get
+			{
+				if ( Camera is SpectateCamera camera )
+					return camera.DeathPosition;
+
+				return Vector3.Zero;
+			}
+		}
+
+		public bool HasSpectatorTarget
+		{
+			get
+			{
+				var target = SpectatorTarget;
+				return (target != null && target.IsValid());
+			}
+		}
+
+		public Player SpectatorTarget
+		{
+			get
+			{
+				if ( Camera is SpectateCamera camera )
+					return camera.TargetPlayer;
+
+				return null;
+			}
+		}
+
 		public void MakeSpectator( Vector3 position = default )
 		{
 			EnableAllCollisions = false;
@@ -257,6 +288,9 @@ namespace HiddenGamemode
 				{
 					return;
 				}
+
+				Team?.OnTakeDamageFromPlayer( this, attacker, info );
+				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
 
 				attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}

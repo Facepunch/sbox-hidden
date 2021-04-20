@@ -18,10 +18,9 @@ namespace HiddenGamemode
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
-
 			player.Inventory.Add( new Pistol(), true );
 
-			if ( player.Deployment == DeploymentType.Assault )
+			if ( player.Deployment == DeploymentType.IRIS_ASSAULT )
 			{
 				player.Inventory.Add( new SMG(), true );
 				player.GiveAmmo( AmmoType.Pistol, 120 );
@@ -71,6 +70,25 @@ namespace HiddenGamemode
 			}
 
 			base.OnJoin( player );
+		}
+
+		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
+		{
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "ASSAULT",
+				Description = "Sprints faster and is equipped with a high firerate SMG.",
+				ClassName = "assault",
+				OnDeploy = () => callback( DeploymentType.IRIS_ASSAULT )
+			} );
+
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "BRAWLER",
+				Description = "Moves slower and is equipped with a high damage shotgun.",
+				ClassName = "brawler",
+				OnDeploy = () => callback( DeploymentType.IRIS_BRAWLER )
+			} );
 		}
 
 		public override void OnPlayerKilled( Player player )

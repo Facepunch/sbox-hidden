@@ -79,18 +79,6 @@ namespace HiddenGamemode
 			SetBBox( mins, maxs );
 		}
 
-		public float GetWishSpeed()
-		{
-			var ws = Duck.GetWishSpeed();
-
-			if ( ws >= 0 ) return ws;
-
-			if ( Input.Down( InputButton.Run ) ) return SprintSpeed;
-			if ( Input.Down( InputButton.Walk ) ) return WalkSpeed;
-
-			return DefaultSpeed;
-		}
-
 		public void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit )
 		{
 			if ( speedLimit > 0 && wishSpeed > speedLimit )
@@ -152,6 +140,18 @@ namespace HiddenGamemode
 			if ( trace.Normal.z > GroundNormalZ ) return;
 
 			Pos = trace.EndPos;
+		}
+
+		public virtual float GetWishSpeed()
+		{
+			var ws = Duck.GetWishSpeed();
+
+			if ( ws >= 0 ) return ws;
+
+			if ( Input.Down( InputButton.Run ) ) return SprintSpeed;
+			if ( Input.Down( InputButton.Walk ) ) return WalkSpeed;
+
+			return DefaultSpeed;
 		}
 
 		public override TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f )

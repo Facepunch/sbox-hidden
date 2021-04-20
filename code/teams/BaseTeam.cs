@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public int Index { get; internal set; }
 
+		public virtual bool HasDeployments => true;
 		public virtual bool HideNameplate => false;
 		public virtual string HudClassName => "";
 
@@ -45,6 +46,12 @@ namespace HiddenGamemode
 		public virtual void OnJoin( Player player  ) { }
 
 		public virtual void OnStart( Player player ) { }
+
+		public virtual void OnTakeDamageFromPlayer( Player player, Player attacker, DamageInfo info ) { }
+
+		public virtual void OnDealDamageToPlayer( Player player, Player target, DamageInfo info ) { }
+
+		public virtual void AddDeployments( Deployment panel, Action<DeploymentType> callback ) { }
 
 		public virtual void OnPlayerKilled( Player player ) { }
 

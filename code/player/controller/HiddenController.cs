@@ -32,6 +32,21 @@ namespace HiddenGamemode
 			base.AddJumpVelocity();
 		}
 
+		public override float GetWishSpeed()
+		{
+			var speed = base.GetWishSpeed();
+
+			if ( Player is Player player )
+			{
+				if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
+					speed *= 0.7f;
+				else if ( player.Deployment == DeploymentType.HIDDEN_ROGUE )
+					speed *= 1.25f;
+			}
+
+			return speed;
+		}
+
 		public override void Tick()
 		{
 			if ( IsFrozen )

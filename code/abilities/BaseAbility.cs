@@ -14,17 +14,9 @@ namespace HiddenGamemode
 
 		[NetLocalPredicted] public TimeSince TimeSinceLastUse { get; set; }
 
-		public float CooldownTimeLeft
-		{
-			get
-			{
-				return Cooldown - TimeSinceLastUse;
-			}
-		}
-
 		public BaseAbility()
 		{
-			TimeSinceLastUse = Cooldown;
+			TimeSinceLastUse = -1;
 		}
 
 		public void Use( Player player )
@@ -40,14 +32,28 @@ namespace HiddenGamemode
 			}
 		}
 
+		public float GetCooldownTimeLeft( Player player )
+		{
+			if ( TimeSinceLastUse == -1 )
+				return 0;
+
+			return GetCooldown( player ) - TimeSinceLastUse;
+		}
+
+		public virtual float GetCooldown( Player player )
+		{
+			return Cooldown;
+		}
+
+
 		public virtual string GetKeybind()
 		{
 			return "";
 		}
 
-		public virtual bool IsUsable()
+		public virtual bool IsUsable( Player player )
 		{
-			return TimeSinceLastUse > Cooldown;
+			return ( TimeSinceLastUse == -1 || TimeSinceLastUse > GetCooldown( player ) );
 		}
 
 		protected virtual void OnUse( Player player ) { }

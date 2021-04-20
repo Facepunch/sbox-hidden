@@ -26,8 +26,11 @@ namespace HiddenGamemode
 				if ( player.Team != null )
 					isHidden = true;
 
-				if ( player.IsSpectator && player.HasSpectatorTarget )
-					isHidden = false;
+				if ( player.IsSpectator && !player.HasSpectatorTarget )
+				{
+					if ( player.SpectatorDeathPosition.IsNearlyZero() )
+						isHidden = false;
+				}
 			}
 
 			SetClass( "hidden", isHidden );

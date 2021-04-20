@@ -29,47 +29,32 @@ namespace HiddenGamemode
 		}
 
 		[ClientCmd( "hdn_open_deployment", CanBeCalledFromServer = true) ]
-		private static void OpenDeploymentCmd()
+		private static void OpenDeploymentCmd( int teamIndex )
 		{
 			if ( Game.Instance.Round is HideRound round )
 			{
-				round.OpenDeployment();
+				round.OpenDeployment( Game.Instance.GetTeamByIndex( teamIndex ) );
 			}
 		}
 
 		public static void SelectDeployment( DeploymentType type )
 		{
+			if ( Sandbox.Player.Local is Player player )
+				player.Deployment = type;
+
 			SelectDeploymentCmd( type.ToString() );
 		}
 
-		public void OpenDeployment()
+		public void OpenDeployment( BaseTeam team )
 		{
 			CloseDeploymentPanel();
 
 			_deploymentPanel = Sandbox.Hud.CurrentPanel.AddChild<Deployment>();
 
-			_deploymentPanel.AddDeployment( new DeploymentInfo
+			team.AddDeployments( _deploymentPanel, (selection) =>
 			{
-				Title = "ASSAULT",
-				Description = "Sprints faster and is equipped with a high firerate SMG.",
-				ClassName = "assault",
-				OnDeploy = () =>
-				{
-					SelectDeployment( DeploymentType.Assault );
-					CloseDeploymentPanel();
-				}
-			} );
-
-			_deploymentPanel.AddDeployment( new DeploymentInfo
-			{
-				Title = "BRAWLER",
-				Description = "Moves slower and is equipped with a high damage shotgun.",
-				ClassName = "brawler",
-				OnDeploy = () =>
-				{
-					SelectDeployment( DeploymentType.Brawler );
-					CloseDeploymentPanel();
-				}
+				SelectDeployment( selection );
+				CloseDeploymentPanel();
 			} );
 		}
 
@@ -84,7 +69,8 @@ namespace HiddenGamemode
 				player.Team = Game.Instance.IrisTeam;
 				player.Team.OnStart( player );
 
-				OpenDeploymentCmd( player );
+				if ( player.Team.HasDeployments )
+					OpenDeploymentCmd( player, player.TeamIndex );
 			}
 
 			base.OnPlayerSpawn( player );
@@ -120,9 +106,10 @@ namespace HiddenGamemode
 					{
 						player.Team = Game.Instance.IrisTeam;
 						player.Team.OnStart( player );
-
-						OpenDeploymentCmd( player );
 					}
+
+					if ( player.Team.HasDeployments )
+						OpenDeploymentCmd( player, player.TeamIndex );
 				} );
 
 				_roundStarted = true;

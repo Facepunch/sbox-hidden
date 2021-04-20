@@ -25,7 +25,7 @@ namespace HiddenGamemode
 			{
 				var staminaLossPerSecond = StaminaLossPerSecond;
 
-				if ( player.Deployment == DeploymentType.Brawler )
+				if ( player.Deployment == DeploymentType.IRIS_BRAWLER )
 				{
 					staminaLossPerSecond *= 1.3f;
 

@@ -20,7 +20,6 @@ namespace HiddenGamemode
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
-
 			player.Inventory.Add( new Knife(), true );
 		}
 
@@ -43,6 +42,57 @@ namespace HiddenGamemode
 
 			player.Controller = new HiddenController();
 			player.Camera = new FirstPersonCamera();
+		}
+
+		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
+		{
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "CLASSIC",
+				Description = "Well rounded and recommended for beginners.",
+				ClassName = "classic",
+				OnDeploy = () => callback( DeploymentType.HIDDEN_CLASSIC )
+			} );
+
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "BEAST",
+				Description = "Harder to kill but moves slower. Deals more damage. Sense ability can be used more frequently.",
+				ClassName = "beast",
+				OnDeploy = () => callback( DeploymentType.HIDDEN_BEAST )
+			} );
+
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "ROGUE",
+				Description = "Moves faster but easier to kill. Deals less damage. Sense ability can be used less frequently.",
+				ClassName = "rogue",
+				OnDeploy = () => callback( DeploymentType.HIDDEN_ROGUE )
+			} );
+		}
+
+		public override void OnTakeDamageFromPlayer( Player player, Player attacker, DamageInfo info )
+		{
+			if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
+			{
+				info.Damage *= 0.5f;
+			}
+			else if ( player.Deployment == DeploymentType.HIDDEN_ROGUE )
+			{
+				info.Damage *= 1.5f;
+			}
+		}
+
+		public override void OnDealDamageToPlayer( Player player, Player target, DamageInfo info )
+		{
+			if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
+			{
+				info.Damage *= 1.25f;
+			}
+			else if ( player.Deployment == DeploymentType.HIDDEN_ROGUE )
+			{
+				info.Damage *= 0.75f;
+			}
 		}
 
 		public override void OnTick()
@@ -112,7 +162,7 @@ namespace HiddenGamemode
 		{
 			if ( player.Input.Pressed( InputButton.Drop ) )
 			{
-				if ( player.Sense?.IsUsable() == true )
+				if ( player.Sense?.IsUsable( player ) == true )
 				{
 					player.Sense.Use( player );
 				}
@@ -120,7 +170,7 @@ namespace HiddenGamemode
 
 			if ( player.Input.Pressed( InputButton.View ) )
 			{
-				if ( player.Scream?.IsUsable() == true )
+				if ( player.Scream?.IsUsable( player ) == true )
 				{
 					player.Scream.Use( player );
 				}

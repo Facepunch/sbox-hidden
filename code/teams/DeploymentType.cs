@@ -2,7 +2,10 @@
 {
 	public enum DeploymentType
 	{
-		Assault,
-		Brawler
+		IRIS_ASSAULT,
+		IRIS_BRAWLER,
+		HIDDEN_CLASSIC,
+		HIDDEN_BEAST,
+		HIDDEN_ROGUE
 	}
 }
