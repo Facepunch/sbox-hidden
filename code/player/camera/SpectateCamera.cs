@@ -54,10 +54,7 @@ namespace HiddenGamemode
 				return DeathPosition;
 
 			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
-			{
-				if ( DeathPosition != Vector3.Zero )
-					return DeathPosition;
-			}
+				return DeathPosition;
 
 			return TargetPlayer.EyePos;
 		}

@@ -19,15 +19,18 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			var doesLocalPlayerHaveTeam = false;
+			var isHidden = false;
 
 			if ( Sandbox.Player.Local is Player player )
 			{
 				if ( player.Team != null )
-					doesLocalPlayerHaveTeam = true;
+					isHidden = true;
+
+				if ( player.IsSpectator && player.HasSpectatorTarget )
+					isHidden = false;
 			}
 
-			SetClass( "hidden", doesLocalPlayerHaveTeam );
+			SetClass( "hidden", isHidden );
 
 			base.Tick();
 		}
