@@ -148,8 +148,6 @@ namespace HiddenGamemode
 						{
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
-								//_viewFlashlight.SetParent( null );
-								//_viewFlashlight.LocalRot = EyeRot;
 								_viewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
 								_viewFlashlight.WorldRot = EyeRot;
 								_viewFlashlight.LocalPos = Vector3.Zero;
