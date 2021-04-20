@@ -37,7 +37,7 @@ namespace HiddenGamemode
 			Brightness = 0.01f + ((0.69f / 100f) * battery);
 			Flicker = (battery <= 10);
 
-			if ( Flicker && !_didPlayFlickerSound )
+			if ( IsServer && Flicker && !_didPlayFlickerSound )
 			{
 				_didPlayFlickerSound = true;
 				

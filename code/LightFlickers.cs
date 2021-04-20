@@ -37,7 +37,7 @@ namespace HiddenGamemode
 
 		public void OnTick()
 		{
-			var currentTime = Sandbox.Time.Now;
+			var currentTime = Time.Now;
 
 			for (var i = _flickers.Count - 1; i >= 0; i--)
 			{
