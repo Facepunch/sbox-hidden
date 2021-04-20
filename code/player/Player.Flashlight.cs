@@ -84,7 +84,7 @@ namespace HiddenGamemode
 						var shouldTurnOff = _flashlight.UpdateFromBattery( FlashlightBattery );
 
 						if ( shouldTurnOff )
-							ShowFlashlight( false );
+							ShowFlashlight( false, false );
 					}
 				}
 				else

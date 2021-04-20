@@ -11,7 +11,6 @@ namespace HiddenGamemode
 		[NetLocal] public ScreamAbility Scream { get; set; }
 		[NetLocal] public DeploymentType Deployment { get; set; }
 
-		private RealTimeSince _timeSinceLastUpdatedFrameRate;
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
@@ -159,12 +158,6 @@ namespace HiddenGamemode
 			if ( camera is FirstPersonCamera )
 			{
 				AddCameraEffects( camera );
-			}
-
-			if ( _timeSinceLastUpdatedFrameRate > 1 )
-			{
-				_timeSinceLastUpdatedFrameRate = 0;
-			//	UpdateFps( (int)(1.0f / Time.Delta) );
 			}
 		}
 

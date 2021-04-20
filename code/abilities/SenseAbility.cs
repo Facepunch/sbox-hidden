@@ -23,9 +23,16 @@ namespace HiddenGamemode
 
 			TimeSinceLastUse = 0;
 
-			if ( Host.IsClient )
+			using ( Prediction.Off() )
 			{
-				_ = StartGlowAbility();
+				if ( Host.IsClient )
+				{
+					_ = StartGlowAbility();
+				}
+				else
+				{
+					player.PlaySound( $"i-see-you-{Rand.Int(1, 3)}" );
+				}
 			}
 		}
 
