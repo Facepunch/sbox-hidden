@@ -18,24 +18,6 @@ namespace HiddenGamemode
 			get => Current as Game;
 		}
 
-		[ServerCmd( "+iv_flashlight" )]
-		private static void EnableFlashlightCmd()
-		{
-			if ( ConsoleSystem.Caller is Player player )
-			{
-				player.ToggleFlashlight();
-			}
-		}
-
-		[ServerCmd( "-iv_flashlight" )]
-		private static void DisableFlashlightCmd()
-		{
-			if ( ConsoleSystem.Caller is Player player )
-			{
-				// Do nothing, we toggle the flashlight.
-			}
-		}
-
 		[Net] public BaseRound Round { get; private set; }
 
 		private BaseRound _lastRound;

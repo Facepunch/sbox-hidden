@@ -5,7 +5,7 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		[NetLocal] public float FlashlightBattery { get; set; } = 100f;
+		[NetLocalPredicted] public float FlashlightBattery { get; set; } = 100f;
 
 		private Flashlight _worldFlashlight;
 		private Flashlight _viewFlashlight;
@@ -36,22 +36,21 @@ namespace HiddenGamemode
 
 		public void ToggleFlashlight()
 		{
-			if ( IsLocalPlayer )
-			{
-				ShowFlashlightLocal( !IsFlashlightOn );
-				return;
-			}
-
 			ShowFlashlight( !IsFlashlightOn );
 		}
 
 		public void ShowFlashlight( bool shouldShow, bool playSounds = true )
 		{
-			if ( HasFlashlightEntity )
+			if ( IsFlashlightOn )
 			{
-				_worldFlashlight.Enabled = false;
-				_worldFlashlight.Flicker = false;
+				if ( IsServer )
+					_worldFlashlight.Enabled = false;
+				else
+					_viewFlashlight.Enabled = false;
 			}
+
+			if ( IsServer && IsFlashlightOn != shouldShow )
+				ShowFlashlightLocal( this, shouldShow );
 
 			if ( ActiveChild is not Weapon weapon || !weapon.HasFlashlight )
 				return;
@@ -60,62 +59,74 @@ namespace HiddenGamemode
 			{
 				if ( !HasFlashlightEntity )
 				{
-					_worldFlashlight = new Flashlight();
-					_worldFlashlight.EnableHideInFirstPerson = true;
-					_worldFlashlight.Rot = EyeRot;
-					_worldFlashlight.SetParent( weapon, "muzzle" );
-					_worldFlashlight.Pos = Vector3.Zero;
+					if ( IsServer )
+					{
+						_worldFlashlight = new Flashlight();
+						_worldFlashlight.EnableHideInFirstPerson = true;
+						_worldFlashlight.LocalRot = EyeRot;
+						_worldFlashlight.SetParent( weapon, "muzzle" );
+						_worldFlashlight.LocalPos = Vector3.Zero;
+					}
+					else
+					{
+						_viewFlashlight = new Flashlight();
+						_viewFlashlight.WorldRot = EyeRot;
+						_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 10f;
+					}
 				}
 				else
 				{
-					// TODO: This is a weird hack to make sure the rotation is right.
-					_worldFlashlight.SetParent( null );
-					_worldFlashlight.Rot = EyeRot;
-					_worldFlashlight.SetParent( weapon, "muzzle" );
-					_worldFlashlight.Pos = Vector3.Zero;
-					_worldFlashlight.Enabled = true;
+					if ( IsServer )
+					{
+						// TODO: This is a weird hack to make sure the rotation is right.
+						_worldFlashlight.SetParent( null );
+						_worldFlashlight.LocalRot = EyeRot;
+						_worldFlashlight.SetParent( weapon, "muzzle" );
+						_worldFlashlight.LocalPos = Vector3.Zero;
+						_worldFlashlight.Enabled = true;
+					}
+					else
+					{
+						_viewFlashlight.Enabled = true;
+					}
 				}
 
-				_worldFlashlight.FogStength = 10f;
-				_worldFlashlight.UpdateFromBattery( FlashlightBattery );
-				_worldFlashlight.Reset();
+				if ( IsServer )
+				{
+					_worldFlashlight.FogStength = 10f;
+					_worldFlashlight.UpdateFromBattery( FlashlightBattery );
+					_worldFlashlight.Reset();
+				}
+				else
+				{
+					_viewFlashlight.FogStength = 10f;
+					_viewFlashlight.UpdateFromBattery( FlashlightBattery );
+					_viewFlashlight.Reset();
+				}
 
-				if ( playSounds )
+				if ( IsServer && playSounds )
 					PlaySound( "flashlight-on" );
 			}
-			else if ( playSounds )
+			else if ( IsServer && playSounds )
 			{
 				PlaySound( "flashlight-off" );
 			}
-
-			ShowFlashlightLocal( this, shouldShow );
 		}
 
 		[ClientRpc]
 		private void ShowFlashlightLocal( bool shouldShow )
 		{
-			if ( shouldShow )
-			{
-				if ( !HasFlashlightEntity )
-				{
-					_viewFlashlight = new Flashlight();
-					_viewFlashlight.Rot = EyeRot;
-					_viewFlashlight.Pos = EyePos + EyeRot.Forward * 10f;
-				}
-
-				_viewFlashlight.FogStength = 10f;
-				_viewFlashlight.Enabled = true;
-				_viewFlashlight.UpdateFromBattery( FlashlightBattery );
-				_viewFlashlight.Reset();
-			}
-			else if ( HasFlashlightEntity )
-			{
-				_viewFlashlight.Enabled = false;
-			}
+			ShowFlashlight( shouldShow );
 		}
 
 		private void TickFlashlight()
 		{
+			if ( Input.Released(InputButton.Flashlight) )
+			{
+				using ( Prediction.Off() )
+					ToggleFlashlight();
+			}
+
 			if ( IsFlashlightOn )
 			{
 				FlashlightBattery = MathF.Max( FlashlightBattery - 10f * Time.Delta, 0f );
@@ -137,10 +148,11 @@ namespace HiddenGamemode
 						{
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
-								_viewFlashlight.SetParent( null );
-								_viewFlashlight.Rot = EyeRot;
+								//_viewFlashlight.SetParent( null );
+								//_viewFlashlight.LocalRot = EyeRot;
 								_viewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
-								_viewFlashlight.Pos = Vector3.Zero;
+								_viewFlashlight.WorldRot = EyeRot;
+								_viewFlashlight.LocalPos = Vector3.Zero;
 							}
 						}
 						else
@@ -148,12 +160,16 @@ namespace HiddenGamemode
 							if ( viewFlashlightParent != null )
 								_viewFlashlight.SetParent( null );
 
-							_viewFlashlight.Rot = EyeRot;
-							_viewFlashlight.Pos = EyePos + EyeRot.Forward * 80f;
+							_viewFlashlight.WorldRot = EyeRot;
+							_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 80f;
 						}
 
-						_viewFlashlight.UpdateFromBattery( FlashlightBattery );
 						_viewFlashlight.BrightnessMultiplier = IsFirstPersonMode ? 1f : 0f;
+
+						var shouldTurnOff = _viewFlashlight.UpdateFromBattery( FlashlightBattery );
+
+						if ( shouldTurnOff )
+							ShowFlashlight( false, false );
 					}
 				}
 			}
