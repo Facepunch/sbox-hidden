@@ -70,6 +70,7 @@ namespace HiddenGamemode
 					else
 					{
 						_viewFlashlight = new Flashlight();
+						_viewFlashlight.EnableViewmodelRendering = true;
 						_viewFlashlight.WorldRot = EyeRot;
 						_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 10f;
 					}
@@ -161,8 +162,6 @@ namespace HiddenGamemode
 							_viewFlashlight.WorldRot = EyeRot;
 							_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 80f;
 						}
-
-						_viewFlashlight.BrightnessMultiplier = IsFirstPersonMode ? 1f : 0f;
 
 						var shouldTurnOff = _viewFlashlight.UpdateFromBattery( FlashlightBattery );
 

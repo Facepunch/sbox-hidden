@@ -29,13 +29,14 @@ namespace HiddenGamemode
 					CreateLaserDot();
 
 				var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 4096f )
+					.UseHitboxes()
 					.Radius( 2f )
 					.Ignore( weapon )
 					.Ignore( this )
 					.Run();
 
 				if ( trace.Hit )
-					_laserDot.Pos = trace.EndPos;
+					_laserDot.WorldPos = trace.EndPos;
 			}
 			else
 			{

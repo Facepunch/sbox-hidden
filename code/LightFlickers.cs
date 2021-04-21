@@ -43,6 +43,12 @@ namespace HiddenGamemode
 			{
 				var flicker = _flickers[i];
 
+				if ( !flicker.Entity.IsValid() )
+				{
+					_flickers.RemoveAt( i );
+					continue;
+				}
+
 				if ( currentTime < flicker.EndTime )
 				{
 					flicker.Entity.Brightness = flicker.StartBrightness * MathF.Abs( Noise.Perlin( currentTime * 5f, 0f, 0f ) );
