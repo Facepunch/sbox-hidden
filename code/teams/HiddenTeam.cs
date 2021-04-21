@@ -124,12 +124,10 @@ namespace HiddenGamemode
 
 				if ( player != null && player.IsValid() )
 				{
-					var overlaps = Overlap.Sphere( player.Pos, 2048f );
+					var overlaps = Physics.GetEntitiesInSphere( player.WorldPos, 2048f );
 
-					for ( int i = 0; i < overlaps.Count; ++i )
+					foreach ( var entity in overlaps )
 					{
-						var entity = overlaps.Element( i ).Entity;
-
 						// Make sure we don't also flicker flashlights.
 						if ( entity is SpotLightEntity light && entity is not Flashlight )
 						{
