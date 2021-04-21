@@ -12,6 +12,7 @@ namespace HiddenGamemode
 		public virtual int Bucket => 1;
 		public virtual int BucketWeight => 100;
 		public virtual bool UnlimitedAmmo => false;
+		public virtual float ChargeAttackDuration => 2;
 		public virtual bool HasFlashlight => false;
 		public virtual bool HasLaserDot => false;
 		public virtual int BaseDamage => 10;
@@ -29,6 +30,11 @@ namespace HiddenGamemode
 
 		[NetPredicted]
 		public TimeSince TimeSinceDeployed { get; set; }
+
+		[NetPredicted]
+		public TimeSince TimeSinceChargeAttack { get; set; }
+
+		public float ChargeAttackEndTime;
 
 		public int AvailableAmmo()
 		{
@@ -86,6 +92,22 @@ namespace HiddenGamemode
 
 		public override void OnPlayerControlTick( Sandbox.Player owner )
 		{
+			if ( owner is Player player )
+			{
+				if ( player.LifeState == LifeState.Alive )
+				{
+					if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
+					{
+						OnChargeAttackFinish();
+						ChargeAttackEndTime = 0f;
+					}
+				}
+				else
+				{
+					ChargeAttackEndTime = 0f;
+				}
+			}
+
 			if ( !IsReloading )
 			{
 				base.OnPlayerControlTick( owner );
@@ -96,6 +118,29 @@ namespace HiddenGamemode
 				OnReloadFinish();
 			}
 		}
+
+		public override bool CanPrimaryAttack()
+		{
+			if ( ChargeAttackEndTime > 0f && Time.Now < ChargeAttackEndTime )
+				return false;
+
+			return base.CanPrimaryAttack();
+		}
+
+		public override bool CanSecondaryAttack()
+		{
+			if ( ChargeAttackEndTime > 0f && Time.Now < ChargeAttackEndTime )
+				return false;
+
+			return base.CanSecondaryAttack();
+		}
+
+		public virtual void StartChargeAttack()
+		{
+			ChargeAttackEndTime = Time.Now + ChargeAttackDuration;
+		}
+
+		public virtual void OnChargeAttackFinish() { }
 
 		public virtual void OnReloadFinish()
 		{

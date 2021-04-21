@@ -117,26 +117,29 @@ namespace HiddenGamemode
 			}
 			else
 			{
-				if ( Sandbox.Time.Now > _nextLightFlicker )
+				if ( Time.Now <= _nextLightFlicker )
+					return;
+
+				var player = CurrentPlayer;
+
+				if ( player != null && player.IsValid() )
 				{
-					var player = CurrentPlayer;
+					var overlaps = Overlap.Sphere( player.Pos, 2048f );
 
-					if ( player != null && player.IsValid() )
+					for ( int i = 0; i < overlaps.Count; ++i )
 					{
-						var overlaps = Overlap.Sphere( player.Pos, 2048f );
+						var entity = overlaps.Element( i ).Entity;
 
-						for ( int i = 0; i < overlaps.Count; ++i )
+						// Make sure we don't also flicker flashlights.
+						if ( entity is SpotLightEntity light && entity is not Flashlight )
 						{
-							if ( overlaps.Element( i ).Entity is SpotLightEntity light )
-							{
-								if ( Rand.Float( 0f, 1f ) >= 0.5f )
-									Game.Instance.LightFlickers.Add( light, Rand.Float( 0.5f, 2f ) );
-							}
+							if ( Rand.Float( 0f, 1f ) >= 0.5f )
+								Game.Instance.LightFlickers.Add( light, Rand.Float( 0.5f, 2f ) );
 						}
 					}
-
-					_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
 				}
+
+				_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
 			}
 		}
 
@@ -156,6 +159,25 @@ namespace HiddenGamemode
 				{
 					player.Scream.Use( player );
 				}
+			}
+
+			if ( player.Input.Pressed( InputButton.Use) )
+			{
+				if ( player.Controller is not HiddenController controller )
+					return;
+
+				if ( controller.IsFrozen )
+					return;
+
+				var trace = Trace.Ray( player.EyePos, player.EyePos + player.EyeRot.Forward * 40f )
+					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
+					.Ignore( player )
+					.Ignore( player.ActiveChild )
+					.Radius( 2 )
+					.Run();
+
+				if ( trace.Hit )
+					controller.IsFrozen = true;
 			}
 		}
 

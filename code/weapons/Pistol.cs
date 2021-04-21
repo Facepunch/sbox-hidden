@@ -31,9 +31,6 @@ namespace HiddenGamemode
 
 		public override void AttackPrimary()
 		{
-			TimeSincePrimaryAttack = 0;
-			TimeSinceSecondaryAttack = 0;
-
 			if ( !TakeAmmo( 1 ) )
 			{
 				PlaySound( "pistol.dryfire" );

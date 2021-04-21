@@ -43,7 +43,7 @@ namespace HiddenGamemode
 			{
 				var flicker = _flickers[i];
 
-				if ( !flicker.Entity.IsValid() )
+				if ( flicker.Entity == null || !flicker.Entity.IsValid() )
 				{
 					_flickers.RemoveAt( i );
 					continue;
