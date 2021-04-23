@@ -33,11 +33,13 @@
 
 
     &.roundNameOnly {
+
         .roundName {
-            width: 100%;
             text-align: center;
             margin-right: 0px;
             left: auto;
+            padding: 0;
+            width: 100%;
         }
 
         .timeLeft {
