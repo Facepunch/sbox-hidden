@@ -52,17 +52,14 @@ namespace HiddenGamemode
 
 			players.ForEach( ( player ) =>
 			{
-				player.GlowActive = true;
-				player.GlowState = GlowStates.GlowStateOn;
-				player.GlowDistanceEnd = 1000;
-				player.GlowColor = Color.Green;
+				player.ShowSenseParticles( true );
 			} );
 
-			await Task.Delay( TimeSpan.FromSeconds( 3 ) );
+			await Task.Delay( TimeSpan.FromSeconds( Cooldown * 0.5f ) );
 
 			players.ForEach( ( player ) =>
 			{
-				player.GlowActive = false;
+				player.ShowSenseParticles( false );
 			} );
 		}
 	}
