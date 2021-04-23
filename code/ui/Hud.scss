@@ -17,18 +17,18 @@ chatbox
 
 vitals
 {
+	align-items: center;
 	background-image: url( /ui/green/player.png );
 	background-size: 100%;
+	color: #fff;
+	font-size: 40px;
+	font-family: Roboto;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	left: 64px;
-	font-size: 40px;
-	color: #fff;
 	width: 305px;
 	height: 85px;
-	font-family: Roboto;
-	align-items: center;
-	justify-content: center;
 
 	label
 	{
@@ -57,17 +57,17 @@ vitals
 
 ammo
 {
+	align-items: center;
 	background-image: url( /ui/green/ammo.png );
 	background-size: 100%;
+	display: none;
+	font-family: Lexend;
+	height: 95px;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	right: 64px;
 	width: 206px;
-	height: 95px;
-	font-family: Lexend;
-	align-items: center;
-	justify-content: center;
-	display: none;
 
 	label
 	{
@@ -92,7 +92,7 @@ ammo
 
 	&.active
 	{
-		display: auto;
+		display: flex;
 	}
 }
 
@@ -109,78 +109,78 @@ ammo
 	}
 }
 
-abilities
-{
+abilities {
+	align-items: center;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	left: 0;
 	right: 0;
-	align-items: center;
-	justify-content: center;
 
-	.ability
-	{
-		width: 90px;
-		height: 90px;
-		background-image: url( /ui/grayscale/power-unavailable-gs.png );
-		background-size: 100%;
-		margin-left: 24px;
+	.ability {
 		align-items: center;
+		background-image: url( /ui/hidden/power-unavailable.png );
+		box-shadow: 0 2px 40px rgba(0,0,0,0.3);
+		background-size: 100%;
+		height: 90px;
 		justify-content: center;
+		margin-left: 24px;
+		opacity: 0.7;
+		transition: all 0.5s ease;
+		width: 90px;
 
-		.icon
-		{
-			width: 40px;
-			height: 40px;
+		.icon {
 			background-size: 100%;
+			width: 80px;
+			height: 80px;
 
-			&.sense
-			{
-				background-image: url( /ui/icons/icon-ability-1.png );
+			&.sense {
+				background-image: url( /ui/hidden/eye-available.png );
 			}
 
-			&.scream
-			{
-				background-image: url( /ui/icons/icon-ability-2.png );
+			&.scream {
+				background-image: url( /ui/hidden/power2-available.png );
 			}
 		}
 
-		.cooldown
-		{
+		.cooldown {
 			position: absolute;
-			background-color: #971515;
+			background-image: url( /ui/hidden/power-unavailable.png );
+			box-shadow: 0 2px 25px rgba(0,0,0,0.9);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-size: cover;
 			font-family: Lexend;
 			border-radius: 4px;
-			bottom: 4px;
-			padding: 8px;
-			height: 10px;
+			bottom: 0;
+			transform: translateY(50%);
+			height: 18px;
+			width: 18px;
 
-			.text
-			{
+			.text {
 				font-size: 12px;
-				align-items: center;
 				color: white;
+				text-shadow: 0 1px 1px rgba(0,0,0,0.8);
 			}
 
-			&.usable
-			{
-				background-color: #B1841C;
+			&.usable {
+				background-image: url( /ui/hidden/power-available.png );
 			}
 		}
 
-		&.usable
-		{
-			background-image: url( /ui/grayscale/power-available-gs.png );
+		&.usable {
+			background-image: url( /ui/hidden/power-available.png );
+			box-shadow: 0 2px 40px rgba(0,0,0,0.9);
+			opacity: 1;
 		}
 
-		&.hidden
-		{
+		&.hidden {
 			display: none;
 		}
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
 	}
 }
