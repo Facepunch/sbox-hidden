@@ -1,16 +1,16 @@
 ﻿.roundContainer
 {
+    background-image: url( /ui/hidden/top-bar-iris.png );
+    background-size: 100%;
+    font-family: Lexend;
+    flex-direction: row;
     position: absolute;
-    top: 48px;
-    margin: 0 auto;
-    color: #ff0;
-    width: 254px;
-    height: 85px;
-    text-align: center;
-    justify-content: center;
+    flex-direction: row;
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    top: 48px;
+    color: #ff0;
+    width: 410px;
+    height: 44px;
 
     label
     {
@@ -19,20 +19,41 @@
 
     .roundName
     {
-        color: #1CB179;
-        margin-left: -40px;
-        margin-top: 4px;
+        font-size: 20px;
+        color: #ECECEC;
+        width: 50%;
+        margin-right: 50px;
+        text-align: right;
+        align-items: center;
+        left: 0;
     }
 
     .timeLeft
     {
-        color: white;
-        margin-left: -40px;
+        font-size: 20px;
+        margin-left: 50px;
+        align-items: center;
+        text-align: left;
+        color: #ECECEC;
+        width: 50%;
+        right: 0;
 
         &.hidden
         {
             display: none;
         }
+    }
+
+    .icon
+    {
+        position: absolute;
+        background-image: url( /ui/hidden/icon-iris.png );
+        background-size: 100%;
+        width: 64px;
+        height: 64px;
+        left: 50%;
+        top: -8px;
+        margin-left: -32px;
     }
 }
 
@@ -49,42 +70,18 @@ roundInfo
 
 .team_iris
 {
-    .roundContainer
-    {
-        background-image: url( /ui/green/mode.png );
-        background-size: 100%;
-        font-family: Days One;
-    }
-
-    .roundName
-    {
-        color: #1CB179;
-        font-size: 16px;
-    }
-
-    .timeLeft
-    {
-        font-size: 16px;
-    }
+    
 }
 
 .team_hidden
 {
     .roundContainer
     {
-        background-image: url( /ui/grayscale/mode-gs.png );
-        background-size: 100%;
-        font-family: Syne Mono;
-    }
+        background-image: url( /ui/hidden/top-bar-hidden.png );
 
-    .roundName
-    {
-        font-size: 16px;
-        color: #D2AC5C;
-    }
-
-    .timeLeft
-    {
-        font-size: 16px;
+        .icon
+        {
+            background-image: url( /ui/hidden/icon-hidden.png );
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
     public class HuntRound : BaseRound
 	{
-		public override string RoundName => "Hunt / Survive";
+		public override string RoundName => "HUNT";
 		public override int RoundDuration => 300;
 		public override bool CanPlayerSuicide => true;
 

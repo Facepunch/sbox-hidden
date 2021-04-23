@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
     public class LobbyRound : BaseRound
 	{
-		public override string RoundName => "Lobby";
+		public override string RoundName => "LOBBY";
 
 		protected override void OnStart()
 		{
