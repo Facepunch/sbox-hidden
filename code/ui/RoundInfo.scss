@@ -1,68 +1,55 @@
-﻿.roundContainer
-{
+﻿.roundContainer {
     background-image: url( /ui/hidden/top-bar-iris.png );
     background-size: 100%;
     font-family: Lexend;
+    display: flex;
     flex-direction: row;
     position: absolute;
-    flex-direction: row;
-    display: flex;
     top: 48px;
-    color: #ff0;
     width: 410px;
     height: 44px;
 
-    label
-    {
+    label {
+        align-items: center;
+        color: #ECECEC;
+        font-size: 20px;
         text-shadow: 0px 2px rgba(#000,0.5);
-       
+
+        &.roundName {
+            width: 50%;
+            padding-right: 50px;
+            text-align: right;
+            left: 0;
+        }
+
+        &.timeLeft {
+            padding-left: 50px;
+            right: 0;
+            text-align: left;
+            width: 50%;
+        }
     }
 
-    .roundName
-    {
-        font-size: 20px;
-        color: #ECECEC;
-        width: 50%;
-        margin-right: 50px;
-        text-align: right;
-        align-items: center;
-        left: 0;
-    }
 
-    .timeLeft
-    {
-        font-size: 20px;
-        margin-left: 50px;
-        align-items: center;
-        text-align: left;
-        color: #ECECEC;
-        width: 50%;
-        right: 0;
-    }
 
-    &.roundNameOnly
-    {
-        .roundName
-        {
+    &.roundNameOnly {
+        .roundName {
             width: 100%;
             text-align: center;
             margin-right: 0px;
             left: auto;
         }
 
-        .timeLeft
-        {
+        .timeLeft {
             display: none;
         }
 
-        .icon
-        {
+        .icon {
             display: none;
         }
     }
 
-    .icon
-    {
+    .icon {
         position: absolute;
         background-image: url( /ui/hidden/icon-iris.png );
         background-size: 100%;
@@ -70,20 +57,19 @@
         height: 64px;
         left: 50%;
         top: 50%;
-        transform: translateY(-50%);
-        margin-left: -32px;
+        transform: translateX(-50%) translateY(-50%);
     }
 }
 
 roundInfo
 {
-    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0;
     min-height: 100%;
     padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
 }
 
 .team_iris
