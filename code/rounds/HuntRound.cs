@@ -123,7 +123,10 @@ namespace HiddenGamemode
 
 			await Task.Delay( delay * 1000 );
 
-			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().First();
+			if ( Game.Instance.Round != this )
+				return;
+
+			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
 
 			Game.Instance.ChangeRound( new StatsRound
 			{

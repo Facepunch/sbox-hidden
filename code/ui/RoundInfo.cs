@@ -39,11 +39,11 @@ namespace HiddenGamemode
 			if ( round.RoundDuration > 0 && !string.IsNullOrEmpty( round.TimeLeftFormatted ) )
 			{
 				TimeLeft.Text = round.TimeLeftFormatted;
-				TimeLeft.SetClass( "hidden", false );
+				Container.SetClass( "roundNameOnly", false );
 			}
 			else
 			{
-				TimeLeft.SetClass( "hidden", true );
+				Container.SetClass( "roundNameOnly", true );
 			}
 		}
 	}

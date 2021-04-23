@@ -37,8 +37,24 @@
         color: #ECECEC;
         width: 50%;
         right: 0;
+    }
 
-        &.hidden
+    &.roundNameOnly
+    {
+        .roundName
+        {
+            width: 100%;
+            text-align: center;
+            margin-right: 0px;
+            left: auto;
+        }
+
+        .timeLeft
+        {
+            display: none;
+        }
+
+        .icon
         {
             display: none;
         }

@@ -14,6 +14,7 @@ namespace HiddenGamemode
 		public virtual bool HasDeployments => true;
 		public virtual bool HideNameplate => false;
 		public virtual string HudClassName => "";
+		public virtual string Name => "";
 
 		public void Join( Player player )
 		{

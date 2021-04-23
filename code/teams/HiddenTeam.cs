@@ -11,6 +11,7 @@ namespace HiddenGamemode
 	{
 		public override bool HideNameplate => true;
 		public override string HudClassName => "team_hidden";
+		public override string Name => "Hidden";
 		public Player CurrentPlayer { get; set; }
 
 		private float _nextLightFlicker;
