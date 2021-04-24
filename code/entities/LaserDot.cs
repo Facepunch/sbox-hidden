@@ -27,7 +27,7 @@ namespace HiddenGamemode
 
 		protected override void OnDestroy()
 		{
-			_particles?.Destory( true );
+			_particles?.Destroy( true );
 
 			base.OnDestroy();
 		}

@@ -154,7 +154,7 @@ namespace HiddenGamemode
 		{
 			if ( _senseParticles != null )
 			{
-				_senseParticles.Destory( false );
+				_senseParticles.Destroy( false );
 				_senseParticles = null;
 			}
 
