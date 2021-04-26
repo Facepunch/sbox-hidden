@@ -1,3 +1,3 @@
 # sbox-hidden
 
-A proof of concept gamemode based on The Hidden.
+Prepare, Survive, Hunt or Hide
