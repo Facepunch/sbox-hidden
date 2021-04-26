@@ -1,3 +1,3 @@
 # sbox-hidden
 
-A proof of concept gamemode based on The Hidden.
+Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.
