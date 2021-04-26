@@ -12,7 +12,11 @@ namespace HiddenGamemode
 		{
 			public Label TeamName;
 			public Panel TeamIcon;
+
+			public Panel TeamContainer;
+
 			public Panel Header;
+			public Panel TeamHeader;
 			public Panel Canvas;
 		}
 
@@ -20,11 +24,18 @@ namespace HiddenGamemode
 		public Dictionary<int, ScoreboardEntry> Entries = new();
 		public Dictionary<int, TeamSection> TeamSections = new();
 
+		public Panel ScoreboardHeader;
+		public Label ScoreboardTitle;
+
+
 		public Scoreboard()
 		{
 			StyleSheet.Load( "/ui/Scoreboard.scss" );
 
 			AddClass( "scoreboard" );
+
+			ScoreboardHeader = Add.Panel( "scoreboard-header" );
+			ScoreboardTitle = ScoreboardHeader.Add.Label( "SCOREBOARD" );
 
 			AddTeamHeader( Game.Instance.HiddenTeam );
 			AddTeamHeader( Game.Instance.IrisTeam );
@@ -50,21 +61,28 @@ namespace HiddenGamemode
 		{
 			var section = new TeamSection
 			{
-				Header = Add.Panel( "header" ),
-				Canvas = Add.Panel( "canvas" )
+				
 			};
 
-			section.TeamName = section.Header.Add.Label( team.Name, "teamName" );
-			section.TeamIcon = section.Header.Add.Panel( "teamIcon" );
+			// Set up the Container for the Team on the scoreboard
+			section.TeamContainer = Add.Panel( "team-container" );
+			section.TeamHeader = section.TeamContainer.Add.Panel( "team-header" );
+			section.Header = section.TeamContainer.Add.Panel( "table-header" );
+			section.Canvas = section.TeamContainer.Add.Panel( "canvas" );
+
+			section.TeamIcon = section.TeamHeader.Add.Panel( "teamIcon" );
+			section.TeamName = section.TeamHeader.Add.Label( team.Name, "teamName" );
+			
 			section.TeamIcon.AddClass( team.HudClassName );
 
-			section.Header.Add.Label( "Name", "name" );
-			section.Header.Add.Label( "Kills", "kills" );
-			section.Header.Add.Label( "Deaths", "deaths" );
-			section.Header.Add.Label( "Ping", "ping" );
+			section.Header.Add.Label( "NAME", "name" );
+			section.Header.Add.Label( "KILLS", "kills" );
+			section.Header.Add.Label( "DEATHS", "deaths" );
+			section.Header.Add.Label( "PING", "ping" );
 
 			section.Canvas.AddClass( team.HudClassName );
 			section.Header.AddClass( team.HudClassName );
+			section.TeamHeader.AddClass( team.HudClassName );
 
 			TeamSections[team.Index] = section;
 		}

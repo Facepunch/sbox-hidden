@@ -16,8 +16,7 @@ namespace HiddenGamemode
 		public Radar()
 		{
 			StyleSheet.Load( "/ui/Radar.scss" );
-
-			Anchor = Add.Panel( "anchor" );
+			SetTemplate( "/ui/Radar.html" );
 		}
 
 		public override void Tick()
