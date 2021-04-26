@@ -1,3 +1,3 @@
 # sbox-hidden
 
-Prepare, Survive, Hunt or Hide
+Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.
