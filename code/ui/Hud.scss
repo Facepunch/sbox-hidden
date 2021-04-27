@@ -91,6 +91,7 @@ ammo {
 		color: #ECECEC;
 		min-width: 50px;
 		text-align: right;
+		transition: color 0.2s ease;
 	}
 
 	.inventory {
@@ -102,6 +103,13 @@ ammo {
 
 	&.active {
 		display: flex;
+	}
+
+
+	&.low-ammo {
+		.weapon {
+			color: #ff9f9f;
+		}
 	}
 }
 
