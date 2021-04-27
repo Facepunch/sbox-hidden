@@ -1,22 +1,4 @@
-﻿@keyframes glowing {
-	0% {
-		box-shadow: 0 0 -10px #c4a300;
-	}
-
-	40% {
-		box-shadow: 0 0 20px #c4a300;
-	}
-
-	60% {
-		box-shadow: 0 0 20px #c4a300;
-	}
-
-	100% {
-		box-shadow: 0 0 -10px #c4a300;
-	}
-}
-
-health {
+﻿health {
 	align-items: center;
 	color: #fff;
 	height: 20px;
@@ -64,7 +46,7 @@ health {
 		}
 
 		.innerBar {
-			background-image: url( /ui/hidden/player-health-low.png ) !important;
+			background-image: url( /ui/hidden/player-health-low.png );
 		}
 	}
 }

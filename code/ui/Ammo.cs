@@ -31,7 +31,7 @@ namespace HiddenGamemode
 			var isValid = (weapon != null && !weapon.IsMelee);
 
 			SetClass( "active", isValid );
-			SetClass("low-ammo", weapon.AmmoClip < 3);
+			SetClass("low-ammo", weapon != null && weapon.AmmoClip < 3);
 
 			if ( !isValid ) return;
 
