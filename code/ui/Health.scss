@@ -1,20 +1,33 @@
-﻿health
-{
-	position: absolute;
-	bottom: 24px;
-	left: 12px;
-	color: #fff;
-
-	.outerBar
-	{
-		background-color: rgba(50, 50, 50, 0.8);
-		margin-top: 4px;
-		width: 180px;
-		height: 8px;
+﻿@keyframes glowing {
+	0% {
+		box-shadow: 0 0 -10px #c4a300;
 	}
 
-	.innerBar
-	{
+	40% {
+		box-shadow: 0 0 20px #c4a300;
+	}
+
+	60% {
+		box-shadow: 0 0 20px #c4a300;
+	}
+
+	100% {
+		box-shadow: 0 0 -10px #c4a300;
+	}
+}
+
+health {
+	align-items: center;
+	color: #fff;
+	height: 20px;
+	width: 100%;
+
+	.outerBar {
+		width: 180px;
+		height: 16px;
+	}
+
+	.innerBar {
 		background-image: url( /ui/hidden/player-health.png );
 		background-size: 100%;
 		background-repeat: no-repeat;
@@ -23,25 +36,35 @@
 		min-width: 1px;
 	}
 
-	.text
-	{
-		font-size: 14px;
-		margin-left: 6px;
-		margin-top: -2px;
+	.text {
+		color: #ECECEC;
+		font-size: 16px;
 		font-family: Lexend;
+		font-weight: 500;
+		text-shadow: 0 1px 1px rgba(#000,0.2);
+		position: absolute;
+		left: 32px;
 	}
 
-	.icon
-	{
+	.icon {
 		background-image: url( /ui/hidden/icon-health.png );
 		background-size: 100%;
-		margin-right: 4px;
-		width: 16px;
-		height: 16px;
+		margin-right: 8px;
+		width: 20px;
+		height: 20px;
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
+	}
+
+	&.low-health {
+		.text {
+			color: #ff9f9f;
+		}
+
+		.innerBar {
+			background-image: url( /ui/hidden/player-health-low.png ) !important;
+		}
 	}
 }

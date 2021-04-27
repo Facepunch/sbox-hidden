@@ -28,6 +28,7 @@ namespace HiddenGamemode
 			if ( Sandbox.Player.Local is not Player player ) return;
 
 			SetClass( "hidden", player.LifeState != LifeState.Alive );
+			SetClass("low-stamina", player.Stamina < 30);
 
 			InnerBar.Style.Width = Length.Percent( player.Stamina );
 			InnerBar.Style.Dirty();

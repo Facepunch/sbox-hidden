@@ -15,8 +15,7 @@ chatbox
 	bottom: 350px;
 }
 
-vitals
-{
+vitals {
 	background-image: url( /ui/hidden/player-container.png );
 	background-size: 100%;
 	position: absolute;
@@ -24,25 +23,25 @@ vitals
 	left: 64px;
 	font-size: 40px;
 	color: #fff;
-	width: 300px;
+	width: 280px;
 	height: 80px;
 	font-family: Roboto;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
+	padding-left: 20px;
+	padding-right: 24px;
 
-	label
-	{
+	label {
 		text-shadow: 0px 0px 20px #000;
 
-		&.danger
-		{
+		&.danger {
 			color: #f00;
 			text-shadow: 0px 0px 10px #f005;
 		}
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
 	}
 }

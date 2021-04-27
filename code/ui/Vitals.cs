@@ -12,8 +12,8 @@ namespace HiddenGamemode
 
 		public Vitals()
 		{
-			Health = AddChild<Health>();
 			Stamina = AddChild<Stamina>();
+			Health = AddChild<Health>();
 		}
 
 		public override void Tick()
