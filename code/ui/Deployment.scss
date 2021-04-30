@@ -21,71 +21,68 @@
     }
 }
 
-.deploymentContainer
-{
+.deploymentContainer {
     padding: 8px;
     font-family: Lexend;
 
-    .item
-    {
-        background-image: url( /ui/green/box.png );
+    .item {
+        align-items: center;
+        background-image: url( /ui/hidden/box-grey.png );
         background-size: 100%;
-        width: 300px;
-        height: 300px;
-        margin: 8px;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
+        width: 400px;
+        height: 400px;
+        padding: 64px;
+        margin: 8px;
 
-        .title
-        {
-            position: absolute;
+        .title {
             font-family: Lexend;
-            font-weight: 100;
+            font-weight: bold;
             font-size: 30px;
             text-align: center;
             color: white;
-            top: 50px;
-            left: 16px;
-            right: 16px;
+            position: relative;
+            top: auto;
+            left: auto;
+            margin-bottom: 32px;
         }
 
-        .desc
-        {
-            position: absolute;
+        .desc {
             font-family: Lexend;
             font-weight: 100;
-            top: 120px;
             text-align: center;
             color: #CCDCC7;
-            font-size: 12px;
-            bottom: 20px;
-            left: 32px;
-            right: 32px;
+            font-size: 16px;
+            width: 100%;
+            flex-grow: 1;
+            text-align: center;
         }
 
-        .button
-        {
-            box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.1);
-            background-color: #229F70;
-            position: absolute;
-            border-radius: 3px;
-            bottom: 64px;
-            width: 50%;
-            height: 32px;
-            justify-content: center;
+        .button {
             align-items: center;
+            background-image: url( /ui/hidden/button-primary.png );
+            background-size: 100%;
+            box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
             cursor: pointer;
+            height: 50px;
+            justify-content: center;
+            min-width: 200px;
+            opacity: 1;
+            transition: opacity 0.15s ease;
 
-            label
-            {
+
+            label {
                 font-family: Lexend;
-                font-size: 14px;
+                font-size: 16px;
+                font-weight: bold;
                 color: white;
             }
 
-            &:hover
-            {
-                box-shadow: 0px 0px 16px 1px rgba(45, 255, 196, 0.07);
-                background-color: #72B985;
+            &:hover {
+                opacity: 0.7;
             }
         }
     }
@@ -95,13 +92,6 @@
 {
     deployment
     {
-        .title
-        {
-            position: absolute;
-            font-family: Lexend;
-            font-size: 32px;
-            color: #CAAB4D;
-        }
     }
 
     .deploymentContainer
@@ -112,15 +102,15 @@
             background-size: 100%;
         }
 
-        .button
+        /*.button
         {
-            background-color: #CAAB4D;
+            background-color: #caab4d;
 
             &:hover
             {
                 box-shadow: 0px 0px 16px 1px rgba(185, 174, 114, 0.07);
-                background-color: #B9AE72;
+                background-color: #b9ae72;
             }
-        }
+        }*/
     }
 }
