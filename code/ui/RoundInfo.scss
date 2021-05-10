@@ -1,90 +1,93 @@
-﻿.roundContainer
-{
+﻿.roundContainer {
+    background-image: url( /ui/hidden/top-bar-iris.png );
+    background-size: 100%;
+    font-family: Lexend;
+    display: flex;
+    flex-direction: row;
     position: absolute;
     top: 48px;
-    margin: 0 auto;
-    color: #ff0;
-    width: 254px;
-    height: 85px;
-    text-align: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    width: 410px;
+    height: 44px;
 
-    label
-    {
-        text-shadow: 0px 0px 20px #000;
+    label {
+        align-items: center;
+        color: #ECECEC;
+        font-size: 20px;
+        text-shadow: 0px 2px rgba(#000,0.5);
+
+        &.roundName {
+            width: 50%;
+            padding-right: 50px;
+            text-align: right;
+            left: 0;
+        }
+
+        &.timeLeft {
+            padding-left: 50px;
+            right: 0;
+            text-align: left;
+            width: 50%;
+        }
     }
 
-    .roundName
-    {
-        color: #1CB179;
-        margin-left: -40px;
-        margin-top: 4px;
-    }
 
-    .timeLeft
-    {
-        color: white;
-        margin-left: -40px;
 
-        &.hidden
-        {
+    &.roundNameOnly {
+
+        .roundName {
+            text-align: center;
+            margin-right: 0px;
+            left: auto;
+            padding: 0;
+            width: 100%;
+        }
+
+        .timeLeft {
             display: none;
         }
+
+        .icon {
+            display: none;
+        }
+    }
+
+    .icon {
+        position: absolute;
+        background-image: url( /ui/hidden/icon-iris.png );
+        background-size: 100%;
+        width: 64px;
+        height: 64px;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
     }
 }
 
 roundInfo
 {
-    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0;
     min-height: 100%;
     padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
 }
 
 .team_iris
 {
-    .roundContainer
-    {
-        background-image: url( /ui/green/mode.png );
-        background-size: 100%;
-        font-family: Days One;
-    }
-
-    .roundName
-    {
-        color: #1CB179;
-        font-size: 16px;
-    }
-
-    .timeLeft
-    {
-        font-size: 16px;
-    }
+    
 }
 
 .team_hidden
 {
     .roundContainer
     {
-        background-image: url( /ui/grayscale/mode-gs.png );
-        background-size: 100%;
-        font-family: Syne Mono;
-    }
+        background-image: url( /ui/hidden/top-bar-hidden.png );
 
-    .roundName
-    {
-        font-size: 16px;
-        color: #D2AC5C;
-    }
-
-    .timeLeft
-    {
-        font-size: 16px;
+        .icon
+        {
+            background-image: url( /ui/hidden/icon-hidden.png );
+        }
     }
 }

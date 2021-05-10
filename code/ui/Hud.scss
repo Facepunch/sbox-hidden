@@ -15,84 +15,99 @@ chatbox
 	bottom: 350px;
 }
 
-vitals
-{
-	background-image: url( /ui/green/player.png );
+vitals {
+	align-items: center;
+	background-image: url( /ui/hidden/player-container.png );
 	background-size: 100%;
+	color: #fff;
+	padding-left: 20px;
+	padding-right: 24px;
+	font-family: Roboto;
+	flex-direction: column;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	left: 64px;
 	font-size: 40px;
-	color: #fff;
-	width: 305px;
-	height: 85px;
-	font-family: Roboto;
-	align-items: center;
-	justify-content: center;
+	height: 80px;
+	width: 280px;
 
-	label
-	{
+	label {
 		text-shadow: 0px 0px 20px #000;
 
-		&.danger
-		{
+		&.danger {
 			color: #f00;
 			text-shadow: 0px 0px 10px #f005;
 		}
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
 	}
 }
 
-.team_hidden
-{
-	vitals
-	{
-		background-image: url( /ui/grayscale/player-gs.png );
+.team_hidden {
+	vitals {
+		background-image: url( /ui/hidden/player-container.png );
 	}
 }
 
-ammo
-{
-	background-image: url( /ui/green/ammo.png );
+ammo {
+	background-image: url( /ui/hidden/ammo-menu.png );
 	background-size: 100%;
-	position: absolute;
 	bottom: 32px;
-	right: 64px;
-	width: 206px;
-	height: 95px;
-	font-family: Syne Mono;
-	align-items: center;
-	justify-content: center;
 	display: none;
+	align-items: center;
+	font-family: Lexend;
+	height: 80px;
+	padding-left: 40px;
+	padding-right: 60px;
+	position: absolute;
+	right: 64px;
+	width: 248px;
 
-	label
-	{
+	label {
 		text-shadow: 0px 0px 20px #000;
 	}
 
-	.weapon
-	{
-		margin-left: -60px;
-		margin-top: -8px;
+	.icon {
+		width: 32px;
+		height: 32px;
+		background-image: url( /ui/hidden/ammo-icon.png );
+		background-size: 100%;
+		position: absolute;
+		right: 36px;
+	}
+
+	.textContainer {
+		align-items: center;
+		flex-grow: 1;
+	}
+
+	.weapon {
 		font-size: 34px;
-		color: white;
+		color: #ECECEC;
+		min-width: 50px;
+		text-align: right;
+		transition: color 0.2s ease;
 	}
 
-	.inventory
-	{
-		color: #2C795C;
-		font-size: 19px;
-		margin-left: 4px;
-		margin-top: -4px;
+	.inventory {
+		color: #ECECEC;
+		font-size: 28px;
+		margin-left: 8px;
+		opacity: 0.5;
 	}
 
-	&.active
-	{
-		display: auto;
+	&.active {
+		display: flex;
+	}
+
+
+	&.low-ammo {
+		.weapon {
+			color: #ff9f9f;
+		}
 	}
 }
 
@@ -109,78 +124,91 @@ ammo
 	}
 }
 
-abilities
-{
+.abilities {
+	align-items: center;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	left: 0;
 	right: 0;
-	align-items: center;
-	justify-content: center;
 
-	.ability
-	{
-		width: 90px;
-		height: 90px;
-		background-image: url( /ui/grayscale/power-unavailable-gs.png );
-		background-size: 100%;
-		margin-left: 24px;
+	.ability {
 		align-items: center;
+		background-image: url( /ui/hidden/power-unavailable.png );
+		box-shadow: 0 2px 40px rgba(0,0,0,0.3);
+		background-size: 100%;
+		height: 90px;
 		justify-content: center;
+		margin-left: 24px;
+		opacity: 0.7;
+		transition: all 0.5s ease;
+		width: 90px;
 
-		.icon
-		{
-			width: 40px;
-			height: 40px;
+		.icon {
 			background-size: 100%;
+			width: 80px;
+			height: 80px;
 
-			&.sense
-			{
-				background-image: url( /ui/icons/icon-ability-1.png );
+			&.sense {
+				background-image: url( /ui/hidden/eye-available.png );
 			}
 
-			&.scream
-			{
-				background-image: url( /ui/icons/icon-ability-2.png );
+			&.scream {
+				background-image: url( /ui/hidden/power2-available.png );
 			}
 		}
 
-		.cooldown
-		{
+		.cooldown-bar {
+			width: 90px;
+			height: 4px;
+			background-color: red;
 			position: absolute;
-			background-color: #971515;
-			font-family: Syne Mono;
+			bottom: 0;
+			opacity: 1;
+
+			&.usable {
+				opacity: 0;
+			}
+		}
+
+		.cooldown {
+			position: absolute;
+			background-image: url( /ui/hidden/power-unavailable.png );
+			box-shadow: 0 2px 25px rgba(0,0,0,0.9);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-size: cover;
+			font-family: Lexend;
 			border-radius: 4px;
-			bottom: 4px;
-			padding: 8px;
-			height: 10px;
+			bottom: 0;
+			transform: translateY(50%);
+			height: 18px;
+			width: 18px;
 
-			.text
-			{
+			.text {
 				font-size: 12px;
-				align-items: center;
 				color: white;
+				text-shadow: 0 1px 1px rgba(0,0,0,0.8);
 			}
 
-			&.usable
-			{
-				background-color: #B1841C;
+			&.usable {
+				background-image: url( /ui/hidden/power-available.png );
 			}
 		}
 
-		&.usable
-		{
-			background-image: url( /ui/grayscale/power-available-gs.png );
+		&.usable {
+			background-image: url( /ui/hidden/power-available.png );
+			box-shadow: 0 2px 40px rgba(0,0,0,0.9);
+			opacity: 1;
 		}
 
-		&.hidden
-		{
+		&.hidden {
 			display: none;
 		}
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
 	}
 }

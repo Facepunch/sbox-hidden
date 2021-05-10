@@ -27,9 +27,11 @@ namespace HiddenGamemode
 			if ( Sandbox.Player.Local is not Player player ) return;
 
 			SetClass( "hidden", player.LifeState != LifeState.Alive );
+			SetClass("low-health", player.Health < 30);
 
 			InnerBar.Style.Width = Length.Percent( player.Health );
 			InnerBar.Style.Dirty();
+			
 
 			Text.Text = player.Health.ToString();
 		}

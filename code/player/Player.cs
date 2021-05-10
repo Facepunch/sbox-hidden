@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Joints;
 using System;
 using System.Linq;
 
@@ -15,6 +16,7 @@ namespace HiddenGamemode
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
 		private WeldJoint _ragdollWeld;
+		private Particles _senseParticles;
 		private float _walkBob = 0;
 		private float _lean = 0;
 		private float _FOV = 0;
@@ -94,6 +96,7 @@ namespace HiddenGamemode
 			base.OnKilled();
 
 			ShowFlashlight( false, false );
+			ShowSenseParticles( false );
 
 			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 
@@ -145,6 +148,23 @@ namespace HiddenGamemode
 		protected override void UseFail()
 		{
 			// Do nothing. By default this plays a sound that we don't want.
+		}
+
+		public void ShowSenseParticles( bool shouldShow )
+		{
+			if ( _senseParticles != null )
+			{
+				_senseParticles.Destroy( false );
+				_senseParticles = null;
+			}
+
+			if ( shouldShow )
+			{
+				_senseParticles = Particles.Create( "particles/sense.vpcf" );
+
+				if ( _senseParticles != null )
+					_senseParticles.SetEntity( 0, this, true );
+			}
 		}
 
 		public void SwitchToBestWeapon()
@@ -342,6 +362,7 @@ namespace HiddenGamemode
 
 		protected override void OnDestroy()
 		{
+			ShowSenseParticles( false );
 			RemoveRagdollEntity();
 			DestroyLaserDot();
 

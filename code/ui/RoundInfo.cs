@@ -11,6 +11,7 @@ namespace HiddenGamemode
 		public Panel Container;
 		public Label RoundName;
 		public Label TimeLeft;
+		public Panel Icon;
 
 		public RoundInfo()
 		{
@@ -18,6 +19,7 @@ namespace HiddenGamemode
 
 			Container = Add.Panel( "roundContainer" );
 			RoundName = Container.Add.Label( "Round", "roundName" );
+			Icon = Container.Add.Panel( "icon" );
 			TimeLeft = Container.Add.Label( "00:00", "timeLeft" );
 		}
 
@@ -37,11 +39,11 @@ namespace HiddenGamemode
 			if ( round.RoundDuration > 0 && !string.IsNullOrEmpty( round.TimeLeftFormatted ) )
 			{
 				TimeLeft.Text = round.TimeLeftFormatted;
-				TimeLeft.SetClass( "hidden", false );
+				Container.SetClass( "roundNameOnly", false );
 			}
 			else
 			{
-				TimeLeft.SetClass( "hidden", true );
+				Container.SetClass( "roundNameOnly", true );
 			}
 		}
 	}

@@ -16,8 +16,7 @@ namespace HiddenGamemode
 		public Radar()
 		{
 			StyleSheet.Load( "/ui/Radar.scss" );
-
-			Anchor = Add.Panel( "anchor" );
+			SetTemplate( "/ui/Radar.html" );
 		}
 
 		public override void Tick()
@@ -74,7 +73,7 @@ namespace HiddenGamemode
 
 			var radarRange = 2048f;
 
-			if ( player.Pos.Distance( localPlayer.Pos ) > radarRange )
+			if ( player.WorldPos.Distance( localPlayer.WorldPos ) > radarRange )
 				return false;
 
 			if ( !_radarDots.TryGetValue( player, out var tag ) )

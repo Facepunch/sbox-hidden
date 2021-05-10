@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
 	public partial class StatsRound : BaseRound
 	{
-		public override string RoundName => "Game Over";
+		public override string RoundName => "STATS";
 		public override int RoundDuration => 10;
 
 		[Net] public string HiddenName { get; set; }

@@ -10,6 +10,7 @@ namespace HiddenGamemode
     class IrisTeam : BaseTeam
 	{
 		public override string HudClassName => "team_iris";
+		public override string Name => "I.R.I.S.";
 
 		private Battery _batteryHud;
 		private Radar _radarHud;

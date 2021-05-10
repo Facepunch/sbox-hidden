@@ -12,7 +12,7 @@ namespace HiddenGamemode
 		[ServerVar( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
 		public static bool HostAlwaysHidden { get; set; } = false;
 
-		public override string RoundName => "Hide / Prepare";
+		public override string RoundName => "PREPARE";
 		public override int RoundDuration => 20;
 
 		private Deployment _deploymentPanel;

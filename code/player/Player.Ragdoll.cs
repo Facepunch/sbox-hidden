@@ -10,8 +10,8 @@ namespace HiddenGamemode
 		{
 			var ragdoll = new PlayerCorpse
 			{
-				Pos = Pos,
-				Rot = Rot
+				WorldPos = WorldPos,
+				WorldRot = WorldRot
 			};
 
 			ragdoll.CopyFrom( this );

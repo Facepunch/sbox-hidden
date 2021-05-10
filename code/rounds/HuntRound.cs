@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
     public class HuntRound : BaseRound
 	{
-		public override string RoundName => "Hunt / Survive";
+		public override string RoundName => "HUNT";
 		public override int RoundDuration => 300;
 		public override bool CanPlayerSuicide => true;
 
@@ -123,7 +123,10 @@ namespace HiddenGamemode
 
 			await Task.Delay( delay * 1000 );
 
-			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().First();
+			if ( Game.Instance.Round != this )
+				return;
+
+			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
 
 			Game.Instance.ChangeRound( new StatsRound
 			{
