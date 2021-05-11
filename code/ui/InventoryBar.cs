@@ -2,6 +2,7 @@
 using Sandbox.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
@@ -12,6 +13,8 @@ namespace HiddenGamemode
 		private Weapon SelectedWeapon;
 
 		public bool IsOpen;
+		
+		public bool IsHiding;
 
 		public InventoryBar()
 		{
@@ -41,6 +44,17 @@ namespace HiddenGamemode
 				columns[weapon.Bucket].UpdateWeapon( weapon );
 			}
 		}
+		
+		// Hide the inventory bar after 5 seconds of inactivity.
+		private async Task StartHideInventoryTimer()
+		{
+		    if ( IsHiding ) return;
+		    IsHiding = true;
+		    await Task.Delay(5000);
+		    if ( !IsOpen ) return;
+		    IsOpen = false;
+		    IsHiding = false;
+		}
 
 		/// <summary>
 		/// IClientInput implementation, calls during the client input build.
@@ -68,6 +82,7 @@ namespace HiddenGamemode
 			{
 				SelectedWeapon = Player.Local.ActiveChild as Weapon;
 				IsOpen = true;
+				_ = StartHideInventoryTimer();
 			}
 
 			if ( !IsOpen ) return;
