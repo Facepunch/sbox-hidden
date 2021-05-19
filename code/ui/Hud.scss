@@ -15,43 +15,40 @@ chatbox
 	bottom: 350px;
 }
 
-vitals
-{
+vitals {
+	align-items: center;
 	background-image: url( /ui/hidden/player-container.png );
 	background-size: 100%;
+	color: #fff;
+	padding-left: 20px;
+	padding-right: 24px;
+	font-family: Roboto;
+	flex-direction: column;
+	justify-content: center;
 	position: absolute;
 	bottom: 32px;
 	left: 64px;
 	font-size: 40px;
-	color: #fff;
-	width: 300px;
 	height: 80px;
-	font-family: Roboto;
-	align-items: center;
-	justify-content: center;
+	width: 280px;
 
-	label
-	{
+	label {
 		text-shadow: 0px 0px 20px #000;
 
-		&.danger
-		{
+		&.danger {
 			color: #f00;
 			text-shadow: 0px 0px 10px #f005;
 		}
 	}
 
-	&.hidden
-	{
+	&.hidden {
 		display: none;
 	}
 }
 
-.team_hidden
-{
-	vitals
-	{
-		background-image: url( /ui/grayscale/player-gs.png );
+.team_hidden {
+	vitals {
+		background-image: url( /ui/hidden/player-container.png );
 	}
 }
 
@@ -92,6 +89,7 @@ ammo {
 		color: #ECECEC;
 		min-width: 50px;
 		text-align: right;
+		transition: color 0.2s ease;
 	}
 
 	.inventory {
@@ -103,6 +101,13 @@ ammo {
 
 	&.active {
 		display: flex;
+	}
+
+
+	&.low-ammo {
+		.weapon {
+			color: #ff9f9f;
+		}
 	}
 }
 
@@ -119,7 +124,7 @@ ammo {
 	}
 }
 
-abilities {
+.abilities {
 	align-items: center;
 	justify-content: center;
 	position: absolute;
@@ -150,6 +155,19 @@ abilities {
 
 			&.scream {
 				background-image: url( /ui/hidden/power2-available.png );
+			}
+		}
+
+		.cooldown-bar {
+			width: 90px;
+			height: 4px;
+			background-color: red;
+			position: absolute;
+			bottom: 0;
+			opacity: 1;
+
+			&.usable {
+				opacity: 0;
 			}
 		}
 

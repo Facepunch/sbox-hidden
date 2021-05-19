@@ -42,7 +42,7 @@ namespace HiddenGamemode
 			ability.Panel = Add.Panel( $"ability {className}" );
 			ability.Panel.Add.Panel( $"icon {className}" );
 
-			ability.CooldownPanel = ability.Panel.Add.Panel( "cooldown " );
+			ability.CooldownPanel = ability.Panel.Add.Panel( "cooldown" );
 			ability.CooldownLabel = ability.CooldownPanel.Add.Label( "0", "text " );
 
 			return ability;
