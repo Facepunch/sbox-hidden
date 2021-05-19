@@ -5,8 +5,9 @@ namespace HiddenGamemode
 	[Library]
 	public class DuckController : NetworkClass
 	{
-		public BasePlayerController Controller { get; set; }
-		public bool IsActive { get; set; }
+		public BasePlayerController Controller;
+
+		public bool IsActive;
 
 		public DuckController( BasePlayerController controller )
 		{
@@ -15,11 +16,11 @@ namespace HiddenGamemode
 
 		public virtual void PreTick()
 		{
-			bool isHoldingDuck = Controller.Input.Down( InputButton.Duck );
+			bool wants = Controller.Input.Down( InputButton.Duck );
 
-			if ( isHoldingDuck != IsActive )
+			if ( wants != IsActive )
 			{
-				if ( isHoldingDuck )
+				if ( wants )
 					TryDuck();
 				else
 					TryUnDuck();
@@ -28,20 +29,21 @@ namespace HiddenGamemode
 			if ( IsActive )
 			{
 				Controller.SetTag( "ducked" );
-				Controller.ViewOffset *= 0.5f;
+				Controller.EyePosLocal *= 0.5f;
 			}
 		}
 
-		private void TryDuck()
+		void TryDuck()
 		{
 			IsActive = true;
 		}
 
-		private void TryUnDuck()
+		void TryUnDuck()
 		{
-			var pm = Controller.TraceBBox( Controller.Pos, Controller.Pos, _originalMins, _originalMaxs );
+			var pm = Controller.TraceBBox( Controller.Position, Controller.Position, _originalMins, _originalMaxs );
 
-			if ( pm.StartedSolid ) return;
+			if ( pm.StartedSolid )
+				return;
 
 			IsActive = false;
 		}
@@ -61,7 +63,6 @@ namespace HiddenGamemode
 		public float GetWishSpeed()
 		{
 			if ( !IsActive ) return -1;
-
 			return 64.0f;
 		}
 	}

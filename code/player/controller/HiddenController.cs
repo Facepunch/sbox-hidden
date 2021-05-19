@@ -16,15 +16,15 @@ namespace HiddenGamemode
 		public float LeapVelocity { get; set; } = 300f;
 		public float LeapStaminaLoss { get; set; } = 40f;
 
-		protected override void AddJumpVelocity()
+		public override void AddJumpVelocity()
 		{
-			if ( Player is Player player )
+			if ( Pawn is Player player )
 			{
 				var minLeapVelocity = (LeapVelocity * 0.2f);
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
 				var actualLeapVelocity = minLeapVelocity + ( extraLeapVelocity / 100f) * player.Stamina;
 
-				Velocity += (Player.EyeRot.Forward * actualLeapVelocity);
+				Velocity += (Pawn.EyeRot.Forward * actualLeapVelocity);
 
 				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
 			}
@@ -36,7 +36,7 @@ namespace HiddenGamemode
 		{
 			var speed = base.GetWishSpeed();
 
-			if ( Player is Player player )
+			if ( Pawn is Player player )
 			{
 				if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
 					speed *= 0.7f;
@@ -47,7 +47,7 @@ namespace HiddenGamemode
 			return speed;
 		}
 
-		public override void Tick()
+		public override void Simulate()
 		{
 			if ( IsFrozen )
 			{
@@ -55,45 +55,19 @@ namespace HiddenGamemode
 				{
 					BaseVelocity = Vector3.Zero;
 					WishVelocity = Vector3.Zero;
-					Velocity = ( Player.EyeRot.Forward * LeapVelocity * 2f);
+					Velocity = (Input.Rotation.Forward * LeapVelocity * 2f);
 					IsFrozen = false;
 				}
 
 				return;
 			}
 
-			if ( Player is Player player )
+			if ( Pawn is Player player )
 			{
 				player.Stamina = MathF.Min( player.Stamina + (10f * Time.Delta), 100f );
 			}
 
-			// TODO: We'll implement jump stamina here. We can't do it yet.
-
-			/*
-			if ( !IsSliding && Input.Pressed( InputButton.Duck) )
-			{
-				if ( GroundEntity != null && Velocity.Length >= SprintSpeed * 0.8f )
-				{
-					SlideVelocity = 2000f;
-					Velocity = Rot.Forward * 1000f;
-					IsSliding = true;
-				}
-			}
-			else if ( IsSliding )
-			{
-				if ( GroundEntity == null || !Input.Down( InputButton.Duck ) )
-				{
-					IsSliding = false;
-				}
-				else
-				{
-					SlideVelocity *= 0.98f;
-					Velocity += (Rot.Forward * SlideVelocity * Time.Delta);
-				}
-			}
-			*/
-
-			base.Tick();
+			base.Simulate();
 		}
 	}
 }

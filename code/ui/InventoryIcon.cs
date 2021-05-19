@@ -28,7 +28,7 @@ namespace HiddenGamemode
 		{
 			base.Tick();
 
-			if ( !Weapon.IsValid() || Weapon.Owner != Sandbox.Player.Local )
+			if ( !Weapon.IsValid() || Weapon.Owner != Local.Pawn )
 				Delete();
 		}
 	}

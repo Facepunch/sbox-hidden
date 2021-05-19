@@ -13,7 +13,8 @@ namespace HiddenGamemode
 
 		public Nameplate( Player player )
 		{
-			NameLabel = Add.Label( player.Name );
+			var client = player.GetClientOwner();
+			NameLabel = Add.Label( client.Name );
 		}
 	}
 }

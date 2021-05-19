@@ -19,9 +19,9 @@ namespace HiddenGamemode
 
 		private float _fallVelocity;
 
-		public override void Tick()
+		public override void Simulate()
 		{
-			if ( Player is Player player )
+			if ( Pawn is Player player )
 			{
 				var staminaLossPerSecond = StaminaLossPerSecond;
 
@@ -46,15 +46,15 @@ namespace HiddenGamemode
 				SprintSpeed = WalkSpeed + (((MaxSprintSpeed - WalkSpeed) / 100f) * player.Stamina) + 40f;
 			}
 
-			base.Tick();
+			base.Simulate();
 		}
 
-		protected override void OnPreTickMove()
+		public override void OnPreTickMove()
 		{
 			_fallVelocity = Velocity.z;
 		}
 
-		protected override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
+		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
 		{
 			if ( Host.IsServer && trace.Hit && _fallVelocity < -FallDamageVelocity )
 			{
@@ -63,12 +63,12 @@ namespace HiddenGamemode
 				using ( Prediction.Off() )
 				{
 					var damageInfo = new DamageInfo()
-						.WithAttacker( Player )
+						.WithAttacker( Pawn )
 						.WithFlag( DamageFlags.Fall );
 
 					damageInfo.Damage = damage;
 
-					Player.TakeDamage( damageInfo );
+					Pawn.TakeDamage( damageInfo );
 				}
 			}
 		}

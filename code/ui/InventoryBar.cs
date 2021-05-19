@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HiddenGamemode
 {
-	public class InventoryBar : Panel, IClientInput
+	public class InventoryBar : Panel
 	{
 		private readonly List<InventoryColumn> columns = new();
 		private readonly List<Weapon> Weapons = new();
@@ -30,7 +30,7 @@ namespace HiddenGamemode
 
 			SetClass( "active", IsOpen );
 
-			var player = Sandbox.Player.Local;
+			var player = Local.Pawn;
 			if ( player == null ) return;
 
 			Weapons.Clear();
@@ -46,7 +46,8 @@ namespace HiddenGamemode
 		/// IClientInput implementation, calls during the client input build.
 		/// You can both read and write to input, to affect what happens down the line.
 		/// </summary>
-		public void ProcessClientInput( ClientInput input )
+		[Event( "buildinput" )]
+		public void ProcessClientInput( InputBuilder input )
 		{
 			bool wantOpen = IsOpen;
 
@@ -66,7 +67,7 @@ namespace HiddenGamemode
 
 			if ( IsOpen != wantOpen )
 			{
-				SelectedWeapon = Player.Local.ActiveChild as Weapon;
+				SelectedWeapon = Local.Pawn.ActiveChild as Weapon;
 				IsOpen = true;
 			}
 
@@ -103,7 +104,7 @@ namespace HiddenGamemode
 			}
 		}
 
-		int SlotPressInput( ClientInput input, int SelectedIndex )
+		int SlotPressInput( InputBuilder input, int SelectedIndex )
 		{
 			var columninput = 0;
 

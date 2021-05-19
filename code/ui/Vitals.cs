@@ -18,7 +18,7 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			if ( Sandbox.Player.Local is not Player player ) return;
+			if ( Local.Pawn is not Player player ) return;
 
 			SetClass( "hidden", player.LifeState != LifeState.Alive );
 

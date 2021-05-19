@@ -53,8 +53,8 @@ namespace HiddenGamemode
 		public override void Tick()
 		{
 			base.Tick();
-
-			SetClass( "open", Sandbox.Player.Local?.Input.Down( InputButton.Score ) ?? false );
+			
+			SetClass( "open", Local.Client?.Input.Down( InputButton.Score ) ?? false );
 		}
 
 		protected void AddTeamHeader(BaseTeam team)

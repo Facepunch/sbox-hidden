@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HiddenGamemode
 {
 	[Library]
-	public partial class Hud : Sandbox.Hud
+	public partial class Hud : HudEntity<RootPanel>
 	{
 		public Hud()
 		{

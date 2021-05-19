@@ -28,7 +28,9 @@ namespace HiddenGamemode
 
 			deleteList.AddRange( _activeNameplates.Keys );
 
-			foreach ( var v in Sandbox.Player.All.OrderBy( x => Vector3.DistanceBetween( x.EyePos, Camera.LastPos ) ) )
+			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePos, CurrentView.Position ) );
+
+			foreach ( var v in players )
 			{
 				if ( v is not Player player ) continue;
 
@@ -61,35 +63,30 @@ namespace HiddenGamemode
 
 		public bool UpdateNameplate( Player player )
 		{
-			if ( player.IsLocalPlayer || !player.HasTeam || player.Team.HideNameplate )
+			if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
 				return false;
 
 			if ( player.LifeState != LifeState.Alive )
 				return false;
 
-			var head = player.GetAttachment( "hat" );
+			var labelPos = player.EyePos + player.Rotation.Up * 10f;
 
-			if ( head.Pos == Vector3.Zero )
-				head.Pos = player.EyePos;
-
-			var labelPos = head.Pos + head.Rot.Up * 5;
-
-			float dist = labelPos.Distance( Camera.LastPos );
+			float dist = labelPos.Distance( CurrentView.Position );
 
 			if ( dist > MaxDrawDistance )
 				return false;
 
-			var localPlayer = Sandbox.Player.Local as Player;
+			var localPlayer = Local.Pawn as Player;
 
 			// If we're not spectating only show nameplates of players we can see.
 			if ( !localPlayer.IsSpectator )
 			{
-				var lookDir = (labelPos - Camera.LastPos).Normal;
+				var lookDir = (labelPos - CurrentView.Position).Normal;
 
-				if ( Camera.LastRot.Forward.Dot( lookDir ) < 0.5 )
+				if ( CurrentView.Rotation.Forward.Dot( lookDir ) < 0.5 )
 					return false;
 
-				var trace = Trace.Ray( localPlayer.EyePos, head.Pos )
+				var trace = Trace.Ray( localPlayer.EyePos, player.EyePos)
 					.Ignore( localPlayer )
 					.Run();
 
@@ -98,7 +95,7 @@ namespace HiddenGamemode
 			}
 
 			var alpha = dist.LerpInverse( MaxDrawDistance, MaxDrawDistance * 0.1f, true );
-			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (Camera.LastFieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
+			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (CurrentView.FieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
 
 			objectSize = objectSize.Clamp( 0.05f, 1.0f );
 

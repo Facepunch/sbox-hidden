@@ -36,7 +36,7 @@ namespace HiddenGamemode
 					.Run();
 
 				if ( trace.Hit )
-					_laserDot.WorldPos = trace.EndPos;
+					_laserDot.Position = trace.EndPos;
 			}
 			else
 			{

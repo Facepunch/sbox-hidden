@@ -26,8 +26,10 @@ namespace HiddenGamemode
 					{
 						TeamIndex = _team.Index;
 
+						var client = GetClientOwner();
+
 						// You have to do this for now.
-						SetScore( "team", TeamIndex );
+						client.SetScore( "team", TeamIndex );
 						NetworkDirty( "TeamIndex", NetVarGroup.Net );
 					}
 				}

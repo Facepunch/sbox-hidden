@@ -24,7 +24,7 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			var player = Sandbox.Player.Local;
+			var player = Local.Pawn;
 			if ( player == null ) return;
 
 			var weapon = player.ActiveChild as Weapon;

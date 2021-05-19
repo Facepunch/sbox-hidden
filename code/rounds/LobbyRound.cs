@@ -17,7 +17,11 @@ namespace HiddenGamemode
 
 			if ( Host.IsServer )
 			{
-				Sandbox.Player.All.ForEach( ( player ) => (player as Player).Respawn() );
+				foreach ( var client in Client.All )
+				{
+					if ( client.Pawn is Player player )
+						player.Respawn();
+				}
 			}
 		}
 

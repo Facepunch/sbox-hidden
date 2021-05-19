@@ -14,7 +14,7 @@ namespace HiddenGamemode
 		{
 			get
 			{
-				if ( IsLocalPlayer )
+				if ( IsLocalPawn )
 				{
 					return (_viewFlashlight != null && _viewFlashlight.IsValid());
 				}
@@ -27,7 +27,7 @@ namespace HiddenGamemode
 		{
 			get
 			{
-				if ( IsLocalPlayer )
+				if ( IsLocalPawn )
 					return (HasFlashlightEntity && _viewFlashlight.Enabled);
 
 				return (HasFlashlightEntity && _worldFlashlight.Enabled);
@@ -50,7 +50,7 @@ namespace HiddenGamemode
 			}
 
 			if ( IsServer && IsFlashlightOn != shouldShow )
-				ShowFlashlightLocal( this, shouldShow );
+				ShowFlashlightLocal( To.Single( this ), shouldShow );
 
 			if ( ActiveChild is not Weapon weapon || !weapon.HasFlashlight )
 				return;
@@ -63,16 +63,16 @@ namespace HiddenGamemode
 					{
 						_worldFlashlight = new Flashlight();
 						_worldFlashlight.EnableHideInFirstPerson = true;
-						_worldFlashlight.LocalRot = EyeRot;
+						_worldFlashlight.LocalRotation = EyeRot;
 						_worldFlashlight.SetParent( weapon, "muzzle" );
-						_worldFlashlight.LocalPos = Vector3.Zero;
+						_worldFlashlight.LocalPosition = Vector3.Zero;
 					}
 					else
 					{
 						_viewFlashlight = new Flashlight();
 						_viewFlashlight.EnableViewmodelRendering = true;
-						_viewFlashlight.WorldRot = EyeRot;
-						_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 10f;
+						_viewFlashlight.Rotation = EyeRot;
+						_viewFlashlight.Position = EyePos + EyeRot.Forward * 10f;
 					}
 				}
 				else
@@ -81,9 +81,9 @@ namespace HiddenGamemode
 					{
 						// TODO: This is a weird hack to make sure the rotation is right.
 						_worldFlashlight.SetParent( null );
-						_worldFlashlight.LocalRot = EyeRot;
+						_worldFlashlight.LocalRotation = EyeRot;
 						_worldFlashlight.SetParent( weapon, "muzzle" );
-						_worldFlashlight.LocalPos = Vector3.Zero;
+						_worldFlashlight.LocalPosition = Vector3.Zero;
 						_worldFlashlight.Enabled = true;
 					}
 					else
@@ -150,8 +150,8 @@ namespace HiddenGamemode
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
 								_viewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
-								_viewFlashlight.WorldRot = EyeRot;
-								_viewFlashlight.LocalPos = Vector3.Zero;
+								_viewFlashlight.Rotation = EyeRot;
+								_viewFlashlight.LocalPosition = Vector3.Zero;
 							}
 						}
 						else
@@ -159,8 +159,8 @@ namespace HiddenGamemode
 							if ( viewFlashlightParent != null )
 								_viewFlashlight.SetParent( null );
 
-							_viewFlashlight.WorldRot = EyeRot;
-							_viewFlashlight.WorldPos = EyePos + EyeRot.Forward * 80f;
+							_viewFlashlight.Rotation = EyeRot;
+							_viewFlashlight.Position = EyePos + EyeRot.Forward * 80f;
 						}
 
 						var shouldTurnOff = _viewFlashlight.UpdateFromBattery( FlashlightBattery );

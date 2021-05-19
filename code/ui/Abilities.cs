@@ -25,7 +25,7 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			if ( Sandbox.Player.Local is not Player player ) return;
+			if ( Local.Pawn is not Player player ) return;
 
 			if ( player.Team is not HiddenTeam ) return;
 
@@ -50,7 +50,7 @@ namespace HiddenGamemode
 
 		private void UpdateAbility( AbilityInfo info, BaseAbility ability )
 		{
-			if ( Sandbox.Player.Local is not Player player )
+			if ( Local.Pawn is not Player player )
 				return;
 
 			info.Panel.SetClass( "hidden", ability == null );

@@ -4,7 +4,7 @@
 	{
 		public static void PositionAtCrosshair( this Panel panel )
 		{
-			panel.PositionAtCrosshair( Player.Local );
+			panel.PositionAtCrosshair( Local.Pawn as Player );
 		}
 
 		public static void PositionAtCrosshair( this Panel panel, Player player )

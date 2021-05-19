@@ -2,7 +2,7 @@
 
 namespace HiddenGamemode
 {
-	public partial class SpectateCamera : BaseCamera
+	public partial class SpectateCamera : Camera
 	{
 		[NetPredicted] public TimeSince TimeSinceDied { get; set; }
 		[NetPredicted] public Vector3 DeathPosition { get; set; }
@@ -16,17 +16,17 @@ namespace HiddenGamemode
 		{
 			base.Activated();
 
-			_focusPoint = LastPos - GetViewOffset();
+			_focusPoint = CurrentView.Position - GetViewOffset();
 
 			FieldOfView = 70;
 		}
 
 		public override void Update()
 		{
-			if ( Sandbox.Player.Local is not Player player )
+			if ( Local.Pawn is not Player player )
 				return;
 
-			if ( TargetPlayer == null || !TargetPlayer.IsValid() || player.Input.Pressed(InputButton.Attack1) )
+			if ( TargetPlayer == null || !TargetPlayer.IsValid() || Local.Client.Input.Pressed(InputButton.Attack1) )
 			{
 				var players = Game.Instance.GetTeamPlayers<IrisTeam>(true);
 
@@ -50,7 +50,7 @@ namespace HiddenGamemode
 
 		private Vector3 GetSpectatePoint()
 		{
-			if ( Sandbox.Player.Local is not Player )
+			if ( Local.Pawn is not Player )
 				return DeathPosition;
 
 			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
@@ -61,7 +61,7 @@ namespace HiddenGamemode
 
 		private Vector3 GetViewOffset()
 		{
-			if ( Sandbox.Player.Local is not Player player )
+			if ( Local.Pawn is not Player player )
 				return Vector3.Zero;
 
 			return player.EyeRot.Forward * -150 + Vector3.Up * 10;

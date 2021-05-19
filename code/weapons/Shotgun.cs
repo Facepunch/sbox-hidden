@@ -32,7 +32,7 @@ namespace HiddenGamemode
 				return;
 			}
 
-			Owner.SetAnimParam( "b_attack", true );
+			(Owner as AnimEntity).SetAnimParam( "b_attack", true );
 
 			ShootEffects();
 			PlaySound( "rust_pumpshotgun.shoot" );
@@ -53,7 +53,7 @@ namespace HiddenGamemode
 
 			ViewModelEntity?.SetAnimParam( "fire", true );
 
-			if ( Owner == Player.Local )
+			if ( IsLocalPawn )
 			{
 				_ = new Sandbox.ScreenShake.Perlin( 1.0f, 1.5f, 2.0f );
 			}
@@ -96,7 +96,7 @@ namespace HiddenGamemode
 			ViewModelEntity?.SetAnimParam( "reload_finished", true );
 		}
 
-		public override void TickPlayerAnimator( PlayerAnimator anim )
+		public override void SimulateAnimator( PawnAnimator anim )
 		{
 			anim.SetParam( "holdtype", 2 );
 			anim.SetParam( "aimat_weight", 1.0f );

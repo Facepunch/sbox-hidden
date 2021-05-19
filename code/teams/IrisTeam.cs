@@ -60,14 +60,13 @@ namespace HiddenGamemode
 
 		public override void OnJoin( Player player  )
 		{
-			Log.Info( $"{player.Name} joined the Military team." );
+			var client = player.GetClientOwner();
 
-			if ( Host.IsClient && player.IsLocalPlayer )
+			Log.Info( $"{ client.Name } joined the Military team." );
+
+			if ( Host.IsClient && player.IsLocalPawn )
 			{
-				_radarHud = Sandbox.Hud.CurrentPanel.AddChild<Radar>();
-				
-				// TODO: Let's try not having a battery HUD. Does it make it spookier?
-				//_batteryHud = Sandbox.Hud.CurrentPanel.AddChild<Battery>();
+				_radarHud = Local.Hud.AddChild<Radar>();
 			}
 
 			base.OnJoin( player );
@@ -99,9 +98,11 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player  )
 		{
-			Log.Info( $"{player.Name} left the Military team." );
+			var client = player.GetClientOwner();
 
-			if ( player.IsLocalPlayer )
+			Log.Info( $"{ client.Name } left the Military team." );
+
+			if ( player.IsLocalPawn )
 			{
 				if ( _radarHud != null )
 				{

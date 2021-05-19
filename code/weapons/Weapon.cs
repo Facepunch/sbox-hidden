@@ -79,22 +79,16 @@ namespace HiddenGamemode
 
 			IsReloading = true;
 
-			Owner.SetAnimParam( "b_reload", true );
+			(Owner as AnimEntity).SetAnimParam( "b_reload", true );
 
 			DoClientReload();
 		}
 
-		public override void TickPlayerAnimator( PlayerAnimator anim )
+		public override void Simulate( Client owner )
 		{
-			anim.SetParam( "holdtype", HoldType );
-			anim.SetParam( "aimat_weight", 1.0f );
-		}
-
-		public override void OnPlayerControlTick( Sandbox.Player owner )
-		{
-			if ( owner is Player player )
+			if ( owner.Pawn is Player player )
 			{
-				if ( player.LifeState == LifeState.Alive )
+				if ( owner.Pawn.LifeState == LifeState.Alive )
 				{
 					if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
 					{
@@ -110,7 +104,7 @@ namespace HiddenGamemode
 
 			if ( !IsReloading )
 			{
-				base.OnPlayerControlTick( owner );
+				base.Simulate( owner );
 			}
 
 			if ( IsReloading && TimeSinceReload > ReloadTime )
@@ -189,7 +183,7 @@ namespace HiddenGamemode
 				Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 			}
 
-			if ( Owner == Sandbox.Player.Local )
+			if ( IsLocalPawn )
 			{
 				_ = new Sandbox.ScreenShake.Perlin();
 			}
@@ -241,7 +235,7 @@ namespace HiddenGamemode
 
 			ViewModelEntity = new ViewModel
 			{
-				WorldPos = WorldPos,
+				Position = Position,
 				Owner = Owner,
 				EnableViewmodelRendering = true
 			};
@@ -251,13 +245,13 @@ namespace HiddenGamemode
 
 		public override void CreateHudElements()
 		{
-			if ( Sandbox.Hud.CurrentPanel == null ) return;
+			if ( Local.Hud == null ) return;
 
 			if ( !HasLaserDot )
 			{
 				CrosshairPanel = new Crosshair
 				{
-					Parent = Sandbox.Hud.CurrentPanel
+					Parent = Local.Hud
 				};
 
 				CrosshairPanel.AddClass( ClassInfo.Name );

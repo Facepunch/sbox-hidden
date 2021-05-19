@@ -21,7 +21,7 @@ namespace HiddenGamemode
 		{
 			var isHidden = false;
 
-			if ( Sandbox.Player.Local is Player player )
+			if ( Local.Pawn is Player player )
 			{
 				if ( player.Team != null )
 					isHidden = true;

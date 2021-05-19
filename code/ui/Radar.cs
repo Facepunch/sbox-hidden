@@ -23,7 +23,8 @@ namespace HiddenGamemode
 		{
 			base.Tick();
 
-			if ( Sandbox.Player.Local is not Player localPlayer ) return;
+			if ( Local.Pawn is not Player localPlayer )
+				return;
 
 			SetClass( "hidden", localPlayer.LifeState != LifeState.Alive );
 
@@ -32,13 +33,13 @@ namespace HiddenGamemode
 
 			deleteList.AddRange( _radarDots.Keys );
 
-			foreach ( var v in Sandbox.Player.All.OrderBy( x => Vector3.DistanceBetween( x.EyePos, Camera.LastPos ) ) )
-			{
-				if ( v is not Player player ) continue;
+			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePos, CurrentView.Position ) );
 
-				if ( UpdateRadar( player ) )
+			foreach ( var v in players )
+			{
+				if ( UpdateRadar( v ) )
 				{
-					deleteList.Remove( player );
+					deleteList.Remove( v );
 					count++;
 				}
 			}
@@ -62,18 +63,18 @@ namespace HiddenGamemode
 
 		public bool UpdateRadar( Player player )
 		{
-			if ( player.IsLocalPlayer || !player.HasTeam || player.Team.HideNameplate )
+			if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
 				return false;
 
 			if ( player.LifeState != LifeState.Alive )
 				return false;
 
-			if ( Sandbox.Player.Local is not Player localPlayer )
+			if ( Local.Pawn is not Player localPlayer )
 				return false;
 
 			var radarRange = 2048f;
 
-			if ( player.WorldPos.Distance( localPlayer.WorldPos ) > radarRange )
+			if ( player.Position.Distance( localPlayer.Position ) > radarRange )
 				return false;
 
 			if ( !_radarDots.TryGetValue( player, out var tag ) )
@@ -84,13 +85,13 @@ namespace HiddenGamemode
 
 			// This is probably fucking awful maths but it works.
 
-			var difference = player.WorldPos - localPlayer.WorldPos;
+			var difference = player.Position - localPlayer.Position;
 			var radarSize = 256f;
 
 			var x = (radarSize / radarRange) * difference.x * 0.5f;
 			var y = (radarSize / radarRange) * difference.y * 0.5f;
 
-			var angle = (MathF.PI / 180) * (Camera.LastRot.Yaw() - 90f);
+			var angle = (MathF.PI / 180) * (CurrentView.Rotation.Yaw() - 90f);
 			var x2 = x * MathF.Cos( angle ) + y * MathF.Sin( angle );
 			var y2 = y * MathF.Cos( angle ) - x *MathF.Sin( angle );
 

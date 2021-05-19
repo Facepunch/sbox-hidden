@@ -18,11 +18,11 @@ namespace HiddenGamemode
 
 		public void Join( Player player )
 		{
-			if ( player.IsLocalPlayer )
+			if ( player.IsLocalPawn )
 			{
 				Log.Info( "Adding " + HudClassName + " to the HUD" );
 
-				Sandbox.Hud.CurrentPanel.AddClass( HudClassName );
+				Local.Hud.AddClass( HudClassName );
 			}
 
 			OnJoin( player );
@@ -30,9 +30,9 @@ namespace HiddenGamemode
 
 		public void Leave( Player player )
 		{
-			if ( player.IsLocalPlayer )
+			if ( player.IsLocalPawn )
 			{
-				Sandbox.Hud.CurrentPanel.RemoveClass( HudClassName );
+				Local.Hud.RemoveClass( HudClassName );
 			}
 
 			OnLeave( player );

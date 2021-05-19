@@ -39,7 +39,7 @@ namespace HiddenGamemode
 
 		public static void SelectDeployment( DeploymentType type )
 		{
-			if ( Sandbox.Player.Local is Player player )
+			if ( Local.Pawn is Player player )
 				player.Deployment = type;
 
 			SelectDeploymentCmd( type.ToString() );
@@ -49,7 +49,7 @@ namespace HiddenGamemode
 		{
 			CloseDeploymentPanel();
 
-			_deploymentPanel = Sandbox.Hud.CurrentPanel.AddChild<Deployment>();
+			_deploymentPanel = Local.Hud.AddChild<Deployment>();
 
 			team.AddDeployments( _deploymentPanel, (selection) =>
 			{
@@ -70,7 +70,7 @@ namespace HiddenGamemode
 				player.Team.OnStart( player );
 
 				if ( player.Team.HasDeployments )
-					OpenDeploymentCmd( player, player.TeamIndex );
+					OpenDeploymentCmd( To.Single( player ), player.TeamIndex );
 			}
 
 			base.OnPlayerSpawn( player );
@@ -82,7 +82,11 @@ namespace HiddenGamemode
 
 			if ( Host.IsServer )
 			{
-				Sandbox.Player.All.ForEach((player) => player.Respawn());
+				foreach ( var client in Client.All )
+				{
+					if ( client.Pawn is Player player )
+						player.Respawn();
+				}
 
 				if ( Players.Count == 0 ) return;
 
@@ -109,7 +113,7 @@ namespace HiddenGamemode
 					}
 
 					if ( player.Team.HasDeployments )
-						OpenDeploymentCmd( player, player.TeamIndex );
+						OpenDeploymentCmd( To.Single( player ), player.TeamIndex );
 				} );
 
 				_roundStarted = true;

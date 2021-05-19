@@ -66,16 +66,16 @@ namespace HiddenGamemode
 		{
 			var output = new List<Player>();
 
-			Sandbox.Player.All.ForEach( ( p ) =>
+			foreach ( var client in Client.All )
 			{
-				if ( p is Player player && player.Team is T )
+				if ( client.Pawn is Player player && player.Team is T )
 				{
 					if ( !isAlive || player.LifeState == LifeState.Alive )
 					{
 						output.Add( player );
 					}
 				}
-			} );
+			}
 
 			return output;
 		}
@@ -107,38 +107,20 @@ namespace HiddenGamemode
 			}
 		}
 
-		public override void DoPlayerNoclip( Sandbox.Player player )
+		public override void DoPlayerNoclip( Client client )
 		{
 			// Do nothing. The player can't noclip in this mode.
 		}
 
-		public override void DoPlayerSuicide( Sandbox.Player player )
+		public override void DoPlayerSuicide( Client client )
 		{
-			if ( player.LifeState == LifeState.Alive && Round?.CanPlayerSuicide == true )
+			if ( client.Pawn.LifeState == LifeState.Alive && Round?.CanPlayerSuicide == true )
 			{
 				// This simulates the player being killed.
-				player.LifeState = LifeState.Dead;
-				player.OnKilled();
-				PlayerKilled( player );
+				client.Pawn.LifeState = LifeState.Dead;
+				client.Pawn.OnKilled();
+				OnKilled( client.Pawn );
 			}
-		}
-
-		public override void PlayerVoiceIn( Sandbox.Player speaker, byte[] voiceData )
-		{
-			foreach ( var receiver in Sandbox.Player.All
-				.Where( x => Vector3.DistanceBetween( x.WorldPos, speaker.WorldPos ) < VoiceRadius ) )
-			{
-				OutputPlayerVoice( receiver, speaker, voiceData );
-			}
-		}
-
-		public override void PlayerVoiceOut( Sandbox.Player speaker, byte[] voiceData )
-		{
-			// We never want to hear ourselves.
-			if ( speaker.IsLocalPlayer )
-				return;
-
-			speaker.PlayVoice( voiceData );
 		}
 
 		public override void PostLevelLoaded()
@@ -148,23 +130,31 @@ namespace HiddenGamemode
 			base.PostLevelLoaded();
 		}
 
-		public override void PlayerKilled( Sandbox.Player player )
+		public override void OnKilled( Entity entity)
 		{
-			Round?.OnPlayerKilled( player as Player );
+			if ( entity is Player player )
+				Round?.OnPlayerKilled( player );
 
-			base.PlayerKilled( player );
+			base.OnKilled( entity);
 		}
 
-		public override void PlayerDisconnected( Sandbox.Player player, NetworkDisconnectionReason reason )
+		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
 		{
-			Log.Info( player.Name + " left, checking minimum player count..." );
+			Log.Info( client.Name + " left, checking minimum player count..." );
 
-			Round?.OnPlayerLeave( player as Player );
+			Round?.OnPlayerLeave( client.Pawn as Player );
 
-			base.PlayerDisconnected( player, reason );
+			base.ClientDisconnect( client, reason );
 		}
 
-		public override Player CreatePlayer() => new();
+		public override void ClientJoined( Client client )
+		{
+			var pawn = new Player();
+			client.Pawn = pawn;
+			pawn.Respawn();
+
+			base.ClientJoined( client );
+		}
 
 		private void OnSecond()
 		{
@@ -193,22 +183,22 @@ namespace HiddenGamemode
 					_lastRound.Start();
 				}
 
-				Sandbox.Player.All.ForEach( ( player ) =>
+				foreach ( var client in Client.All )
 				{
-					if ( player is not Player hiddenPlayer ) return;
+					if ( client.Pawn is not Player player ) return;
 
-					if ( hiddenPlayer.TeamIndex != hiddenPlayer.LastTeamIndex )
+					if ( player.TeamIndex != player.LastTeamIndex )
 					{
-						hiddenPlayer.Team = GetTeamByIndex( hiddenPlayer.TeamIndex );
-						hiddenPlayer.LastTeamIndex = hiddenPlayer.TeamIndex;
+						player.Team = GetTeamByIndex( player.TeamIndex );
+						player.LastTeamIndex = player.TeamIndex;
 					}
-				} );
+				};
 			}
 		}
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Sandbox.Player.All.Count >= MinPlayers)
+			if ( Client.All.Count >= MinPlayers)
 			{
 				if ( Round is LobbyRound || Round == null )
 				{

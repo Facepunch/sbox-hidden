@@ -26,7 +26,7 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient )
 			{
-				_statsPanel = Sandbox.Hud.CurrentPanel.AddChild<Stats>();
+				_statsPanel = Local.Hud.AddChild<Stats>();
 
 				_statsPanel.Winner.Text = Winner;
 

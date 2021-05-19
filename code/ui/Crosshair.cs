@@ -33,7 +33,7 @@ namespace HiddenGamemode
 		{
 			base.Tick();
 
-			if ( Sandbox.Player.Local is not Player player )
+			if ( Local.Pawn is not Player player )
 				return;
 
 			Charge.SetClass( "hidden", true );

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HiddenGamemode
 {
-	public partial class Player : BasePlayer
+	public partial class Player : Sandbox.Player
 	{
 		[NetPredicted] public float Stamina { get; set; }
 		[NetLocal] public SenseAbility Sense { get; set; }
@@ -105,9 +105,9 @@ namespace HiddenGamemode
 			Team?.OnPlayerKilled( this );
 		}
 
-		protected override void Tick()
+		public override void Simulate( Client client )
 		{
-			TickActiveChild();
+			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
 			if ( Input.ActiveChild != null )
@@ -143,6 +143,9 @@ namespace HiddenGamemode
 			{
 				SwitchToBestWeapon();
 			}
+
+			var controller = GetActiveController();
+			controller?.Simulate( client, this, GetActiveAnimator() );
 		}
 
 		protected override void UseFail()
@@ -181,7 +184,7 @@ namespace HiddenGamemode
 
 		public override void OnActiveChildChanged( Entity from, Entity to )
 		{
-			if ( to is Weapon weapon && HasFlashlightEntity )
+			if ( to is Weapon && HasFlashlightEntity )
 			{
 				ShowFlashlight( false );
 			}
@@ -189,23 +192,23 @@ namespace HiddenGamemode
 			base.OnActiveChildChanged( from, to );
 		}
 
-		public override void PostCameraSetup( Camera camera )
+		public override void PostCameraSetup( ref CameraSetup setup )
 		{
-			base.PostCameraSetup( camera );
+			base.PostCameraSetup( ref setup );
 
 			if ( _lastCameraRot == Rotation.Identity )
-				_lastCameraRot = Camera.Rot;
+				_lastCameraRot = CurrentView.Rotation;
 
-			var angleDiff = Rotation.Difference( _lastCameraRot, Camera.Rot );
+			var angleDiff = Rotation.Difference( _lastCameraRot, CurrentView.Rotation );
 			var angleDiffDegrees = angleDiff.Angle();
 			var allowance = 20.0f;
 
 			if ( angleDiffDegrees > allowance )
 			{
-				_lastCameraRot = Rotation.Lerp( _lastCameraRot, Camera.Rot, 1.0f - (allowance / angleDiffDegrees) );
+				_lastCameraRot = Rotation.Lerp( _lastCameraRot, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
 			}
 
-			if ( camera is FirstPersonCamera )
+			if ( Camera is FirstPersonCamera camera )
 			{
 				AddCameraEffects( camera );
 			}
@@ -311,10 +314,10 @@ namespace HiddenGamemode
 				Team?.OnTakeDamageFromPlayer( this, attacker, info );
 				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
 
-				attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
+				attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
-			TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos, info.Flags );
+			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.Flags );
 
 			if ( info.Flags.HasFlag( DamageFlags.Fall ) )
 			{

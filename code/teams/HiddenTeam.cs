@@ -101,7 +101,7 @@ namespace HiddenGamemode
 			if ( Host.IsClient )
 			{
 				/*
-				if ( Sandbox.Player.Local is not Player localPlayer )
+				if ( Local.Pawn is not Player localPlayer )
 					return;
 
 				if ( localPlayer.Team == this )
@@ -125,7 +125,7 @@ namespace HiddenGamemode
 
 				if ( player != null && player.IsValid() )
 				{
-					var overlaps = Physics.GetEntitiesInSphere( player.WorldPos, 2048f );
+					var overlaps = Physics.GetEntitiesInSphere( player.Position, 2048f );
 
 					foreach ( var entity in overlaps )
 					{
@@ -189,11 +189,13 @@ namespace HiddenGamemode
 
 		public override void OnJoin( Player player  )
 		{
-			Log.Info( $"{player.Name} joined the Hidden team." );
+			var client = player.GetClientOwner();
 
-			if ( Host.IsClient && player.IsLocalPlayer )
+			Log.Info( $"{ client.Name } joined the Hidden team." );
+
+			if ( Host.IsClient && player.IsLocalPawn )
 			{
-				_abilitiesHud = Sandbox.Hud.CurrentPanel.AddChild<Abilities>();
+				_abilitiesHud = Local.Hud.AddChild<Abilities>();
 			}
 
 			player.EnableShadowCasting = false;
@@ -210,13 +212,15 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player )
 		{
+			var client = player.GetClientOwner();
+
 			player.EnableShadowReceive = true;
 			player.EnableShadowCasting = true;
 			player.RenderAlpha = 1f;
 
-			Log.Info( $"{player.Name} left the Hidden team." );
+			Log.Info( $"{ client.Name } left the Hidden team." );
 
-			if ( _abilitiesHud != null && player.IsLocalPlayer )
+			if ( _abilitiesHud != null && player.IsLocalPawn )
 			{
 				_abilitiesHud.Delete( true );
 				_abilitiesHud = null;

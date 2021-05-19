@@ -31,7 +31,8 @@ namespace HiddenGamemode
 			{
 				if ( player.LastAttacker is Player attacker )
 				{
-					_hiddenHunter = attacker.Name;
+					var client = attacker.GetClientOwner();
+					_hiddenHunter = client.Name;
 				}
 
 				_ = LoadStatsRound( "I.R.I.S. Eliminated The Hidden" );
@@ -42,7 +43,8 @@ namespace HiddenGamemode
 			{
 				if ( string.IsNullOrEmpty( _firstDeath ) )
 				{
-					_firstDeath = player.Name;
+					var client = player.GetClientOwner();
+					_firstDeath = client.Name;
 				}
 
 				_hiddenKills++;
@@ -82,7 +84,11 @@ namespace HiddenGamemode
 
 			if ( Host.IsServer )
 			{
-				Sandbox.Player.All.ForEach( ( player ) => SupplyLoadouts( player as Player ) );
+				foreach ( var client in Client.All )
+				{
+					if ( client.Pawn is Player player )
+						SupplyLoadouts( player );
+				}
 			}
 		}
 
@@ -127,10 +133,11 @@ namespace HiddenGamemode
 				return;
 
 			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
+			var hiddenName = hidden != null ? hidden.GetClientOwner().Name : "";
 
 			Game.Instance.ChangeRound( new StatsRound
 			{
-				HiddenName = hidden != null ? hidden.Name : "",
+				HiddenName = hiddenName,
 				HiddenKills = _hiddenKills,
 				FirstDeath = _firstDeath,
 				HiddenHunter = _hiddenHunter,
