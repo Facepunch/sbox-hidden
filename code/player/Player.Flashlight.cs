@@ -5,7 +5,7 @@ namespace HiddenGamemode
 {
 	partial class Player
 	{
-		[NetLocalPredicted] public float FlashlightBattery { get; set; } = 100f;
+		[Net, Local, Predicted] public float FlashlightBattery { get; set; } = 100f;
 
 		private Flashlight _worldFlashlight;
 		private Flashlight _viewFlashlight;

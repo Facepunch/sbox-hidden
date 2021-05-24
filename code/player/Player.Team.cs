@@ -30,7 +30,6 @@ namespace HiddenGamemode
 
 						// You have to do this for now.
 						client.SetScore( "team", TeamIndex );
-						NetworkDirty( "TeamIndex", NetVarGroup.Net );
 					}
 				}
 			}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-    public abstract partial class BaseRound : NetworkClass
+    public abstract partial class BaseRound : NetworkComponent
 	{
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";
@@ -82,7 +82,6 @@ namespace HiddenGamemode
 				else
 				{
 					TimeLeftFormatted = TimeSpan.FromSeconds( TimeLeft ).ToString( @"mm\:ss" );
-					NetworkDirty( "TimeLeftFormatted", NetVarGroup.Net );
 				}
 			}
 		}

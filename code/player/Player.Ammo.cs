@@ -1,12 +1,13 @@
 ﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 
 namespace HiddenGamemode
 {
 	partial class Player
 	{
 		[Net]
-		public NetList<int> Ammo { get; set; } = new();
+		public List<int> Ammo { get; set; } = new();
 
 		public void ClearAmmo()
 		{
@@ -15,10 +16,25 @@ namespace HiddenGamemode
 
 		public int AmmoCount( AmmoType type )
 		{
-
+			var iType = (int)type;
 			if ( Ammo == null ) return 0;
+			if ( Ammo.Count <= iType ) return 0;
+			return Ammo[(int)type];
+		}
 
-			return Ammo.Get( type );
+		public bool SetAmmo( AmmoType type, int amount )
+		{
+			var iType = (int)type;
+			if ( !Host.IsServer ) return false;
+			if ( Ammo == null ) return false;
+
+			while ( Ammo.Count <= iType )
+			{
+				Ammo.Add( 0 );
+			}
+
+			Ammo[(int)type] = amount;
+			return true;
 		}
 
 		public bool GiveAmmo( AmmoType type, int amount )
@@ -26,18 +42,18 @@ namespace HiddenGamemode
 			if ( !Host.IsServer ) return false;
 			if ( Ammo == null ) return false;
 
-			var currentAmmo = AmmoCount( type );
-			return Ammo.Set( type, currentAmmo + amount );
+			SetAmmo( type, AmmoCount( type ) + amount );
+			return true;
 		}
 
 		public int TakeAmmo( AmmoType type, int amount )
 		{
-			var available = Ammo.Get( type );
-			amount = Math.Min( Ammo.Get( type ), amount );
+			if ( Ammo == null ) return 0;
 
-			Ammo.Set( type, available - amount );
-			NetworkDirty( "Ammo", NetVarGroup.Net );
+			var available = AmmoCount( type );
+			amount = Math.Min( available, amount );
 
+			SetAmmo( type, available - amount );
 			return amount;
 		}
 	}

@@ -4,8 +4,8 @@ namespace HiddenGamemode
 {
 	public partial class SpectateCamera : Camera
 	{
-		[NetPredicted] public TimeSince TimeSinceDied { get; set; }
-		[NetPredicted] public Vector3 DeathPosition { get; set; }
+		[Net, Predicted] public TimeSince TimeSinceDied { get; set; }
+		[Net, Predicted] public Vector3 DeathPosition { get; set; }
 
 		public Player TargetPlayer { get; set; }
 

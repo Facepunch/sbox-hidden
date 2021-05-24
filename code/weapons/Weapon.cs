@@ -19,19 +19,19 @@ namespace HiddenGamemode
 		public virtual int HoldType => 1;
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
-		[NetPredicted]
+		[Net, Predicted]
 		public int AmmoClip { get; set; }
 
-		[NetPredicted]
+		[Net, Predicted]
 		public TimeSince TimeSinceReload { get; set; }
 
-		[NetPredicted]
+		[Net, Predicted]
 		public bool IsReloading { get; set; }
 
-		[NetPredicted]
+		[Net, Predicted]
 		public TimeSince TimeSinceDeployed { get; set; }
 
-		[NetPredicted]
+		[Net, Predicted]
 		public TimeSince TimeSinceChargeAttack { get; set; }
 
 		public float ChargeAttackEndTime;

@@ -7,10 +7,10 @@ namespace HiddenGamemode
 {
 	public partial class Player : Sandbox.Player
 	{
-		[NetPredicted] public float Stamina { get; set; }
-		[NetLocal] public SenseAbility Sense { get; set; }
-		[NetLocal] public ScreamAbility Scream { get; set; }
-		[NetLocal] public DeploymentType Deployment { get; set; }
+		[Net, Predicted] public float Stamina { get; set; }
+		[Net, Local] public SenseAbility Sense { get; set; }
+		[Net, Local] public ScreamAbility Scream { get; set; }
+		[Net, Local] public DeploymentType Deployment { get; set; }
 
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
@@ -254,7 +254,7 @@ namespace HiddenGamemode
 				{
 					// TODO: This should be a weld joint to the world but it doesn't work right now.
 					_ragdollBody.BodyType = PhysicsBodyType.Static;
-					_ragdollBody.Pos = trace.EndPos - (trace.Direction * 2.5f);
+					_ragdollBody.Position = trace.EndPos - (trace.Direction * 2.5f);
 
 					/*
 					PhysicsJoint.Weld

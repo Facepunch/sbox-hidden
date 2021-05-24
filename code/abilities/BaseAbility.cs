@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public partial class BaseAbility : NetworkClass
+	public partial class BaseAbility : NetworkComponent
 	{
 		public virtual float Cooldown => 1;
 		public virtual string Name => "";
 
-		[NetLocalPredicted] public TimeSince TimeSinceLastUse { get; set; }
+		[Net, Local, Predicted] public TimeSince TimeSinceLastUse { get; set; }
 
 		public BaseAbility()
 		{
@@ -22,14 +22,6 @@ namespace HiddenGamemode
 		public void Use( Player player )
 		{
 			OnUse( player );
-
-			if ( Host.IsServer )
-			{
-				using ( Prediction.Off() )
-				{
-					NetworkDirty( "TimeSinceLastUse", NetVarGroup.NetLocalPredicted );
-				}
-			}
 		}
 
 		public float GetCooldownTimeLeft( Player player )
