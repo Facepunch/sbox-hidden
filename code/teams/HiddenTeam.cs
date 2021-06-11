@@ -144,7 +144,7 @@ namespace HiddenGamemode
 
 		public override void OnTick( Player player )
 		{
-			if ( player.Input.Pressed( InputButton.Drop ) )
+			if ( Input.Pressed( InputButton.Drop ) )
 			{
 				if ( player.Sense?.IsUsable( player ) == true )
 				{
@@ -152,7 +152,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			if ( player.Input.Pressed( InputButton.View ) )
+			if ( Input.Pressed( InputButton.View ) )
 			{
 				if ( player.Scream?.IsUsable( player ) == true )
 				{
@@ -160,7 +160,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			if ( player.Input.Pressed( InputButton.Use) )
+			if ( Input.Pressed( InputButton.Use) )
 			{
 				if ( player.Controller is not HiddenController controller )
 					return;

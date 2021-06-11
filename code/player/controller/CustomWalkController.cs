@@ -79,13 +79,6 @@ namespace HiddenGamemode
 			SetBBox( mins, maxs );
 		}
 
-		public override void FrameSimulate()
-		{
-			base.FrameSimulate();
-
-			EyeRot = Input.Rotation;
-		}
-
 		public override void Simulate()
 		{
 			EyePosLocal = Vector3.Up * (EyeHeight * Pawn.Scale);

@@ -20,7 +20,6 @@ namespace HiddenGamemode
 			public Panel Canvas;
 		}
 
-		public TextEntry Input { get; protected set; }
 		public Dictionary<int, ScoreboardEntry> Entries = new();
 		public Dictionary<int, TeamSection> TeamSections = new();
 
@@ -54,7 +53,7 @@ namespace HiddenGamemode
 		{
 			base.Tick();
 			
-			SetClass( "open", Local.Client?.Input.Down( InputButton.Score ) ?? false );
+			SetClass( "open", Input.Down( InputButton.Score ) );
 		}
 
 		protected void AddTeamHeader(BaseTeam team)

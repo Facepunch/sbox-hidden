@@ -26,7 +26,7 @@ namespace HiddenGamemode
 			if ( Local.Pawn is not Player player )
 				return;
 
-			if ( TargetPlayer == null || !TargetPlayer.IsValid() || Local.Client.Input.Pressed(InputButton.Attack1) )
+			if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed(InputButton.Attack1) )
 			{
 				var players = Game.Instance.GetTeamPlayers<IrisTeam>(true);
 
