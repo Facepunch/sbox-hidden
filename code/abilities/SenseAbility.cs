@@ -14,7 +14,7 @@ namespace HiddenGamemode
 
 		public override string GetKeybind()
 		{
-			return "G";
+			return Input.GetKeyWithBinding( "iv_drop" ).ToUpper();
 		}
 
 		protected override void OnUse( Player player )

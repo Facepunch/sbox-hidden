@@ -22,7 +22,7 @@ namespace HiddenGamemode
 
 		public override string GetKeybind()
 		{
-			return "V";
+			return Input.GetKeyWithBinding( "iv_view" ).ToUpper();
 		}
 
 		protected override void OnUse( Player player )
