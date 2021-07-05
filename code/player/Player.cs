@@ -227,7 +227,7 @@ namespace HiddenGamemode
 
 			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
 			{
-				if ( !_ragdollWeld.IsValid() )
+				if ( !_ragdollWeld.IsValid )
 				{
 					_ragdollBody = trace.Body;
 					_ragdollWeld = PhysicsJoint.Weld
@@ -241,7 +241,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			if ( _ragdollWeld.IsValid() )
+			if ( _ragdollWeld.IsValid )
 			{
 				trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 40f )
 					.HitLayer( CollisionLayer.WORLD_GEOMETRY )

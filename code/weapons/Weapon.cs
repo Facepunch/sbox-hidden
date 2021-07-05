@@ -79,7 +79,7 @@ namespace HiddenGamemode
 
 			IsReloading = true;
 
-			(Owner as AnimEntity).SetAnimParam( "b_reload", true );
+			(Owner as AnimEntity).SetAnimBool( "b_reload", true );
 
 			DoClientReload();
 		}
@@ -161,7 +161,7 @@ namespace HiddenGamemode
 		[ClientRpc]
 		public virtual void DoClientReload()
 		{
-			ViewModelEntity?.SetAnimParam( "reload", true );
+			ViewModelEntity?.SetAnimBool( "reload", true );
 		}
 
 		public override void AttackPrimary()
@@ -188,8 +188,8 @@ namespace HiddenGamemode
 				_ = new Sandbox.ScreenShake.Perlin();
 			}
 
-			ViewModelEntity?.SetAnimParam( "fire", true );
-			CrosshairPanel?.OnEvent( "fire" );
+			ViewModelEntity?.SetAnimBool( "fire", true );
+			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )

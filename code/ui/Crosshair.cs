@@ -1,8 +1,6 @@
 ﻿
 using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System;
 
 namespace HiddenGamemode
 {
@@ -59,14 +57,10 @@ namespace HiddenGamemode
 				_fireCounter--;
 		}
 
-		public override void OnEvent( string eventName )
+		[PanelEvent]
+		public void FireEvent()
 		{
-			if ( eventName == "fire" )
-			{
-				_fireCounter += 2;
-			}
-
-			base.OnEvent( eventName );
+			_fireCounter += 2;
 		}
 	}
 }
