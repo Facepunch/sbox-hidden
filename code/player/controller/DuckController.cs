@@ -3,7 +3,7 @@
 namespace HiddenGamemode
 {
 	[Library]
-	public class DuckController : NetworkComponent
+	public class DuckController : BaseNetworkable
 	{
 		public BasePlayerController Controller;
 

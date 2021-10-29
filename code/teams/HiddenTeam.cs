@@ -189,9 +189,7 @@ namespace HiddenGamemode
 
 		public override void OnJoin( Player player  )
 		{
-			var client = player.GetClientOwner();
-
-			Log.Info( $"{ client.Name } joined the Hidden team." );
+			Log.Info( $"{ player.Client.Name } joined the Hidden team." );
 
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
@@ -200,7 +198,7 @@ namespace HiddenGamemode
 
 			player.EnableShadowCasting = false;
 			player.EnableShadowReceive = false;
-			player.RenderAlpha = 0.15f;
+			player.RenderColor = player.RenderColor.WithAlpha(0.15f);
 
 			player.Sense = new SenseAbility();
 			player.Scream = new ScreamAbility();
@@ -212,13 +210,11 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player )
 		{
-			var client = player.GetClientOwner();
-
 			player.EnableShadowReceive = true;
 			player.EnableShadowCasting = true;
-			player.RenderAlpha = 1f;
+			player.RenderColor = player.RenderColor.WithAlpha(1f);
 
-			Log.Info( $"{ client.Name } left the Hidden team." );
+			Log.Info( $"{ player.Client.Name } left the Hidden team." );
 
 			if ( _abilitiesHud != null && player.IsLocalPawn )
 			{

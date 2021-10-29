@@ -1,0 +1,43 @@
+﻿<link rel="stylesheet" href="Scoreboard.scss">
+
+<div class="scoreboard">
+	<div class="scoreboard-header">
+		<label>SCOREBOARD</label>
+	</div>
+
+	<div class="team-container">
+		<div class="team-header team_hidden">
+			<div class="teamicon team_hidden"></div>
+			<label>Hidden</label>
+		</div>
+		
+		<div class="table-header team_hidden">
+			<label class="name">NAME</label>
+			<label class="kills">KILLS</label>
+			<label class="deaths">DEATHS</label>
+			<label class="ping">PING</label>
+		</div>
+
+		<div class="canvas team_hidden" @ref="HiddenSection">
+
+		</div>
+	</div>
+
+	<div class="team-container">
+		<div class="team-header team_iris">
+			<div class="teamicon team_iris"></div>
+			<label>Hidden</label>
+		</div>
+		
+		<div class="table-header team_iris">
+			<label class="name">NAME</label>
+			<label class="kills">KILLS</label>
+			<label class="deaths">DEATHS</label>
+			<label class="ping">PING</label>
+		</div>
+
+		<div class="canvas team_iris" @ref="IrisSection">
+
+		</div>
+	</div>
+</div>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-    public abstract partial class BaseRound : NetworkComponent
+    public abstract partial class BaseRound : BaseNetworkable
 	{
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";

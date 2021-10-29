@@ -1,151 +1,56 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System.Collections.Generic;
 
 namespace HiddenGamemode
 {
+	[UseTemplate]
 	public class Scoreboard : Panel
 	{
-		public struct TeamSection
-		{
-			public Label TeamName;
-			public Panel TeamIcon;
-
-			public Panel TeamContainer;
-
-			public Panel Header;
-			public Panel TeamHeader;
-			public Panel Canvas;
-		}
-
-		public Dictionary<int, ScoreboardEntry> Entries = new();
-		public Dictionary<int, TeamSection> TeamSections = new();
-
-		public Panel ScoreboardHeader;
-		public Label ScoreboardTitle;
-
-
-		public Scoreboard()
-		{
-			StyleSheet.Load( "/ui/Scoreboard.scss" );
-
-			AddClass( "scoreboard" );
-
-			ScoreboardHeader = Add.Panel( "scoreboard-header" );
-			ScoreboardTitle = ScoreboardHeader.Add.Label( "SCOREBOARD" );
-
-			AddTeamHeader( Game.Instance.HiddenTeam );
-			AddTeamHeader( Game.Instance.IrisTeam );
-
-			PlayerScore.OnPlayerAdded += AddPlayer;
-			PlayerScore.OnPlayerUpdated += UpdatePlayer;
-			PlayerScore.OnPlayerRemoved += RemovePlayer;
-
-			foreach ( var player in PlayerScore.All )
-			{
-				AddPlayer( player );
-			}
-		}
+		Dictionary<Client, ScoreboardEntry> Entries = new();
+		
+		public Panel HiddenSection { get; set; }
+		public Panel IrisSection { get; set; }
 
 		public override void Tick()
 		{
 			base.Tick();
-			
-			SetClass( "open", Input.Down( InputButton.Score ) );
-		}
 
-		protected void AddTeamHeader(BaseTeam team)
-		{
-			var section = new TeamSection
+			SetClass("open", Input.Down(InputButton.Score));
+
+			if ( !IsVisible )
+				return;
+
+			foreach(Client cl in Client.All.Except(Entries.Keys))
 			{
-				
-			};
+				ScoreboardEntry entry = new();
+				Entries.Add(cl, entry);
+				entry.UpdateFrom(cl);
 
-			// Set up the Container for the Team on the scoreboard
-			section.TeamContainer = Add.Panel( "team-container" );
-			section.TeamHeader = section.TeamContainer.Add.Panel( "team-header" );
-			section.Header = section.TeamContainer.Add.Panel( "table-header" );
-			section.Canvas = section.TeamContainer.Add.Panel( "canvas" );
-
-			section.TeamIcon = section.TeamHeader.Add.Panel( "teamIcon" );
-			section.TeamName = section.TeamHeader.Add.Label( team.Name, "teamName" );
-			
-			section.TeamIcon.AddClass( team.HudClassName );
-
-			section.Header.Add.Label( "NAME", "name" );
-			section.Header.Add.Label( "KILLS", "kills" );
-			section.Header.Add.Label( "DEATHS", "deaths" );
-			section.Header.Add.Label( "PING", "ping" );
-
-			section.Canvas.AddClass( team.HudClassName );
-			section.Header.AddClass( team.HudClassName );
-			section.TeamHeader.AddClass( team.HudClassName );
-
-			TeamSections[team.Index] = section;
-		}
-
-		protected void AddPlayer( PlayerScore.Entry entry )
-		{
-			var teamIndex = entry.Get( "team", 0 );
-
-			if ( !TeamSections.TryGetValue( teamIndex, out var section ) )
-			{
-				section = TeamSections[ Game.Instance.IrisTeam.Index ];
 			}
 
-			var p = section.Canvas.AddChild<ScoreboardEntry>();
-			p.UpdateFrom( entry );
-			Entries[entry.Id] = p;
-		}
-
-		protected void UpdatePlayer( PlayerScore.Entry entry )
-		{
-			if ( Entries.TryGetValue( entry.Id, out var panel ) )
+			foreach (Client cl in Entries.Keys.Except(Client.All))
 			{
-				var currentTeamIndex = 0;
-				var newTeamIndex = entry.Get( "team", 0 );
-
-				foreach (var kv in TeamSections)
+				if( Entries.TryGetValue(cl, out var entry))
 				{
-					if ( kv.Value.Canvas == panel.Parent )
-					{
-						currentTeamIndex = kv.Key;
-					}
+					entry.Delete();
+					Entries.Remove(cl);
 				}
-
-				if ( currentTeamIndex != newTeamIndex )
-				{
-					panel.Parent = TeamSections[newTeamIndex].Canvas;
-				}
-
-				panel.UpdateFrom( entry );
 			}
+
+			var incorrectlyLocated = Entries.Where(kvp => kvp.Value.Parent != GetCorrectSection(kvp.Key)).ToList();
+
+			foreach(var kvp in incorrectlyLocated)
+				kvp.Value.Parent = GetCorrectSection(kvp.Key);
 		}
 
-		protected void RemovePlayer( PlayerScore.Entry entry )
+		private Panel GetCorrectSection(Client client)
 		{
-			if ( Entries.TryGetValue( entry.Id, out var panel ) )
-			{
-				panel.Delete();
-				Entries.Remove( entry.Id );
-			}
-		}
-	}
-
-	public class ScoreboardEntry : Sandbox.UI.ScoreboardEntry
-	{
-		public ScoreboardEntry()
-		{
-
-		}
-
-		public override void UpdateFrom( PlayerScore.Entry entry )
-		{
-			base.UpdateFrom( entry );
-
-
+			return client.GetInt("Team", 2) == 1 ? HiddenSection : IrisSection;
 		}
 	}
 }

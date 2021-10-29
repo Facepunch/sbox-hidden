@@ -60,9 +60,7 @@ namespace HiddenGamemode
 
 		public override void OnJoin( Player player  )
 		{
-			var client = player.GetClientOwner();
-
-			Log.Info( $"{ client.Name } joined the Military team." );
+			Log.Info( $"{ player.Client.Name } joined the Military team." );
 
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
@@ -98,9 +96,7 @@ namespace HiddenGamemode
 
 		public override void OnLeave( Player player  )
 		{
-			var client = player.GetClientOwner();
-
-			Log.Info( $"{ client.Name } left the Military team." );
+			Log.Info( $"{ player.Client.Name } left the Military team." );
 
 			if ( player.IsLocalPawn )
 			{

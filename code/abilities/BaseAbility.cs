@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	public partial class BaseAbility : NetworkComponent
+	public partial class BaseAbility : BaseNetworkable
 	{
 		public virtual float Cooldown => 1;
 		public virtual string Name => "";
