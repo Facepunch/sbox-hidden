@@ -85,6 +85,7 @@ namespace HiddenGamemode
 			Game.Instance?.Round?.OnPlayerSpawn( this );
 
 			RemoveRagdollEntity();
+			DrawPlayer(true);
 
 			Stamina = 100f;
 
@@ -97,6 +98,7 @@ namespace HiddenGamemode
 
 			ShowFlashlight( false, false );
 			ShowSenseParticles( false );
+			DrawPlayer(false);
 
 			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 
@@ -151,6 +153,12 @@ namespace HiddenGamemode
 		protected override void UseFail()
 		{
 			// Do nothing. By default this plays a sound that we don't want.
+		}
+
+		public void DrawPlayer(bool shouldDraw)
+		{
+			EnableDrawing = shouldDraw;
+			Clothing.ForEach(x => x.EnableDrawing = shouldDraw);
 		}
 
 		public void ShowSenseParticles( bool shouldShow )
@@ -271,30 +279,31 @@ namespace HiddenGamemode
 		private void AddCameraEffects( Camera camera )
 		{
 			var speed = Velocity.Length.LerpInverse( 0, 320 );
-			var forwardspeed = Velocity.Normal.Dot( camera.Rot.Forward );
+			var forwardspeed = Velocity.Normal.Dot( camera.Rotation.Forward );
 
-			var left = camera.Rot.Left;
-			var up = camera.Rot.Up;
+			var left = camera.Rotation.Left;
+			var up = camera.Rotation.Up;
 
 			if ( GroundEntity != null )
 			{
 				_walkBob += Time.Delta * 25.0f * speed;
 			}
 
-			camera.Pos += up * MathF.Sin( _walkBob ) * speed * 2;
-			camera.Pos += left * MathF.Sin( _walkBob * 0.6f ) * speed * 1;
+			camera.Position += up * MathF.Sin( _walkBob ) * speed * 2;
+			camera.Position += left * MathF.Sin( _walkBob * 0.6f ) * speed * 1;
 
-			_lean = _lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.03f, Time.Delta * 15.0f );
+			_lean = _lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.03f, Time.Delta * 15.0f );
 
 			var appliedLean = _lean;
 			appliedLean += MathF.Sin( _walkBob ) * speed * 0.2f;
-			camera.Rot *= Rotation.From( 0, 0, appliedLean );
+			camera.Rotation *= Rotation.From( 0, 0, appliedLean );
 
 			speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
 
 			_FOV = _FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
 
-			camera.FieldOfView += _FOV;
+			//Set to a constant because it seems to actually modify camera the camera FOV leading to wackiness if you +=
+			camera.FieldOfView = 70 + _FOV;
 		}
 
 		public override void TakeDamage( DamageInfo info )

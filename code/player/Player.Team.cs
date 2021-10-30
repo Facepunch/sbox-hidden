@@ -26,10 +26,7 @@ namespace HiddenGamemode
 					{
 						TeamIndex = _team.Index;
 
-						var client = GetClientOwner();
-
-						// You have to do this for now.
-						client.SetScore( "team", TeamIndex );
+						Client.SetInt("team", TeamIndex);
 					}
 				}
 			}

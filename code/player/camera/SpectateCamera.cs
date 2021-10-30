@@ -41,8 +41,8 @@ namespace HiddenGamemode
 
 			_focusPoint = Vector3.Lerp( _focusPoint, GetSpectatePoint(), Time.Delta * 5.0f );
 
-			Pos = _focusPoint + GetViewOffset();
-			Rot = player.EyeRot;
+			Position = _focusPoint + GetViewOffset();
+			Rotation = player.EyeRot;
 
 			FieldOfView = FieldOfView.LerpTo( 50, Time.Delta * 3.0f );
 			Viewer = null;

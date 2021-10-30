@@ -31,8 +31,7 @@ namespace HiddenGamemode
 			{
 				if ( player.LastAttacker is Player attacker )
 				{
-					var client = attacker.GetClientOwner();
-					_hiddenHunter = client.Name;
+					_hiddenHunter = attacker.Client.Name;
 				}
 
 				_ = LoadStatsRound( "I.R.I.S. Eliminated The Hidden" );
@@ -43,8 +42,7 @@ namespace HiddenGamemode
 			{
 				if ( string.IsNullOrEmpty( _firstDeath ) )
 				{
-					var client = player.GetClientOwner();
-					_firstDeath = client.Name;
+					_firstDeath = player.Client.Name;
 				}
 
 				_hiddenKills++;
@@ -133,7 +131,7 @@ namespace HiddenGamemode
 				return;
 
 			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
-			var hiddenName = hidden != null ? hidden.GetClientOwner().Name : "";
+			var hiddenName = hidden != null ? hidden.Client.Name : "";
 
 			Game.Instance.ChangeRound( new StatsRound
 			{

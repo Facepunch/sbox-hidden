@@ -20,7 +20,7 @@ namespace HiddenGamemode
 			base.Spawn();
 
 			// TODO: EnableDrawing = false does not work.
-			RenderAlpha = 0f;
+			RenderColor = RenderColor.WithAlpha(0f);
 
 			SetModel( "weapons/rust_boneknife/rust_boneknife.vmdl" );
 		}
