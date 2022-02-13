@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace HiddenGamemode
 {
-	[Library( "hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
 		public LightFlickers LightFlickers { get; set; }

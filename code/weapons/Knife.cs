@@ -27,10 +27,10 @@ namespace HiddenGamemode
 
 		public virtual void MeleeStrike( float damage, float force )
 		{
-			var forward = Owner.EyeRot.Forward;
+			var forward = Owner.EyeRotation.Forward;
 			forward = forward.Normal;
 
-			foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + forward * MeleeDistance, 10f ) )
+			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeDistance, 10f ) )
 			{
 				if ( !tr.Entity.IsValid() ) continue;
 

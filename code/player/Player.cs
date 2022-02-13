@@ -226,7 +226,7 @@ namespace HiddenGamemode
 		{
 			if ( !Input.Pressed( InputButton.Use ) ) return;
 
-			var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 80f )
+			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
 				.HitLayer( CollisionLayer.Debris )
 				.Ignore( ActiveChild )
 				.Ignore( this )
@@ -239,7 +239,7 @@ namespace HiddenGamemode
 				{
 					_ragdollBody = trace.Body;
 					_ragdollWeld = PhysicsJoint.Weld
-						.From( PhysicsBody, PhysicsBody.Transform.PointToLocal( EyePos + EyeRot.Forward * 40f ) )
+						.From( PhysicsBody, PhysicsBody.Transform.PointToLocal( EyePosition + EyeRotation.Forward * 40f ) )
 						.To( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
 						.WithLinearSpring( 20f, 1f, 0.0f )
 						.WithAngularSpring( 0.0f, 0.0f, 0.0f )
@@ -251,7 +251,7 @@ namespace HiddenGamemode
 
 			if ( _ragdollWeld.IsValid )
 			{
-				trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 40f )
+				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
 					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
 					.Ignore( ActiveChild )
 					.Ignore( this )

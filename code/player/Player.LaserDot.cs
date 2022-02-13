@@ -28,7 +28,7 @@ namespace HiddenGamemode
 				if ( _laserDot == null )
 					CreateLaserDot();
 
-				var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 4096f )
+				var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 4096f )
 					.UseHitboxes()
 					.Radius( 2f )
 					.Ignore( weapon )

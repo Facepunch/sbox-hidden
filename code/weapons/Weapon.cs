@@ -194,11 +194,11 @@ namespace HiddenGamemode
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
 		{
-			var forward = Owner.EyeRot.Forward;
+			var forward = Owner.EyeRotation.Forward;
 			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
 			forward = forward.Normal;
 
-			foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + forward * 5000, bulletSize ) )
+			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 5000, bulletSize ) )
 			{
 				tr.Surface.DoBulletImpact( tr );
 

@@ -168,7 +168,7 @@ namespace HiddenGamemode
 				if ( controller.IsFrozen )
 					return;
 
-				var trace = Trace.Ray( player.EyePos, player.EyePos + player.EyeRot.Forward * 40f )
+				var trace = Trace.Ray( player.EyePosition, player.EyePosition + player.EyeRotation.Forward * 40f )
 					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
 					.Ignore( player )
 					.Ignore( player.ActiveChild )

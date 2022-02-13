@@ -24,7 +24,7 @@ namespace HiddenGamemode
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
 				var actualLeapVelocity = minLeapVelocity + ( extraLeapVelocity / 100f) * player.Stamina;
 
-				Velocity += (Pawn.EyeRot.Forward * actualLeapVelocity);
+				Velocity += (Pawn.EyeRotation.Forward * actualLeapVelocity);
 
 				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
 			}

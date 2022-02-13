@@ -42,7 +42,7 @@ namespace HiddenGamemode
 			_focusPoint = Vector3.Lerp( _focusPoint, GetSpectatePoint(), Time.Delta * 5.0f );
 
 			Position = _focusPoint + GetViewOffset();
-			Rotation = player.EyeRot;
+			Rotation = player.EyeRotation;
 
 			FieldOfView = FieldOfView.LerpTo( 50, Time.Delta * 3.0f );
 			Viewer = null;
@@ -56,7 +56,7 @@ namespace HiddenGamemode
 			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
 				return DeathPosition;
 
-			return TargetPlayer.EyePos;
+			return TargetPlayer.EyePosition;
 		}
 
 		private Vector3 GetViewOffset()
@@ -64,7 +64,7 @@ namespace HiddenGamemode
 			if ( Local.Pawn is not Player player )
 				return Vector3.Zero;
 
-			return player.EyeRot.Forward * -150 + Vector3.Up * 10;
+			return player.EyeRotation.Forward * -150 + Vector3.Up * 10;
 		}
 	}
 }

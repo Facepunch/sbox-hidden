@@ -28,7 +28,7 @@ namespace HiddenGamemode
 
 			deleteList.AddRange( _activeNameplates.Keys );
 
-			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePos, CurrentView.Position ) );
+			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, CurrentView.Position ) );
 
 			foreach ( var v in players )
 			{
@@ -69,7 +69,7 @@ namespace HiddenGamemode
 			if ( player.LifeState != LifeState.Alive )
 				return false;
 
-			var labelPos = player.EyePos + player.Rotation.Up * 10f;
+			var labelPos = player.EyePosition + player.Rotation.Up * 10f;
 
 			float dist = labelPos.Distance( CurrentView.Position );
 
@@ -86,7 +86,7 @@ namespace HiddenGamemode
 				if ( CurrentView.Rotation.Forward.Dot( lookDir ) < 0.5 )
 					return false;
 
-				var trace = Trace.Ray( localPlayer.EyePos, player.EyePos)
+				var trace = Trace.Ray( localPlayer.EyePosition, player.EyePosition)
 					.Ignore( localPlayer )
 					.Run();
 

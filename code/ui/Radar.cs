@@ -33,7 +33,7 @@ namespace HiddenGamemode
 
 			deleteList.AddRange( _radarDots.Keys );
 
-			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePos, CurrentView.Position ) );
+			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, CurrentView.Position ) );
 
 			foreach ( var v in players )
 			{
