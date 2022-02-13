@@ -1,3 +1,13 @@
 {
-	"sharedassets": "*.*",
+  "Title": "Sbox Hidden",
+  "Type": "game",
+  "Org": "facepunch",
+  "Ident": "hidden",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": null,
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "HiddenGamemode"
 }
