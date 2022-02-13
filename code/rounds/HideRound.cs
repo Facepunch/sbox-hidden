@@ -21,7 +21,7 @@ namespace HiddenGamemode
 		[ServerCmd( "hdn_select_deployment" )]
 		private static void SelectDeploymentCmd( string type )
 		{
-			if ( ConsoleSystem.Caller is Player player )
+			if ( ConsoleSystem.Caller.Pawn is Player player )
 			{
 				if ( Game.Instance.Round is HideRound )
 					player.Deployment = Enum.Parse<DeploymentType>( type );
