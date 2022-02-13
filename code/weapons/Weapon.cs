@@ -192,21 +192,23 @@ namespace HiddenGamemode
 			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
-		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
+		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize, int bulletCount = 1 )
 		{
-			var forward = Owner.EyeRotation.Forward;
-			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
-			forward = forward.Normal;
+			Rand.SetSeed(Time.Tick);
 
-			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 5000, bulletSize ) )
+			for( int i = 0; i < bulletCount; i++)
 			{
-				tr.Surface.DoBulletImpact( tr );
+				var forward = Owner.EyeRotation.Forward;
+				forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
+				forward = forward.Normal;
 
-				if ( !IsServer ) continue;
-				if ( !tr.Entity.IsValid() ) continue;
-
-				using ( Prediction.Off() )
+				foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 5000, bulletSize ) )
 				{
+					tr.Surface.DoBulletImpact( tr );
+
+					if ( !IsServer ) continue;
+					if ( !tr.Entity.IsValid() ) continue;
+
 					var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
 						.UsingTraceResult( tr )
 						.WithAttacker( Owner )

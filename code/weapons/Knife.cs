@@ -38,15 +38,12 @@ namespace HiddenGamemode
 
 				if ( !IsServer ) continue;
 
-				using ( Prediction.Off() )
-				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
-						.UsingTraceResult( tr )
-						.WithAttacker( Owner )
-						.WithWeapon( this );
+				var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
+					.UsingTraceResult( tr )
+					.WithAttacker( Owner )
+					.WithWeapon( this );
 
-					tr.Entity.TakeDamage( damageInfo );
-				}
+				tr.Entity.TakeDamage( damageInfo );
 			}
 		}
 

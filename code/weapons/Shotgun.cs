@@ -36,11 +36,7 @@ namespace HiddenGamemode
 
 			ShootEffects();
 			PlaySound( "rust_pumpshotgun.shoot" );
-
-			for ( int i = 0; i < 10; i++ )
-			{
-				ShootBullet( 0.15f, 0.3f, BaseDamage, 3.0f );
-			}
+			ShootBullet(0.15f, 0.3f, BaseDamage, 3.0f, 10);
 		}
 
 		[ClientRpc]
