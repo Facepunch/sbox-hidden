@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -33,7 +33,7 @@ namespace HiddenGamemode
 			InnerBar.Style.Dirty();
 			
 
-			Text.Text = player.Health.ToString();
+			Text.Text = Math.Round(player.Health).ToString();
 		}
 	}
 }
