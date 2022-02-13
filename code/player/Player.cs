@@ -96,6 +96,7 @@ namespace HiddenGamemode
 		{
 			base.OnKilled();
 
+			if (_ragdollWeld.IsValid) _ragdollWeld.Remove();
 			ShowFlashlight( false, false );
 			ShowSenseParticles( false );
 			DrawPlayer(false);
