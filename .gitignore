@@ -3,5 +3,5 @@ obj/
 code/accesslist.txt
 Properties
 codegen-*
-sbox-hidden.csproj
 .intermediate
+*.csproj
