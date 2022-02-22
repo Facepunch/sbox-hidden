@@ -42,7 +42,7 @@ namespace HiddenGamemode
 			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new HiddenController();
-			player.Camera = new FirstPersonCamera();
+			player.CameraMode = new FirstPersonCamera();
 		}
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
@@ -125,7 +125,7 @@ namespace HiddenGamemode
 
 				if ( player != null && player.IsValid() )
 				{
-					var overlaps = Physics.GetEntitiesInSphere( player.Position, 2048f );
+					var overlaps = Entity.FindInSphere( player.Position, 2048f );
 
 					foreach ( var entity in overlaps )
 					{

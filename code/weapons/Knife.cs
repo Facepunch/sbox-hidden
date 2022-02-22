@@ -38,7 +38,7 @@ namespace HiddenGamemode
 
 				if ( !IsServer ) continue;
 
-				var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
+				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
 					.UsingTraceResult( tr )
 					.WithAttacker( Owner )
 					.WithWeapon( this );

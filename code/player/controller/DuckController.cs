@@ -29,7 +29,7 @@ namespace HiddenGamemode
 			if ( IsActive )
 			{
 				Controller.SetTag( "ducked" );
-				Controller.EyePosLocal *= 0.5f;
+				Controller.EyeLocalPosition *= 0.5f;
 			}
 		}
 

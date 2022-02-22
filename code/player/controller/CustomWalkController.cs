@@ -81,17 +81,17 @@ namespace HiddenGamemode
 
 		public override void Simulate()
 		{
-			EyePosLocal = Vector3.Up * (EyeHeight * Pawn.Scale);
+			EyeLocalPosition = Vector3.Up * (EyeHeight * Pawn.Scale);
 			UpdateBBox();
 
-			EyePosLocal += TraceOffset;
-			EyeRot = Input.Rotation;
+			EyeLocalPosition += TraceOffset;
+			EyeRotation = Input.Rotation;
 
 			if ( Unstuck.TestAndFix() )
 				return;
 
 			CheckLadder();
-			Swimming = Pawn.WaterLevel.Fraction > 0.6f;
+			Swimming = Pawn.WaterLevel > 0.6f;
 
 			if ( !Swimming && !_isTouchingLadder )
 			{
@@ -206,7 +206,7 @@ namespace HiddenGamemode
 
 				if ( pm.Fraction == 1 )
 				{
-					Position = pm.EndPos;
+					Position = pm.EndPosition;
 					StayOnGround();
 					return;
 				}
@@ -235,7 +235,7 @@ namespace HiddenGamemode
 			Velocity = startVel;
 
 			var trace = TraceBBox( Position, Position + Vector3.Up * (StepSize + DistEpsilon) );
-			if ( !trace.StartedSolid ) Position = trace.EndPos;
+			if ( !trace.StartedSolid ) Position = trace.EndPosition;
 
 			TryPlayerMove();
 
@@ -250,7 +250,7 @@ namespace HiddenGamemode
 
 
 			if ( !trace.StartedSolid )
-				Position = trace.EndPos;
+				Position = trace.EndPosition;
 
 			var withStepPos = Position;
 
@@ -465,7 +465,7 @@ namespace HiddenGamemode
 
 			if ( moveToEndPos && !pm.StartedSolid && pm.Fraction > 0.0f && pm.Fraction < 1.0f )
 			{
-				Position = pm.EndPos;
+				Position = pm.EndPosition;
 			}
 
 			OnPostCategorizePosition( stayOnGround, pm );
@@ -520,7 +520,7 @@ namespace HiddenGamemode
 			var end = Position + Vector3.Down * StepSize;
 			var trace = TraceBBox( Position, start );
 
-			start = trace.EndPos;
+			start = trace.EndPosition;
 			trace = TraceBBox( start, end );
 
 			if ( trace.Fraction <= 0 ) return;
@@ -528,7 +528,7 @@ namespace HiddenGamemode
 			if ( trace.StartedSolid ) return;
 			if ( Vector3.GetAngle( Vector3.Up, trace.Normal ) > GroundAngle ) return;
 
-			Position = trace.EndPos;
+			Position = trace.EndPosition;
 		}
 
 		public virtual void OnPreTickMove() { }

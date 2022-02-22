@@ -24,8 +24,7 @@ namespace HiddenGamemode
 
 		public override void Tick()
 		{
-			var player = Local.Pawn;
-			if ( player == null ) return;
+			if (Local.Pawn is not Player player) return;
 
 			var weapon = player.ActiveChild as Weapon;
 			var isValid = (weapon != null && !weapon.IsMelee);

@@ -51,6 +51,9 @@ namespace HiddenGamemode
 		{
 			bool wantOpen = IsOpen;
 
+			if (Local.Pawn is not Player player)
+				return;
+
 			wantOpen = wantOpen || input.MouseWheel != 0;
 			wantOpen = wantOpen || input.Pressed( InputButton.Slot1 );
 			wantOpen = wantOpen || input.Pressed( InputButton.Slot2 );
@@ -58,6 +61,7 @@ namespace HiddenGamemode
 			wantOpen = wantOpen || input.Pressed( InputButton.Slot4 );
 			wantOpen = wantOpen || input.Pressed( InputButton.Slot5 );
 			wantOpen = wantOpen || input.Pressed( InputButton.Slot6 );
+
 
 			if ( Weapons.Count == 0 )
 			{
@@ -67,7 +71,7 @@ namespace HiddenGamemode
 
 			if ( IsOpen != wantOpen )
 			{
-				SelectedWeapon = Local.Pawn.ActiveChild as Weapon;
+				SelectedWeapon = player.ActiveChild as Weapon;
 				IsOpen = true;
 			}
 

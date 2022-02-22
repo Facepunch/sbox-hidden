@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.Joints;
 using System;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace HiddenGamemode
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
-		private WeldJoint _ragdollWeld;
+		private FixedJoint _ragdollWeld;
 		private Particles _senseParticles;
 		private float _walkBob = 0;
 		private float _lean = 0;
@@ -34,14 +33,14 @@ namespace HiddenGamemode
 
 		public bool IsSpectator
 		{
-			get => (Camera is SpectateCamera);
+			get => (CameraMode is SpectateCamera);
 		}
 
 		public Vector3 SpectatorDeathPosition
 		{
 			get
 			{
-				if ( Camera is SpectateCamera camera )
+				if ( CameraMode is SpectateCamera camera )
 					return camera.DeathPosition;
 
 				return Vector3.Zero;
@@ -61,7 +60,7 @@ namespace HiddenGamemode
 		{
 			get
 			{
-				if ( Camera is SpectateCamera camera )
+				if ( CameraMode is SpectateCamera camera )
 					return camera.TargetPlayer;
 
 				return null;
@@ -73,7 +72,7 @@ namespace HiddenGamemode
 			EnableAllCollisions = false;
 			EnableDrawing = false;
 			Controller = null;
-			Camera = new SpectateCamera
+			CameraMode = new SpectateCamera
 			{
 				DeathPosition = position,
 				TimeSinceDied = 0
@@ -96,7 +95,7 @@ namespace HiddenGamemode
 		{
 			base.OnKilled();
 
-			if (_ragdollWeld.IsValid) _ragdollWeld.Remove();
+			if (_ragdollWeld.IsValid()) _ragdollWeld.Remove();
 			ShowFlashlight( false, false );
 			ShowSenseParticles( false );
 			DrawPlayer(false);
@@ -217,7 +216,7 @@ namespace HiddenGamemode
 				_lastCameraRot = Rotation.Lerp( _lastCameraRot, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
 			}
 
-			if ( Camera is FirstPersonCamera camera )
+			if ( CameraMode is FirstPersonCamera camera )
 			{
 				AddCameraEffects( camera );
 			}
@@ -236,21 +235,18 @@ namespace HiddenGamemode
 
 			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
 			{
-				if ( !_ragdollWeld.IsValid )
+				if ( !_ragdollWeld.IsValid() )
 				{
 					_ragdollBody = trace.Body;
-					_ragdollWeld = PhysicsJoint.Weld
-						.From( PhysicsBody, PhysicsBody.Transform.PointToLocal( EyePosition + EyeRotation.Forward * 40f ) )
-						.To( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
-						.WithLinearSpring( 20f, 1f, 0.0f )
-						.WithAngularSpring( 0.0f, 0.0f, 0.0f )
-						.Create();
+
+					_ragdollWeld = PhysicsJoint.CreateFixed(PhysicsBody.WorldPoint(EyePosition + EyeRotation.Forward * 40f), trace.Body.WorldPoint(trace.EndPosition));
+					_ragdollWeld.SpringLinear = new PhysicsSpring(20f, 1f);
 
 					return;
 				}
 			}
 
-			if ( _ragdollWeld.IsValid )
+			if ( _ragdollWeld.IsValid() )
 			{
 				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
 					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
@@ -263,7 +259,7 @@ namespace HiddenGamemode
 				{
 					// TODO: This should be a weld joint to the world but it doesn't work right now.
 					_ragdollBody.BodyType = PhysicsBodyType.Static;
-					_ragdollBody.Position = trace.EndPos - (trace.Direction * 2.5f);
+					_ragdollBody.Position = trace.EndPosition - (trace.Direction * 2.5f);
 
 					/*
 					PhysicsJoint.Weld
@@ -277,7 +273,7 @@ namespace HiddenGamemode
 			}
 		}
 
-		private void AddCameraEffects( Camera camera )
+		private void AddCameraEffects( CameraMode camera )
 		{
 			var speed = Velocity.Length.LerpInverse( 0, 320 );
 			var forwardspeed = Velocity.Normal.Dot( camera.Rotation.Forward );

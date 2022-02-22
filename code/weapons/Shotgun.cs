@@ -32,7 +32,7 @@ namespace HiddenGamemode
 				return;
 			}
 
-			(Owner as AnimEntity).SetAnimBool( "b_attack", true );
+			(Owner as AnimEntity).SetAnimParameter( "b_attack", true );
 
 			ShootEffects();
 			PlaySound( "rust_pumpshotgun.shoot" );
@@ -47,7 +47,7 @@ namespace HiddenGamemode
 			Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 			Particles.Create( "particles/pistol_ejectbrass.vpcf", EffectEntity, "ejection_point" );
 
-			ViewModelEntity?.SetAnimBool( "fire", true );
+			ViewModelEntity?.SetAnimParameter( "fire", true );
 
 			if ( IsLocalPawn )
 			{
@@ -89,13 +89,13 @@ namespace HiddenGamemode
 		[ClientRpc]
 		protected virtual void FinishReload()
 		{
-			ViewModelEntity?.SetAnimBool( "reload_finished", true );
+			ViewModelEntity?.SetAnimParameter( "reload_finished", true );
 		}
 
 		public override void SimulateAnimator( PawnAnimator anim )
 		{
-			anim.SetParam( "holdtype", 2 );
-			anim.SetParam( "aimat_weight", 1.0f );
+			anim.SetAnimParameter( "holdtype", 2 );
+			anim.SetAnimParameter("aim_body_weight", 1.0f );
 		}
 	}
 }

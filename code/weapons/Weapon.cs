@@ -79,7 +79,7 @@ namespace HiddenGamemode
 
 			IsReloading = true;
 
-			(Owner as AnimEntity).SetAnimBool( "b_reload", true );
+			(Owner as AnimEntity).SetAnimParameter( "b_reload", true );
 
 			DoClientReload();
 		}
@@ -161,7 +161,7 @@ namespace HiddenGamemode
 		[ClientRpc]
 		public virtual void DoClientReload()
 		{
-			ViewModelEntity?.SetAnimBool( "reload", true );
+			ViewModelEntity?.SetAnimParameter( "reload", true );
 		}
 
 		public override void AttackPrimary()
@@ -188,7 +188,7 @@ namespace HiddenGamemode
 				_ = new Sandbox.ScreenShake.Perlin();
 			}
 
-			ViewModelEntity?.SetAnimBool( "fire", true );
+			ViewModelEntity?.SetAnimParameter( "fire", true );
 			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
@@ -209,7 +209,7 @@ namespace HiddenGamemode
 					if ( !IsServer ) continue;
 					if ( !tr.Entity.IsValid() ) continue;
 
-					var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
+					var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
 						.UsingTraceResult( tr )
 						.WithAttacker( Owner )
 						.WithWeapon( this );
