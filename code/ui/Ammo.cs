@@ -27,7 +27,7 @@ namespace HiddenGamemode
 			var player = Local.Pawn;
 			if ( player == null ) return;
 
-			var weapon = player.ActiveChild as Weapon;
+			var weapon = player.Children as Weapon;
 			var isValid = (weapon != null && !weapon.IsMelee);
 
 			SetClass( "active", isValid );

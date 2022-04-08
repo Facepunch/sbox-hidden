@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.Joints;
 using System;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace HiddenGamemode
 		private Rotation _lastCameraRot = Rotation.Identity;
 		private DamageInfo _lastDamageInfo;
 		private PhysicsBody _ragdollBody;
-		private WeldJoint _ragdollWeld;
+		public PhysicsJoint _ragdollWeld;
 		private Particles _senseParticles;
 		private float _walkBob = 0;
 		private float _lean = 0;
@@ -34,14 +33,14 @@ namespace HiddenGamemode
 
 		public bool IsSpectator
 		{
-			get => (Camera is SpectateCamera);
+			get => (CameraMode is SpectateCamera);
 		}
 
 		public Vector3 SpectatorDeathPosition
 		{
 			get
 			{
-				if ( Camera is SpectateCamera camera )
+				if ( CameraMode is SpectateCamera camera )
 					return camera.DeathPosition;
 
 				return Vector3.Zero;
@@ -61,7 +60,7 @@ namespace HiddenGamemode
 		{
 			get
 			{
-				if ( Camera is SpectateCamera camera )
+				if ( CameraMode is SpectateCamera camera )
 					return camera.TargetPlayer;
 
 				return null;
@@ -73,7 +72,7 @@ namespace HiddenGamemode
 			EnableAllCollisions = false;
 			EnableDrawing = false;
 			Controller = null;
-			Camera = new SpectateCamera
+			CameraMode = new SpectateCamera
 			{
 				DeathPosition = position,
 				TimeSinceDied = 0
@@ -85,7 +84,7 @@ namespace HiddenGamemode
 			Game.Instance?.Round?.OnPlayerSpawn( this );
 
 			RemoveRagdollEntity();
-			DrawPlayer(true);
+			DrawPlayer( true );
 
 			Stamina = 100f;
 
@@ -98,7 +97,7 @@ namespace HiddenGamemode
 
 			ShowFlashlight( false, false );
 			ShowSenseParticles( false );
-			DrawPlayer(false);
+			DrawPlayer( false );
 
 			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
 
@@ -155,10 +154,10 @@ namespace HiddenGamemode
 			// Do nothing. By default this plays a sound that we don't want.
 		}
 
-		public void DrawPlayer(bool shouldDraw)
+		public void DrawPlayer( bool shouldDraw )
 		{
 			EnableDrawing = shouldDraw;
-			Clothing.ForEach(x => x.EnableDrawing = shouldDraw);
+			Clothing.ForEach( x => x.EnableDrawing = shouldDraw );
 		}
 
 		public void ShowSenseParticles( bool shouldShow )
@@ -216,7 +215,7 @@ namespace HiddenGamemode
 				_lastCameraRot = Rotation.Lerp( _lastCameraRot, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
 			}
 
-			if ( Camera is FirstPersonCamera camera )
+			if ( CameraMode is FirstPersonCamera camera )
 			{
 				AddCameraEffects( camera );
 			}
@@ -226,7 +225,7 @@ namespace HiddenGamemode
 		{
 			if ( !Input.Pressed( InputButton.Use ) ) return;
 
-			var trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 80f )
+			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
 				.HitLayer( CollisionLayer.Debris )
 				.Ignore( ActiveChild )
 				.Ignore( this )
@@ -235,23 +234,18 @@ namespace HiddenGamemode
 
 			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
 			{
-				if ( !_ragdollWeld.IsValid )
+				if ( _ragdollWeld != null )
 				{
 					_ragdollBody = trace.Body;
-					_ragdollWeld = PhysicsJoint.Weld
-						.From( PhysicsBody, PhysicsBody.Transform.PointToLocal( EyePos + EyeRot.Forward * 40f ) )
-						.To( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
-						.WithLinearSpring( 20f, 1f, 0.0f )
-						.WithAngularSpring( 0.0f, 0.0f, 0.0f )
-						.Create();
+					_ragdollWeld = PhysicsJoint.CreateLength( PhysicsPoint.Local( PhysicsBody, Vector3.Down * 6.5f ), PhysicsPoint.World( trace.Body, trace.EndPosition ), 100 );
 
 					return;
 				}
 			}
 
-			if ( _ragdollWeld.IsValid )
+			if ( _ragdollWeld == null )
 			{
-				trace = Trace.Ray( EyePos, EyePos + EyeRot.Forward * 40f )
+				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
 					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
 					.Ignore( ActiveChild )
 					.Ignore( this )
@@ -262,7 +256,7 @@ namespace HiddenGamemode
 				{
 					// TODO: This should be a weld joint to the world but it doesn't work right now.
 					_ragdollBody.BodyType = PhysicsBodyType.Static;
-					_ragdollBody.Position = trace.EndPos - (trace.Direction * 2.5f);
+					_ragdollBody.Position = trace.EndPosition - (trace.Direction * 2.5f);
 
 					/*
 					PhysicsJoint.Weld
@@ -276,7 +270,7 @@ namespace HiddenGamemode
 			}
 		}
 
-		private void AddCameraEffects( Camera camera )
+		private void AddCameraEffects( CameraMode camera )
 		{
 			var speed = Velocity.Length.LerpInverse( 0, 320 );
 			var forwardspeed = Velocity.Normal.Dot( camera.Rotation.Forward );
@@ -366,8 +360,8 @@ namespace HiddenGamemode
 		[ClientRpc]
 		public void TookDamage( Vector3 position, DamageFlags flags )
 		{
-			if ( flags.HasFlag(DamageFlags.Fall) )
-				_ = new Sandbox.ScreenShake.Perlin(2f, 1f, 1.5f, 0.8f);
+			if ( flags.HasFlag( DamageFlags.Fall ) )
+				_ = new Sandbox.ScreenShake.Perlin( 2f, 1f, 1.5f, 0.8f );
 
 			DamageIndicator.Current?.OnHit( position );
 		}

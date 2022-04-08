@@ -67,7 +67,7 @@ namespace HiddenGamemode
 
 			if ( IsOpen != wantOpen )
 			{
-				SelectedWeapon = Local.Pawn.ActiveChild as Weapon;
+				SelectedWeapon = Local.Pawn.Children as Weapon;
 				IsOpen = true;
 			}
 

@@ -31,7 +31,7 @@ namespace HiddenGamemode
 				return;
 			}
 
-			(Owner as AnimEntity).SetAnimBool( "b_attack", true );
+			(Owner as AnimEntity).SetAnimParameter( "b_attack", true );
 
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" );
@@ -51,14 +51,14 @@ namespace HiddenGamemode
 				_ = new Sandbox.ScreenShake.Perlin( 0.5f, 4.0f, 1.0f, 0.5f );
 			}
 
-			ViewModelEntity?.SetAnimBool( "fire", true );
+			ViewModelEntity?.SetAnimParameter( "fire", true );
 			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
 		public override void SimulateAnimator( PawnAnimator anim )
 		{
-			anim.SetParam( "holdtype", 2 );
-			anim.SetParam( "aimat_weight", 1.0f );
+			anim.SetAnimParameter( "holdtype", 2 ); // TODO this is shit
+			anim.SetAnimParameter( "aim_body_weight", 1.0f );
 		}
 	}
 }

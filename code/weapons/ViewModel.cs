@@ -16,7 +16,7 @@ namespace HiddenGamemode
 
 		private void AddCameraEffects( ref CameraSetup camSetup )
 		{
-			Rotation = Local.Pawn.EyeRot;
+			Rotation = Local.Pawn.EyeRotation;
 
 			var speed = Owner.Velocity.Length.LerpInverse( 0, 320 );
 			var left = camSetup.Rotation.Left;

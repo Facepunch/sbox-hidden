@@ -79,7 +79,7 @@ namespace HiddenGamemode
 
 			IsReloading = true;
 
-			(Owner as AnimEntity).SetAnimBool( "b_reload", true );
+			(Owner as AnimEntity).SetAnimParameter( "b_reload", true );
 
 			DoClientReload();
 		}
@@ -88,7 +88,7 @@ namespace HiddenGamemode
 		{
 			if ( owner.Pawn is Player player )
 			{
-				if ( owner.Pawn.LifeState == LifeState.Alive )
+				if ( player.LifeState == LifeState.Alive )
 				{
 					if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
 					{
@@ -161,7 +161,7 @@ namespace HiddenGamemode
 		[ClientRpc]
 		public virtual void DoClientReload()
 		{
-			ViewModelEntity?.SetAnimBool( "reload", true );
+			ViewModelEntity?.SetAnimParameter( "reload", true );
 		}
 
 		public override void AttackPrimary()
@@ -188,17 +188,17 @@ namespace HiddenGamemode
 				_ = new Sandbox.ScreenShake.Perlin();
 			}
 
-			ViewModelEntity?.SetAnimBool( "fire", true );
+			ViewModelEntity?.SetAnimParameter( "fire", true );
 			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
 		{
-			var forward = Owner.EyeRot.Forward;
+			var forward = Owner.EyeRotation.Forward;
 			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
 			forward = forward.Normal;
 
-			foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + forward * 5000, bulletSize ) )
+			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 5000, bulletSize ) )
 			{
 				tr.Surface.DoBulletImpact( tr );
 
@@ -207,7 +207,7 @@ namespace HiddenGamemode
 
 				using ( Prediction.Off() )
 				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
+					var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
 						.UsingTraceResult( tr )
 						.WithAttacker( Owner )
 						.WithWeapon( this );

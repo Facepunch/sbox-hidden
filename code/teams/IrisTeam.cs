@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
+using Sandbox.Component;
 
 namespace HiddenGamemode
 {
@@ -11,6 +12,7 @@ namespace HiddenGamemode
 	{
 		public override string HudClassName => "team_iris";
 		public override string Name => "I.R.I.S.";
+
 
 		private Battery _batteryHud;
 		private Radar _radarHud;
@@ -55,7 +57,7 @@ namespace HiddenGamemode
 			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new IrisController();
-			player.Camera = new FirstPersonCamera();
+			player.CameraMode = new FirstPersonCamera();
 		}
 
 		public override void OnJoin( Player player  )
@@ -91,7 +93,9 @@ namespace HiddenGamemode
 
 		public override void OnPlayerKilled( Player player )
 		{
-			player.GlowActive = false;
+			var playerglow = player.Components.GetOrCreate<Glow>();
+			playerglow.Active = false;
+			playerglow.Color = Color.White;
 		}
 
 		public override void OnLeave( Player player  )

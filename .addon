@@ -1,3 +1,21 @@
 {
-	"sharedassets": "*.*",
+  "Title": "Hidden",
+  "Type": "game",
+  "Org": "facepunch",
+  "Ident": "hidden",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": [
+    "/ui/*"
+  ],
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "Facepunch.Hidden",
+  "Metadata": {
+    "MapList": [],
+    "MinPlayers": 0,
+    "MaxPlayers": 32,
+    "MapSelect": 2
+  }
 }

@@ -1,0 +1,158 @@
+
+@BaseClass = BaseProperties_facepunch_hidden
+[
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	parentAttachmentName(parentAttachment) [ group="Hierarchy" ] : "Parent Model Bone/Attachment Name" : : "The name of the bone or attachment to attach to on the entity's parent in the movement hierarchy. Use !bonemerge to use bone-merge style attachment."
+
+	useLocalOffset(boolean) [ group="Hierarchy" ] : "Use Model Attachment offsets" : 0 : "Whether to respect the specified local offset when doing the initial hierarchical attachment to its parent."
+	local.origin(vector) [ group="Hierarchy" ] : "Model Attachment position offset" : : "Offset in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+	local.angles(angle) [ group="Hierarchy" ] : "Model Attachment angular offset" : : "Angular offset in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+	local.scales(vector) [ group="Hierarchy" ] : "Model Attachment scale" : : "Scale in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	tags(tags) : "Tags" : "" : "A list of general purpose tags for this entity, for interactions with other entities such as triggers."
+]
+
+//
+// HiddenGamemode.Game
+//
+@PointClass base(BaseProperties_facepunch_hidden) = hidden : ""
+[
+]
+
+//
+// HiddenGamemode.Flashlight
+//
+@PointClass base(BaseProperties_facepunch_hidden) tags( Lighting ) editormodel( "models/editor/spot", lightModeTint, "0 255 192", "255 64 64" ) leansphere( "lightsourceradius" ) light() lightcone() = flashlight : ""
+[
+	enabled(boolean) : "Enabled" : 1 : ""
+	color(color255) : "Color" : "255 255 255" : ""
+	brightness(float) : "Brightness" : 1 : ""
+	range(float) : "Range" : 512 : "Distance range for light. 0=infinite"
+	falloff(float) : "Falloff" : "1" : "Angular falloff exponent. Does not work with light cookies. Does not work with dynamic lighting."
+	attenuation1(float) { group = "Rendering" } : "Linear Attenuation" : 0 : ""
+	attenuation2(float) { group = "Rendering" } : "Quadratic Attenuation" : 1 : ""
+	innerconeangle(float) : "Inner Cone Angle" : 45 : "Inner cone angle. No angular falloff within this cone."
+	outerconeangle(float) : "Outer Cone Angle" : 60 : "Outer cone angle."
+	fademindist(float) { group = "Fade Distance" } : "Fade Distance Min" : -250 : "Distance at which the light starts to fade. (less than 0 = use 'Fade Distance Max')"
+	fademaxdist(float) { group = "Fade Distance" } : "Fade Distance Max" : 1250 : "Maximum distance at which the light is visible. (0 = don't fade out)"
+	shadowfademindist(float) { group = "Shadows" } : "Shadow Start Fade Dist" : -250 : "Distance at which the shadow starts to fade. (less than 0 = use 'Shadow End Fade Dist')"
+	shadowfademaxdist(float) { group = "Shadows" } : "Shadow End Fade Dist" : 1000 : "Maximum distance at which the shadow is visible. (0 = don't fade out)"
+	lightcookie(resource:vtex) : "Light Cookie" :  : ""
+	fog_lighting(choices) : "Fog Lighting" : 0 : "Volumetric Fogging - How should light interact with volumetric fogging." =
+	[
+		0 : "None"
+		1 : "Baked"
+		2 : "Dynamic"
+		3 : "Baked No Shadows"
+		4 : "Dynamic No Shadows"
+	]
+	fogcontributionstrength(float) : "Fog Stength" : "1" : "Overrides how much the light affects the fog. (if enabled)"
+	castshadows(choices) { group = "Shadows" } : "Cast Shadows" : 1 : "Whether this light casts shadows." =
+	[
+		0 : "No"
+		1 : "Yes"
+		2 : "Baked Only"
+	]
+	nearclipplane(float) { group = "Shadows" } : "Shadow Near Clip Plane" : "1" : "Distance for near clip plane for shadow map."
+	shadowtexturewidth(integer) { group = "Shadows" } : "Shadow Texture Width" : 0 : "0 = use default texture resolution"
+	shadowtextureheight(integer) { group = "Shadows" } : "Shadow Texture Height" : 0 : "0 = use default texture resolution"
+	rendertocubemaps(boolean) { group = "Rendering" } : "Render To Cubemaps" : 1 : "If true, this light renders into baked cube maps."
+	priority(integer) { group = "Rendering" } : "Priority" : 0 : "When the number of visible lights exceeds the rendering budget, higher priority lights are chosen for rendering first."
+	lightgroup(string) { group = "Rendering" } : "Light Group" :  : "Semicolon-delimited list of light groups to affect."
+	lightsourceradius(float) { group = "Rendering" } : "Light Source Radius" : "2" : "The radius of the light source in game units."
+	baked_light_indexing(boolean) { group = "Rendering" } : "Baked Light Indexing" : 1 : "Allows direct light to be indexed if baked. Indexed lights have per-pixel quality specular lighting and normal map response."
+	pattern(string) { group = "Style" } : "Pattern" :  : "Set a custom pattern of light brightness for this light. Pattern format is a string of characters, where 'a' is total darkness, 'z' fully bright. i.e. 'aaggnnttzz' would be a steppy fade in from dark to light."
+	style(choices) { group = "Style" } : "Style" : 0 : "" =
+	[
+		0 : "Normal"
+		1 : "Flicker A"
+		2 : "Slow Strong Pulse"
+		3 : "Candle A"
+		4 : "Fast Strobe"
+		5 : "Gentle Pulse"
+		6 : "Flicker B"
+		7 : "Candle B"
+		8 : "Candle C"
+		9 : "Slow Strobe"
+		10 : "Fluorescent Flicker"
+		11 : "Slow Pulse No Black"
+	]
+	renderdiffuse(boolean) { group = "Rendering" } : "Render Diffuse" : 1 : "Whether the light should affect diffuse surfaces."
+	renderspecular(choices) { group = "Rendering" } : "Render Specular" : 1 : "Whether the light should be visible in specular reflections." =
+	[
+		0 : "Off"
+		1 : "On"
+		2 : "Bake Into Cubemaps"
+	]
+	rendertransmissive(boolean) { group = "Rendering" } : "Render Transmissive" : 1 : ""
+	directlight(choices) : "Direct Light" : 1 : "How direct lighting should be represented" =
+	[
+		0 : "None"
+		1 : "Baked"
+		2 : "Per Pixel"
+	]
+	indirectlight(choices) : "Indirect Light" : 1 : "How indirect lighting should be represented" =
+	[
+		0 : "None"
+		1 : "Baked"
+	]
+	bouncescale(float) : "Indirect Light Multiplier" : 1 : ""
+	clientSideEntity(boolean) [ group="Misc" ] : "Create as client-only entity" : 0 : "If set, the entity will spawn on client only."
+
+	input SetLightBrightness(float) : ""
+	input SetLightEnabled(boolean) : ""
+	input TurnOn(void) : ""
+	input TurnOff(void) : ""
+	input Toggle(void) : ""
+	input SetLightColor(color255) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+//
+// HiddenGamemode.LaserDot
+//
+@PointClass base(BaseProperties_facepunch_hidden) = laserdot : ""
+[
+]
+
+//
+// HiddenGamemode.Knife
+//
+@PointClass base(BaseProperties_facepunch_hidden) = hdn_knife : ""
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+//
+// HiddenGamemode.Pistol
+//
+@PointClass base(BaseProperties_facepunch_hidden) = hdn_pistol : ""
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+//
+// HiddenGamemode.Shotgun
+//
+@PointClass base(BaseProperties_facepunch_hidden) = hdn_shotgun : ""
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+//
+// HiddenGamemode.SMG
+//
+@PointClass base(BaseProperties_facepunch_hidden) = hdn_smg : ""
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
