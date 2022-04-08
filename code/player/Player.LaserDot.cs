@@ -21,6 +21,7 @@ namespace HiddenGamemode
 			}
 		}
 
+		[Event.Frame]
 		private void UpdateLaserDot()
 		{
 			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
