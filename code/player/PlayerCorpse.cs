@@ -13,12 +13,10 @@ namespace HiddenGamemode
 
 		public PlayerCorpse()
 		{
-			MoveType = MoveType.Physics;
+			PhysicsEnabled = true;
 			UsePhysicsCollision = true;
 
-			SetInteractsAs(CollisionLayer.Debris );
-			SetInteractsWith(CollisionLayer.WORLD_GEOMETRY );
-			SetInteractsExclude(CollisionLayer.Player | CollisionLayer.Debris );
+			Tags.Add( "debris" );
 		}
 
 		public void CopyFrom( Player player )

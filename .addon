@@ -16,6 +16,8 @@
     "MapList": [],
     "MinPlayers": 0,
     "MaxPlayers": 32,
-    "MapSelect": 2
+    "MapSelect": "Unrestricted",
+    "GameCategory": "Shooter",
+    "GameSettings": {}
   }
 }

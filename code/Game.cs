@@ -23,13 +23,13 @@ namespace HiddenGamemode
 		private BaseRound _lastRound;
 		private List<BaseTeam> _teams;
 
-		[ServerVar( "hdn_min_players", Help = "The minimum players required to start." )]
+		[ConVar.Server( "hdn_min_players", Help = "The minimum players required to start." )]
 		public static int MinPlayers { get; set; } = 2;
 
-		[ServerVar( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
+		[ConVar.Server( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
 		public static bool AllowFriendlyFire { get; set; } = true;
 
-		[ServerVar( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
+		[ConVar.Server( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
 		public static int VoiceRadius { get; set; } = 2048;
 
 		public Game()

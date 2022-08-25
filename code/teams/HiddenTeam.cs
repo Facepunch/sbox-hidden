@@ -42,7 +42,7 @@ namespace HiddenGamemode
 			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new HiddenController();
-			player.CameraMode = new FirstPersonCamera();
+			player.CameraMode = new HiddenFirstPersonCamera();
 		}
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
@@ -169,7 +169,7 @@ namespace HiddenGamemode
 					return;
 
 				var trace = Trace.Ray( player.EyePosition, player.EyePosition + player.EyeRotation.Forward * 40f )
-					.HitLayer( CollisionLayer.WORLD_GEOMETRY )
+					.WithAnyTags( "solid" )
 					.Ignore( player )
 					.Ignore( player.ActiveChild )
 					.Radius( 2 )

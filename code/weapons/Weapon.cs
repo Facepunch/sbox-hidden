@@ -79,7 +79,7 @@ namespace HiddenGamemode
 
 			IsReloading = true;
 
-			(Owner as AnimEntity).SetAnimParameter( "b_reload", true );
+			(Owner as AnimatedEntity).SetAnimParameter( "b_reload", true );
 
 			DoClientReload();
 		}
@@ -183,13 +183,9 @@ namespace HiddenGamemode
 				Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 			}
 
-			if ( IsLocalPawn )
-			{
-				_ = new Sandbox.ScreenShake.Perlin();
-			}
-
+			CrosshairLastShoot = 0;
+			
 			ViewModelEntity?.SetAnimParameter( "fire", true );
-			CrosshairPanel?.CreateEvent( "fire" );
 		}
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
@@ -243,21 +239,6 @@ namespace HiddenGamemode
 			ViewModelEntity.SetModel( ViewModelPath );
 		}
 
-		public override void CreateHudElements()
-		{
-			if ( Local.Hud == null ) return;
-
-			if ( !HasLaserDot )
-			{
-				CrosshairPanel = new Crosshair
-				{
-					Parent = Local.Hud
-				};
-
-				CrosshairPanel.AddClass( ClassInfo.Name );
-			}
-		}
-
 		public bool IsUsable()
 		{
 			if ( IsMelee || ClipSize == 0 || AmmoClip > 0 )
@@ -266,6 +247,24 @@ namespace HiddenGamemode
 			}
 
 			return AvailableAmmo() > 0;
+		}
+
+		protected TimeSince CrosshairLastShoot { get; set; }
+		protected TimeSince CrosshairLastReload { get; set; }
+
+		public virtual void RenderHud( in Vector2 screensize )
+		{
+			var center = screensize * 0.5f;
+
+			if ( IsReloading || (AmmoClip == 0 && ClipSize > 1) )
+				CrosshairLastReload = 0;
+
+			RenderCrosshair( center, CrosshairLastShoot.Relative, CrosshairLastReload.Relative );
+		}
+
+		public virtual void RenderCrosshair( in Vector2 center, float lastAttack, float lastReload )
+		{
+			var draw = Render.Draw2D;
 		}
 	}
 }

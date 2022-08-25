@@ -9,7 +9,7 @@ namespace HiddenGamemode
 {
 	public partial class HideRound : BaseRound
 	{
-		[ServerVar( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
+		[ConVar.Server( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
 		public static bool HostAlwaysHidden { get; set; } = false;
 
 		public override string RoundName => "PREPARE";
@@ -18,7 +18,7 @@ namespace HiddenGamemode
 		private Deployment _deploymentPanel;
 		private bool _roundStarted;
 
-		[ServerCmd( "hdn_select_deployment" )]
+		[ConCmd.Server( "hdn_select_deployment" )]
 		private static void SelectDeploymentCmd( string type )
 		{
 			if ( ConsoleSystem.Caller is Player player )
@@ -28,7 +28,7 @@ namespace HiddenGamemode
 			}
 		}
 
-		[ClientCmd( "hdn_open_deployment", CanBeCalledFromServer = true) ]
+		[ConCmd.Client( "hdn_open_deployment", CanBeCalledFromServer = true) ]
 		private static void OpenDeploymentCmd( int teamIndex )
 		{
 			if ( Game.Instance.Round is HideRound round )

@@ -286,18 +286,21 @@ namespace HiddenGamemode
 			camera.Position += up * MathF.Sin( _walkBob ) * speed * 2;
 			camera.Position += left * MathF.Sin( _walkBob * 0.6f ) * speed * 1;
 
-			_lean = _lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.03f, Time.Delta * 15.0f );
+			// Camera lean
+			_lean = _lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15.0f );
 
 			var appliedLean = _lean;
-			appliedLean += MathF.Sin( _walkBob ) * speed * 0.2f;
+			appliedLean += MathF.Sin( _walkBob ) * speed * 0.3f;
 			camera.Rotation *= Rotation.From( 0, 0, appliedLean );
 
 			speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
 
-			_FOV = _FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
+
+			_FOV = _FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 4.0f );
+
+			camera.FieldOfView += _FOV;
 
 			//Set to a constant because it seems to actually modify camera the camera FOV leading to wackiness if you +=
-			camera.FieldOfView = 70 + _FOV;
 		}
 
 		public override void TakeDamage( DamageInfo info )
@@ -361,7 +364,6 @@ namespace HiddenGamemode
 		public void TookDamage( Vector3 position, DamageFlags flags )
 		{
 			if ( flags.HasFlag( DamageFlags.Fall ) )
-				_ = new Sandbox.ScreenShake.Perlin( 2f, 1f, 1.5f, 0.8f );
 
 			DamageIndicator.Current?.OnHit( position );
 		}

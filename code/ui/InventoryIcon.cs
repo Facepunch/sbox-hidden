@@ -15,7 +15,7 @@ namespace HiddenGamemode
 		{
 			Weapon = weapon;
 			Icon = Add.Panel( "icon" );
-			AddClass( weapon.ClassInfo.Name );
+			AddClass( weapon.ClassName );
 		}
 
 		internal void TickSelection( Weapon selectedWeapon )

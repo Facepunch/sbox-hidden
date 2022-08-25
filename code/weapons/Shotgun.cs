@@ -32,7 +32,7 @@ namespace HiddenGamemode
 				return;
 			}
 
-			(Owner as AnimEntity).SetAnimParameter( "b_attack", true );
+			(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 
 			ShootEffects();
 			PlaySound( "rust_pumpshotgun.shoot" );
@@ -53,12 +53,7 @@ namespace HiddenGamemode
 
 			ViewModelEntity?.SetAnimParameter( "fire", true );
 
-			if ( IsLocalPawn )
-			{
-				_ = new Sandbox.ScreenShake.Perlin( 1.0f, 1.5f, 2.0f );
-			}
-
-			CrosshairPanel?.CreateEvent( "fire" );
+			//CrosshairPanel?.CreateEvent( "fire" );
 		}
 
 		public override void OnReloadFinish()
@@ -100,6 +95,37 @@ namespace HiddenGamemode
 		{
 			anim.SetAnimParameter( "holdtype", 2 );
 			anim.SetAnimParameter( "aim_body_weight", 1.0f );
+		}
+
+		public override void RenderCrosshair( in Vector2 center, float lastAttack, float lastReload )
+		{
+			var draw = Render.Draw2D;
+
+			var color = Color.Lerp( Color.Red, Color.Yellow, lastReload.LerpInverse( 0.0f, 0.4f ) );
+			draw.BlendMode = BlendMode.Lighten;
+			draw.Color = color.WithAlpha( 0.2f + lastAttack.LerpInverse( 1.2f, 0 ) * 0.5f );
+
+			// center
+			{
+				var shootEase = 1 + Easing.BounceIn( lastAttack.LerpInverse( 0.3f, 0.0f ) );
+				draw.Ring( center, 15 * shootEase, 14 * shootEase );
+			}
+
+			// outer lines
+			{
+				var shootEase = Easing.EaseInOut( lastAttack.LerpInverse( 0.4f, 0.0f ) );
+				var length = 30.0f;
+				var gap = 30.0f + shootEase * 50.0f;
+				var thickness = 4.0f;
+				var extraAngle = 30 * shootEase;
+
+				draw.CircleEx( center + Vector2.Right * gap, length, length - thickness, 32, 220, 320 );
+				draw.CircleEx( center - Vector2.Right * gap, length, length - thickness, 32, 40, 140 );
+
+				draw.Color = draw.Color.WithAlpha( 0.1f );
+				draw.CircleEx( center + Vector2.Right * gap * 2.6f, length, length - thickness * 0.5f, 32, 220, 320 );
+				draw.CircleEx( center - Vector2.Right * gap * 2.6f, length, length - thickness * 0.5f, 32, 40, 140 );
+			}
 		}
 	}
 }

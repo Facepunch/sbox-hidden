@@ -94,13 +94,11 @@ namespace HiddenGamemode
 
 				if ( IsServer )
 				{
-					_worldFlashlight.FogStength = 10f;
 					_worldFlashlight.UpdateFromBattery( FlashlightBattery );
 					_worldFlashlight.Reset();
 				}
 				else
 				{
-					_viewFlashlight.FogStength = 10f;
 					_viewFlashlight.UpdateFromBattery( FlashlightBattery );
 					_viewFlashlight.Reset();
 				}

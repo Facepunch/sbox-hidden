@@ -73,9 +73,9 @@ namespace HiddenGamemode
 
 			if ( !IsOpen ) return;
 
-			if ( input.Down( InputButton.Attack1 ) )
+			if ( input.Down( InputButton.PrimaryAttack ) )
 			{
-				input.SuppressButton( InputButton.Attack1 );
+				input.SuppressButton( InputButton.PrimaryAttack );
 				input.ActiveChild = SelectedWeapon;
 				IsOpen = false;
 				Sound.FromScreen( "dm.ui_select" );

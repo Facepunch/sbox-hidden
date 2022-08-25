@@ -11,14 +11,22 @@ namespace HiddenGamemode
 		{
 			base.PostCameraSetup( ref camSetup );
 
+			camSetup.ViewModel.FieldOfView = 75;
+
 			AddCameraEffects( ref camSetup );
 		}
 
 		private void AddCameraEffects( ref CameraSetup camSetup )
 		{
-			Rotation = Local.Pawn.EyeRotation;
+			//Rotation = Local.Pawn.EyeRotation;
 
-			var speed = Owner.Velocity.Length.LerpInverse( 0, 320 );
+			if ( Local.Pawn.LifeState == LifeState.Dead )
+				return;
+
+			//
+			// Bob up and down based on our walk movement
+			//
+			var speed = Owner.Velocity.Length.LerpInverse( 0, 400 );
 			var left = camSetup.Rotation.Left;
 			var up = camSetup.Rotation.Up;
 
@@ -28,7 +36,8 @@ namespace HiddenGamemode
 			}
 
 			Position += up * MathF.Sin( walkBob ) * speed * -1;
-			Position += left * MathF.Sin( walkBob * 0.6f ) * speed * -0.5f;
+			Position += left * MathF.Sin( walkBob * 0.5f ) * speed * -0.5f;
+
 		}
 	}
 }

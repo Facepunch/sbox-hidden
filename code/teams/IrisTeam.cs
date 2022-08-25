@@ -42,13 +42,20 @@ namespace HiddenGamemode
 
 			player.SetModel( "models/citizen/citizen.vmdl" );
 
+			player.SetBodyGroup( "Hands", 1 );
+			player.SetBodyGroup( "Feet", 1 );
+			player.SetBodyGroup( "Chest", 1 );
+			player.SetBodyGroup( "Legs", 1 );
+
 			if ( Host.IsServer )
 			{
 				player.RemoveClothing();
-				player.AttachClothing( "models/citizen_clothes/trousers/trousers.lab.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/jacket/labcoat.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/shoes/shoes.workboots.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/hat/hat_securityhelmet.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
 			}
 
 			player.EnableAllCollisions = true;
@@ -57,7 +64,7 @@ namespace HiddenGamemode
 			player.EnableShadowInFirstPerson = true;
 
 			player.Controller = new IrisController();
-			player.CameraMode = new FirstPersonCamera();
+			player.CameraMode = new HiddenFirstPersonCamera();
 		}
 
 		public override void OnJoin( Player player  )

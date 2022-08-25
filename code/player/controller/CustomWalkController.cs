@@ -383,11 +383,10 @@ namespace HiddenGamemode
 			var end = start + (_isTouchingLadder ? (_ladderNormal * -1.0f) : WishVelocity.Normal) * ladderDistance;
 
 			var pm = Trace.Ray( start, end )
-				.Size( _mins, _maxs )
-				.HitLayer( CollisionLayer.All, false )
-				.HitLayer( CollisionLayer.LADDER, true )
-				.Ignore( Pawn )
-				.Run();
+						.Size( _mins, _maxs )
+						.WithTag( "ladder" )
+						.Ignore( Pawn )
+						.Run();
 
 			_isTouchingLadder = false;
 
