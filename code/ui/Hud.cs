@@ -5,7 +5,7 @@ using Sandbox.UI.Construct;
 using System;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library]
 	public partial class Hud : HudEntity<RootPanel>

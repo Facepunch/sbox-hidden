@@ -1,34 +1,28 @@
 ﻿using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
-	[Library("laserdot")]
 	public partial class LaserDot : Entity
 	{
-		private Particles _particles;
+		private Particles Particles;
 
 		public LaserDot()
 		{
+			Predictable = true;
 			Transmit = TransmitType.Always;
 
 			if ( IsClient )
 			{
-				_particles = Particles.Create( "particles/laserdot.vpcf" );
+				Particles = Particles.Create( "particles/laserdot.vpcf" );
 
-				if ( _particles != null )
-					_particles.SetEntity( 0, this, true );
+				if ( Particles != null )
+					Particles.SetEntity( 0, this, true );
 			}
 		}
 
 		protected override void OnDestroy()
 		{
-			_particles?.Destroy( true );
-
+			Particles?.Destroy( true );
 			base.OnDestroy();
 		}
 	}

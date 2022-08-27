@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	partial class Inventory : BaseInventory
 	{

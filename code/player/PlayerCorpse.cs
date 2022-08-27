@@ -1,11 +1,6 @@
 ﻿using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class PlayerCorpse : ModelEntity
 	{
@@ -16,7 +11,7 @@ namespace HiddenGamemode
 			PhysicsEnabled = true;
 			UsePhysicsCollision = true;
 
-			Tags.Add( "debris" );
+			Tags.Add( "corpse" );
 		}
 
 		public void CopyFrom( Player player )

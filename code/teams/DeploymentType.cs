@@ -1,4 +1,4 @@
-﻿namespace HiddenGamemode
+﻿namespace Facepunch.Hidden
 {
 	public enum DeploymentType
 	{

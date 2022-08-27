@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	partial class Player
 	{

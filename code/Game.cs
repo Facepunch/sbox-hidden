@@ -1,11 +1,9 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
-	[Library( "hidden", Title = "Hidden" )]
 	partial class Game : Sandbox.Game
 	{
 		public LightFlickers LightFlickers { get; set; }
@@ -18,23 +16,22 @@ namespace HiddenGamemode
 			get => Current as Game;
 		}
 
-		[Net] public BaseRound Round { get; private set; }
+		[Net, Change( nameof( OnRoundChanged ) )] public BaseRound Round { get; private set; }
 
-		private BaseRound _lastRound;
-		private List<BaseTeam> _teams;
+		private List<BaseTeam> Teams;
 
 		[ConVar.Server( "hdn_min_players", Help = "The minimum players required to start." )]
 		public static int MinPlayers { get; set; } = 2;
 
 		[ConVar.Server( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
-		public static bool AllowFriendlyFire { get; set; } = true;
+		public static bool FriendlyFire { get; set; } = true;
 
 		[ConVar.Server( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
 		public static int VoiceRadius { get; set; } = 2048;
 
 		public Game()
 		{
-			_teams = new();
+			Teams = new();
 
 			if ( IsServer )
 			{
@@ -48,18 +45,18 @@ namespace HiddenGamemode
 			AddTeam( HiddenTeam );
 			AddTeam( IrisTeam );
 
-			_ = StartTickTimer();
+			_ = StartSecondTimer();
 		}
 
 		public void AddTeam( BaseTeam team )
 		{
-			_teams.Add( team );
-			team.Index = _teams.Count;
+			Teams.Add( team );
+			team.Index = Teams.Count;
 		}
 
 		public BaseTeam GetTeamByIndex( int index )
 		{
-			return _teams[index - 1];
+			return Teams[index - 1];
 		}
 
 		public List<Player> GetTeamPlayers<T>(bool isAlive = false) where T : BaseTeam
@@ -91,19 +88,17 @@ namespace HiddenGamemode
 
 		public async Task StartSecondTimer()
 		{
-			while (true)
+			while ( true )
 			{
-				await Task.DelaySeconds( 1 );
-				OnSecond();
-			}
-		}
-
-		public async Task StartTickTimer()
-		{
-			while (true)
-			{
-				await Task.NextPhysicsFrame();
-				OnTick();
+				try
+				{
+					await Task.DelaySeconds( 1 );
+					OnSecond();
+				}
+				catch( TaskCanceledException _ )
+				{
+					break;
+				}
 			}
 		}
 
@@ -114,19 +109,11 @@ namespace HiddenGamemode
 
 		public override void DoPlayerSuicide( Client client )
 		{
-			if ( client.Pawn.LifeState == LifeState.Alive && Round?.CanPlayerSuicide == true )
-			{
-				// This simulates the player being killed.
-				client.Pawn.LifeState = LifeState.Dead;
-				client.Pawn.OnKilled();
-				OnKilled( client.Pawn );
-			}
+			// Do nothing. The player can't suicide in this mode.
 		}
 
 		public override void PostLevelLoaded()
 		{
-			_ = StartSecondTimer();
-
 			base.PostLevelLoaded();
 		}
 
@@ -140,10 +127,7 @@ namespace HiddenGamemode
 
 		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
 		{
-			Log.Info( client.Name + " left, checking minimum player count..." );
-
 			Round?.OnPlayerLeave( client.Pawn as Player );
-
 			base.ClientDisconnect( client, reason );
 		}
 
@@ -162,27 +146,20 @@ namespace HiddenGamemode
 			Round?.OnSecond();
 		}
 
+		[Event.Tick]
 		private void OnTick()
 		{
 			Round?.OnTick();
 
-			for ( var i = 0; i < _teams.Count; i++ )
+			for ( var i = 0; i < Teams.Count; i++ )
 			{
-				_teams[i].OnTick();
+				Teams[i].OnTick();
 			}
 
 			LightFlickers?.OnTick();
 
 			if ( IsClient )
 			{
-				// We have to hack around this for now until we can detect changes in net variables.
-				if ( _lastRound != Round )
-				{
-					_lastRound?.Finish();
-					_lastRound = Round;
-					_lastRound.Start();
-				}
-
 				foreach ( var client in Client.All )
 				{
 					if ( client.Pawn is not Player player ) return;
@@ -194,6 +171,12 @@ namespace HiddenGamemode
 					}
 				};
 			}
+		}
+
+		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )
+		{
+			oldRound?.Finish();
+			newRound.Start();
 		}
 
 		private void CheckMinimumPlayers()

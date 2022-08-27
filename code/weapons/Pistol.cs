@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library( "hdn_pistol", Title = "Baretta" )]
 	partial class Pistol : Weapon

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
     public class HuntRound : BaseRound
 	{
@@ -78,8 +78,6 @@ namespace HiddenGamemode
 
 		protected override void OnStart()
 		{
-			Log.Info( "Started Hunt Round" );
-
 			if ( Host.IsServer )
 			{
 				foreach ( var client in Client.All )
@@ -92,8 +90,6 @@ namespace HiddenGamemode
 
 		protected override void OnFinish()
 		{
-			Log.Info( "Finished Hunt Round" );
-
 			if ( Host.IsServer )
 			{
 				Spectators.Clear();
@@ -103,8 +99,6 @@ namespace HiddenGamemode
 		protected override void OnTimeUp()
 		{
 			if ( _isGameOver ) return;
-
-			Log.Info( "Hunt Time Up!" );
 
 			_ = LoadStatsRound( "I.R.I.S. Survived Long Enough" );
 

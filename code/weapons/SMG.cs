@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library( "hdn_smg", Title = "MP5" )]
 	partial class SMG : Weapon

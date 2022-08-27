@@ -3,7 +3,7 @@ using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class Vitals : Panel
 	{

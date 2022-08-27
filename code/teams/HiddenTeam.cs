@@ -1,11 +1,7 @@
 ﻿using Sandbox;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
     class HiddenTeam : BaseTeam
 	{
@@ -14,8 +10,8 @@ namespace HiddenGamemode
 		public override string Name => "Hidden";
 		public Player CurrentPlayer { get; set; }
 
-		private float _nextLightFlicker;
-		private Abilities _abilitiesHud;
+		private float NextLightFlicker;
+		private Abilities AbilitiesHud;
 
 		public override void SupplyLoadout( Player player )
 		{
@@ -118,7 +114,7 @@ namespace HiddenGamemode
 			}
 			else
 			{
-				if ( Time.Now <= _nextLightFlicker )
+				if ( Time.Now <= NextLightFlicker )
 					return;
 
 				var player = CurrentPlayer;
@@ -138,7 +134,7 @@ namespace HiddenGamemode
 					}
 				}
 
-				_nextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
+				NextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
 			}
 		}
 
@@ -160,7 +156,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			if ( Input.Pressed( InputButton.Use) )
+			if ( Input.Pressed( InputButton.Use ) )
 			{
 				if ( player.Controller is not HiddenController controller )
 					return;
@@ -193,7 +189,7 @@ namespace HiddenGamemode
 
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
-				_abilitiesHud = Local.Hud.AddChild<Abilities>();
+				AbilitiesHud = Local.Hud.AddChild<Abilities>();
 			}
 
 			player.EnableShadowCasting = false;
@@ -216,10 +212,10 @@ namespace HiddenGamemode
 
 			Log.Info( $"{ player.Client.Name } left the Hidden team." );
 
-			if ( _abilitiesHud != null && player.IsLocalPawn )
+			if ( AbilitiesHud != null && player.IsLocalPawn )
 			{
-				_abilitiesHud.Delete( true );
-				_abilitiesHud = null;
+				AbilitiesHud.Delete( true );
+				AbilitiesHud = null;
 			}
 
 			player.Sense = null;

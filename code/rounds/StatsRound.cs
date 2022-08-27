@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public partial class StatsRound : BaseRound
 	{
@@ -18,19 +18,17 @@ namespace HiddenGamemode
 		[Net] public string FirstDeath { get; set; }
 		[Net] public string Winner { get; set; }
 
-		private Stats _statsPanel;
+		private Stats StatsPanel;
 
 		protected override void OnStart()
 		{
-			Log.Info( "Started Stats Round" );
-
 			if ( Host.IsClient )
 			{
-				_statsPanel = Local.Hud.AddChild<Stats>();
+				StatsPanel = Local.Hud.AddChild<Stats>();
 
-				_statsPanel.Winner.Text = Winner;
+				StatsPanel.Winner.Text = Winner;
 
-				_statsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new StatInfo
 				{
 					Title = "Hidden Kills",
 					PlayerName = HiddenName,
@@ -39,7 +37,7 @@ namespace HiddenGamemode
 					Text = HiddenKills.ToString()
 				} );
 
-				_statsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new StatInfo
 				{
 					Title = "Hidden Hunter",
 					PlayerName = !string.IsNullOrEmpty( HiddenHunter ) ? HiddenHunter : "N/A",
@@ -48,7 +46,7 @@ namespace HiddenGamemode
 					Text = ""
 				} );
 
-				_statsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new StatInfo
 				{
 					Title = "First Death",
 					PlayerName = !string.IsNullOrEmpty( FirstDeath ) ? FirstDeath : "N/A",
@@ -61,18 +59,14 @@ namespace HiddenGamemode
 
 		protected override void OnFinish()
 		{
-			Log.Info( "Finished Stats Round" );
-
-			if ( _statsPanel != null )
+			if ( StatsPanel != null )
 			{
-				_statsPanel.Delete( );
+				StatsPanel.Delete( );
 			}
 		}
 
 		protected override void OnTimeUp()
 		{
-			Log.Info( "Stats Time Up!" );
-
 			Game.Instance.ChangeRound( new HideRound() );
 
 			base.OnTimeUp();

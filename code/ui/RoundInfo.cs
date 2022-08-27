@@ -1,10 +1,9 @@
-﻿
-using Sandbox;
+﻿using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class RoundInfo : Panel
 	{
@@ -45,6 +44,8 @@ namespace HiddenGamemode
 			{
 				Container.SetClass( "roundNameOnly", true );
 			}
+
+			SetClass( "hidden", Scoreboard.Current?.IsOpen ?? false );
 
 			base.Tick();
 		}

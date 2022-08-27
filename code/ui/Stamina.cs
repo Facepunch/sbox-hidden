@@ -4,7 +4,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class Stamina : Panel
 	{

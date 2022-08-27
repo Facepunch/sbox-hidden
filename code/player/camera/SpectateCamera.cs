@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public partial class SpectateCamera : CameraMode
 	{

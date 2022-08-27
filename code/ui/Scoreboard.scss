@@ -1,138 +1,149 @@
-﻿.scoreboard {
-	align-items: center;
+﻿Scoreboard {
 	background-color: rgba(#000,0.8);
 	font-family: Lexend;
-	flex-direction: column;
-	justify-content: center;
 	position: absolute;
+	transition: all 0.1s ease;
 	opacity: 0;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
-	transition: all 0.15s ease;
-	transform: scale(0.95);
 	z-index: 100;
 
 	&.open {
 		opacity: 1;
-		transform: scale(1);
-	}
-	// Header
-	.scoreboard-header {
-		align-items: center;
-		background-image: url( /ui/hidden/scoreboard-header-bg.png );
-		background-size: 100%;
-		font-family: Lexend;
-		justify-content: center;
-		display: flex;
-		flex-direction: row;
-		position: absolute;
-		top: 40px;
-		width: 410px;
-		height: 55px;
 
-		label {
-			align-items: center;
-			color: #ECECEC;
-			font-size: 24px;
-			font-weight: 600;
-			text-shadow: 0px 2px rgba(#000,0.5);
+		.container {
+			transform: scale(1);
 		}
 	}
-	// Team Container
-	.team-container {
-		box-shadow: 0 10px 50px rgba(#000,0.4);
+
+	.container {
+		transform: scale(0.9);
 		flex-direction: column;
-		margin-bottom: 30px;
-		min-width: 40%;
-		margin-top: 30px;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
 		transition: all 0.2s ease;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
 
-		.team-header {
+		.scoreboard-header {
 			align-items: center;
-			color: #fff;
+			background-image: url( /ui/hidden/scoreboard-header-bg.png );
 			background-size: 100%;
-			background-repeat: no-repeat;
-			font-weight: 500;
-			height: 44px;
-			padding-left: 80px;
+			font-family: Lexend;
+			justify-content: center;
+			display: flex;
+			flex-direction: row;
+			position: absolute;
+			top: 40px;
+			width: 410px;
+			height: 55px;
 
-			&.team_iris {
-				background-image: url( /ui/hidden/iris-bg.png );
-
-				.teamIcon {
-					background-image: url( /ui/hidden/icon-iris.png );
-				}
-			}
-
-			&.team_hidden {
-				background-image: url( /ui/hidden/hidden-bg.png );
-
-				.teamIcon {
-					background-image: url( /ui/hidden/icon-hidden.png );
-				}
-			}
-
-			.teamIcon {
-				background-size: 100%;
-				width: 60px;
-				height: 60px;
-				position: absolute;
-				left: 16px;
-				top: -16px;
+			label {
+				align-items: center;
+				color: #ECECEC;
+				font-size: 24px;
+				font-weight: 600;
+				text-shadow: 0px 2px rgba(#000,0.5);
 			}
 		}
 
-		.table-header {
-			align-items: center;
-			background-size: 100%;
-			background-image: url( /ui/hidden/table-header-bg.png );
-			color: #6C6C6C;
-			height: 44px;
-			padding-right: 40px;
-			padding-left: 16px;
-		}
-
-
-		.canvas {
+		.team-container {
+			box-shadow: 0 10px 50px rgba(#000,0.4);
 			flex-direction: column;
-			min-width: 30%;
-			mix-blend-mode: lighten;
-			// Player Row
-			.entry {
+			margin-bottom: 30px;
+			min-width: 40%;
+			margin-top: 30px;
+			transition: all 0.2s ease;
+
+			.team-header {
+				align-items: center;
+				color: #fff;
+				background-size: 100%;
+				background-repeat: no-repeat;
+				font-weight: 500;
+				height: 44px;
+				padding-left: 80px;
+
+				&.team_iris {
+					background-image: url( /ui/hidden/iris-bg.png );
+
+					.teamIcon {
+						background-image: url( /ui/hidden/icon-iris.png );
+					}
+				}
+
+				&.team_hidden {
+					background-image: url( /ui/hidden/hidden-bg.png );
+
+					.teamIcon {
+						background-image: url( /ui/hidden/icon-hidden.png );
+					}
+				}
+
+				.teamIcon {
+					background-size: 100%;
+					width: 60px;
+					height: 60px;
+					position: absolute;
+					left: 16px;
+					top: -16px;
+				}
+			}
+
+			.table-header {
 				align-items: center;
 				background-size: 100%;
-				background-image: url( /ui/hidden/row-bg.png );
-				margin-bottom: 2px;
-				height: 40px;
-				padding-left: 16px;
+				background-image: url( /ui/hidden/table-header-bg.png );
+				color: #6C6C6C;
+				height: 44px;
 				padding-right: 40px;
-				color: #fff;
+				padding-left: 16px;
+			}
 
-				label {
-					color: #CDCDCD;
-					font-size: 15px;
-				}
 
-				&.me {
-					background-image: url( /ui/hidden/row-bg-me.png );
+			.canvas {
+				flex-direction: column;
+				min-width: 30%;
+				mix-blend-mode: lighten;
+
+				.entry {
+					align-items: center;
+					background-size: 100%;
+					background-image: url( /ui/hidden/row-bg.png );
+					margin-bottom: 2px;
+					height: 40px;
+					padding-left: 16px;
+					padding-right: 40px;
+					color: #fff;
+
+					label {
+						color: #CDCDCD;
+						font-size: 15px;
+					}
+
+					&.me {
+						background-image: url( /ui/hidden/row-bg-me.png );
+					}
 				}
 			}
 		}
-	}
 
+		.name {
+			flex-grow: 1;
+		}
 
-	.name {
-		flex-grow: 1;
-	}
+		.deaths, .kills, .ping, .fps {
+			width: 90px;
+			text-align: center;
+		}
 
-	.deaths, .kills, .ping, .fps {
-		width: 90px;
-		text-align: center;
-	}
-
-	.ping, .fps {
-		width: 50px;
+		.ping, .fps {
+			width: 50px;
+		}
 	}
 }

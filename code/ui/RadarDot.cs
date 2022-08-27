@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class RadarDot : Panel
 	{

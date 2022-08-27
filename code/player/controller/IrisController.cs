@@ -1,11 +1,7 @@
 ﻿using Sandbox;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class IrisController : CustomWalkController
 	{
@@ -17,7 +13,7 @@ namespace HiddenGamemode
 		public float StaminaLossPerSecond = 15f;
 		public float StaminaGainPerSecond = 20f;
 
-		private float _fallVelocity;
+		private float FallVelocity;
 
 		public override void Simulate()
 		{
@@ -35,13 +31,9 @@ namespace HiddenGamemode
 				}
 
 				if ( Input.Down( InputButton.Run ) && Velocity.Length >= (SprintSpeed * 0.8f) )
-				{
 					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
-				}
 				else
-				{
 					player.Stamina = MathF.Min( player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
-				}
 
 				SprintSpeed = WalkSpeed + (((MaxSprintSpeed - WalkSpeed) / 100f) * player.Stamina) + 40f;
 			}
@@ -51,14 +43,14 @@ namespace HiddenGamemode
 
 		public override void OnPreTickMove()
 		{
-			_fallVelocity = Velocity.z;
+			FallVelocity = Velocity.z;
 		}
 
 		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
 		{
-			if ( Host.IsServer && trace.Hit && _fallVelocity < -FallDamageVelocity )
+			if ( Host.IsServer && trace.Hit && FallVelocity < -FallDamageVelocity )
 			{
-				var damage = (MathF.Abs( _fallVelocity ) - FallDamageVelocity) * FallDamageScale;
+				var damage = (MathF.Abs( FallVelocity ) - FallDamageVelocity) * FallDamageScale;
 
 				using ( Prediction.Off() )
 				{

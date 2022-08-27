@@ -1,45 +1,53 @@
 ﻿using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
-	partial class Player
+	public partial class Player
 	{
-		private LaserDot _laserDot;
+		[Net] private LaserDot LaserDot { get; set; }
 
 		private void CreateLaserDot()
 		{
 			DestroyLaserDot();
-			_laserDot = new LaserDot();
+
+			LaserDot = new LaserDot();
+			LaserDot.Owner = this;
 		}
 
 		private void DestroyLaserDot()
 		{
-			if ( _laserDot != null )
+			if ( LaserDot != null )
 			{
-				_laserDot.Delete();
-				_laserDot = null;
+				LaserDot.Delete();
+				LaserDot = null;
 			}
 		}
 
-		[Event.Frame]
-		private void UpdateLaserDot()
+		private void SimulateLaserDot( Client client )
 		{
 			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
 			{
-				if ( _laserDot == null )
+				if ( IsServer && LaserDot == null )
+				{
 					CreateLaserDot();
+				}
 
-				var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 4096f )
-					.UseHitboxes()
-					.Radius( 2f )
-					.Ignore( weapon )
-					.Ignore( this )
-					.Run();
+				if ( LaserDot.IsValid() )
+				{
+					var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 4096f )
+						.UseHitboxes()
+						.Radius( 2f )
+						.Ignore( weapon )
+						.Ignore( this )
+						.Run();
 
-				if ( trace.Hit )
-					_laserDot.Position = trace.EndPosition;
+					if ( trace.Hit )
+					{
+						LaserDot.Position = trace.EndPosition;
+					}
+				}
 			}
-			else
+			else if ( IsServer )
 			{
 				DestroyLaserDot();
 			}

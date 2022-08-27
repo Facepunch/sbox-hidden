@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public partial class Player : Sandbox.Player
 	{
@@ -11,14 +11,14 @@ namespace HiddenGamemode
 		[Net, Local] public ScreamAbility Scream { get; set; }
 		[Net, Local] public DeploymentType Deployment { get; set; }
 
-		private Rotation _lastCameraRot = Rotation.Identity;
-		private DamageInfo _lastDamageInfo;
-		private PhysicsBody _ragdollBody;
-		public PhysicsJoint _ragdollWeld;
-		private Particles _senseParticles;
-		private float _walkBob = 0;
-		private float _lean = 0;
-		private float _FOV = 0;
+		private Rotation LastCameraRotation = Rotation.Identity;
+		private DamageInfo LastDamageInfo;
+		private PhysicsBody RagdollBody;
+		public PhysicsJoint RagdollWeld;
+		private Particles SenseParticles;
+		private float WalkBob = 0;
+		private float Lean = 0;
+		private float FOV = 0;
 
 		public bool HasTeam
 		{
@@ -86,6 +86,9 @@ namespace HiddenGamemode
 			RemoveRagdollEntity();
 			DrawPlayer( true );
 
+			RagdollWeld = null;
+			RagdollBody = null;
+
 			Stamina = 100f;
 
 			base.Respawn();
@@ -99,11 +102,18 @@ namespace HiddenGamemode
 			ShowSenseParticles( false );
 			DrawPlayer( false );
 
-			BecomeRagdollOnServer( _lastDamageInfo.Force, GetHitboxBone( _lastDamageInfo.HitboxIndex ) );
+			BecomeRagdollOnServer( LastDamageInfo.Force, GetHitboxBone( LastDamageInfo.HitboxIndex ) );
 
 			Inventory.DeleteContents();
 
 			Team?.OnPlayerKilled( this );
+		}
+
+		public override void FrameSimulate( Client client )
+		{
+			SimulateLaserDot( client );
+
+			base.FrameSimulate( client );
 		}
 
 		public override void Simulate( Client client )
@@ -130,8 +140,8 @@ namespace HiddenGamemode
 			{
 				using ( Prediction.Off() )
 				{
-					//TickPickupRagdoll();
-					UpdateLaserDot();
+					TickPickupRagdoll();
+					SimulateLaserDot( client );
 				}
 			}
 
@@ -162,18 +172,18 @@ namespace HiddenGamemode
 
 		public void ShowSenseParticles( bool shouldShow )
 		{
-			if ( _senseParticles != null )
+			if ( SenseParticles != null )
 			{
-				_senseParticles.Destroy( false );
-				_senseParticles = null;
+				SenseParticles.Destroy( false );
+				SenseParticles = null;
 			}
 
 			if ( shouldShow )
 			{
-				_senseParticles = Particles.Create( "particles/sense.vpcf" );
+				SenseParticles = Particles.Create( "particles/sense.vpcf" );
 
-				if ( _senseParticles != null )
-					_senseParticles.SetEntity( 0, this, true );
+				if ( SenseParticles != null )
+					SenseParticles.SetEntity( 0, this, true );
 			}
 		}
 
@@ -203,16 +213,16 @@ namespace HiddenGamemode
 		{
 			base.PostCameraSetup( ref setup );
 
-			if ( _lastCameraRot == Rotation.Identity )
-				_lastCameraRot = CurrentView.Rotation;
+			if ( LastCameraRotation == Rotation.Identity )
+				LastCameraRotation = CurrentView.Rotation;
 
-			var angleDiff = Rotation.Difference( _lastCameraRot, CurrentView.Rotation );
+			var angleDiff = Rotation.Difference( LastCameraRotation, CurrentView.Rotation );
 			var angleDiffDegrees = angleDiff.Angle();
 			var allowance = 20.0f;
 
 			if ( angleDiffDegrees > allowance )
 			{
-				_lastCameraRot = Rotation.Lerp( _lastCameraRot, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
+				LastCameraRotation = Rotation.Lerp( LastCameraRotation, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
 			}
 
 			if ( CameraMode is FirstPersonCamera camera )
@@ -221,54 +231,46 @@ namespace HiddenGamemode
 			}
 		}
 
-		//private void TickPickupRagdoll()
-		//{
-		//	if ( !Input.Pressed( InputButton.Use ) ) return;
+		private void TickPickupRagdoll()
+		{
+			if ( !Input.Pressed( InputButton.Use ) ) return;
 
-		//	var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
-		//		.HitLayer( CollisionLayer.Debris )
-		//		.Ignore( ActiveChild )
-		//		.Ignore( this )
-		//		.Radius( 2 )
-		//		.Run();
+			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
+				.EntitiesOnly()
+				.Ignore( ActiveChild )
+				.Ignore( this )
+				.Radius( 2 )
+				.Run();
 
-		//	if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
-		//	{
-		//		if ( _ragdollWeld != null )
-		//		{
-		//			_ragdollBody = trace.Body;
-		//			_ragdollWeld = PhysicsJoint.CreateLength( PhysicsPoint.Local( PhysicsBody, Vector3.Down * 6.5f ), PhysicsPoint.World( trace.Body, trace.EndPosition ), 100 );
+			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
+			{
+				if ( !RagdollWeld.IsValid() )
+				{
+					RagdollBody = trace.Body;
+					RagdollWeld = PhysicsJoint.CreateLength( PhysicsPoint.Local( PhysicsBody, Vector3.Up * 2f ), PhysicsPoint.World( trace.Body, trace.EndPosition ), 20f );
+					return;
+				}
+			}
 
-		//			return;
-		//		}
-		//	}
+			if ( RagdollBody.IsValid() )
+			{
+				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
+					.WorldOnly()
+					.Ignore( ActiveChild )
+					.Ignore( this )
+					.Radius( 2 )
+					.Run();
 
-		//	if ( _ragdollWeld == null )
-		//	{
-		//		trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
-		//			.HitLayer( CollisionLayer.WORLD_GEOMETRY )
-		//			.Ignore( ActiveChild )
-		//			.Ignore( this )
-		//			.Radius( 2 )
-		//			.Run();
+				if ( trace.Hit && RagdollBody != null && RagdollBody.IsValid() )
+				{
+					PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PhysicsPoint.World( RagdollBody, trace.EndPosition ), 4f );
+				}
 
-		//		if ( trace.Hit && _ragdollBody != null && _ragdollBody.IsValid() )
-		//		{
-		//			// TODO: This should be a weld joint to the world but it doesn't work right now.
-		//			_ragdollBody.BodyType = PhysicsBodyType.Static;
-		//			_ragdollBody.Position = trace.EndPosition - (trace.Direction * 2.5f);
-
-		//			/*
-		//			PhysicsJoint.Weld
-		//				.From( trace.Body, trace.Body.Transform.PointToLocal( trace.EndPos ) )
-		//				.To( _ragdollBody, _ragdollBody.Transform.PointToLocal( trace.EndPos ) )
-		//				.Create();
-		//			*/
-		//		}
-
-		//		_ragdollWeld.Remove();
-		//	}
-		//}
+				RagdollWeld.Remove();
+				RagdollBody = null;
+				RagdollWeld = null;
+			}
+		}
 
 		private void AddCameraEffects( CameraMode camera )
 		{
@@ -280,27 +282,23 @@ namespace HiddenGamemode
 
 			if ( GroundEntity != null )
 			{
-				_walkBob += Time.Delta * 25.0f * speed;
+				WalkBob += Time.Delta * 25.0f * speed;
 			}
 
-			camera.Position += up * MathF.Sin( _walkBob ) * speed * 2;
-			camera.Position += left * MathF.Sin( _walkBob * 0.6f ) * speed * 1;
+			camera.Position += up * MathF.Sin( WalkBob ) * speed * 2;
+			camera.Position += left * MathF.Sin( WalkBob * 0.6f ) * speed * 1;
 
-			// Camera lean
-			_lean = _lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15.0f );
+			Lean = Lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15.0f );
 
-			var appliedLean = _lean;
-			appliedLean += MathF.Sin( _walkBob ) * speed * 0.3f;
+			var appliedLean = Lean;
+			appliedLean += MathF.Sin( WalkBob ) * speed * 0.3f;
 			camera.Rotation *= Rotation.From( 0, 0, appliedLean );
 
 			speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
 
+			FOV = FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 4.0f );
 
-			_FOV = _FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 4.0f );
-
-			camera.FieldOfView += _FOV;
-
-			//Set to a constant because it seems to actually modify camera the camera FOV leading to wackiness if you +=
+			camera.FieldOfView += FOV;
 		}
 
 		public override void TakeDamage( DamageInfo info )
@@ -312,14 +310,13 @@ namespace HiddenGamemode
 
 			if ( info.Attacker is Player attacker && attacker != this )
 			{
-				if ( !Game.AllowFriendlyFire )
+				if ( !Game.FriendlyFire && attacker.Team == Team )
 				{
 					return;
 				}
 
 				Team?.OnTakeDamageFromPlayer( this, attacker, info );
 				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
-
 				attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 			}
 
@@ -337,7 +334,7 @@ namespace HiddenGamemode
 				}
 			}
 
-			_lastDamageInfo = info;
+			LastDamageInfo = info;
 
 			base.TakeDamage( info );
 		}

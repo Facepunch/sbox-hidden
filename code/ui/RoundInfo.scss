@@ -30,8 +30,6 @@
         }
     }
 
-
-
     &.roundNameOnly {
         .roundName {
             text-align: center;
@@ -62,7 +60,7 @@
     }
 }
 
-roundInfo
+RoundInfo
 {
     align-items: center;
     display: flex;
@@ -71,6 +69,10 @@ roundInfo
     min-height: 100%;
     padding: 0;
     width: 100%;
+
+    &.hidden {
+        display: none;
+    }
 }
 
 .team_iris

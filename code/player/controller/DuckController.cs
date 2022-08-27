@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library]
 	public class DuckController : BaseNetworkable

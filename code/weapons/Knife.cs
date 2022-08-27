@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library( "hdn_knife", Title = "Knife" )]
 	partial class Knife : Weapon
@@ -18,10 +18,7 @@ namespace HiddenGamemode
 		public override void Spawn()
 		{
 			base.Spawn();
-
-			// TODO: EnableDrawing = false does not work.
 			RenderColor = RenderColor.WithAlpha(0f);
-
 			SetModel( "weapons/rust_boneknife/rust_boneknife.vmdl" );
 		}
 

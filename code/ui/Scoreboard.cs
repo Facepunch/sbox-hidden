@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Sandbox;
 using Sandbox.UI;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[UseTemplate]
 	public class Scoreboard : Panel
@@ -16,11 +13,20 @@ namespace HiddenGamemode
 		public Panel HiddenSection { get; set; }
 		public Panel IrisSection { get; set; }
 
+		public static Scoreboard Current { get; private set; }
+
+		public Scoreboard()
+		{
+			Current = this;
+		}
+
+		public bool IsOpen => Input.Down( InputButton.Score );
+
 		public override void Tick()
 		{
 			base.Tick();
 
-			SetClass("open", Input.Down(InputButton.Score));
+			SetClass( "open", IsOpen );
 
 			if ( !IsVisible )
 				return;
@@ -50,7 +56,7 @@ namespace HiddenGamemode
 
 		private Panel GetCorrectSection(Client client)
 		{
-			return client.GetInt("Team", 2) == 1 ? HiddenSection : IrisSection;
+			return client.GetInt( "Team", 2 ) == 1 ? HiddenSection : IrisSection;
 		}
 	}
 }

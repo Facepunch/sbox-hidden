@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library( "hdn_shotgun", Title = "SPAS-12" )]
 	partial class Shotgun : Weapon

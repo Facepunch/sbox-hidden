@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	[Library]
 	public class CustomWalkController : BasePlayerController

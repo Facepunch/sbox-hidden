@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class Radar : Panel
 	{
 		private readonly Dictionary<Player, RadarDot> _radarDots = new();
-
-		public Panel Anchor;
 
 		public Radar()
 		{
@@ -84,7 +82,6 @@ namespace HiddenGamemode
 			}
 
 			// This is probably fucking awful maths but it works.
-
 			var difference = player.Position - localPlayer.Position;
 			var radarSize = 256f;
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public partial class HideRound : BaseRound
 	{
@@ -78,8 +78,6 @@ namespace HiddenGamemode
 
 		protected override void OnStart()
 		{
-			Log.Info( "Started Hide Round" );
-
 			if ( Host.IsServer )
 			{
 				foreach ( var client in Client.All )
@@ -122,15 +120,11 @@ namespace HiddenGamemode
 
 		protected override void OnFinish()
 		{
-			Log.Info( "Finished Hide Round" );
-
 			CloseDeploymentPanel();
 		}
 
 		protected override void OnTimeUp()
 		{
-			Log.Info( "Hide Time Up!" );
-
 			Game.Instance.ChangeRound( new HuntRound() );
 
 			base.OnTimeUp();

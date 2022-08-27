@@ -2,7 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	public class Crosshair : Panel
 	{

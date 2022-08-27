@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
 	partial class Player
 	{

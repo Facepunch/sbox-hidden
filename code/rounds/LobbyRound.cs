@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HiddenGamemode
+namespace Facepunch.Hidden
 {
     public class LobbyRound : BaseRound
 	{
@@ -13,8 +13,6 @@ namespace HiddenGamemode
 
 		protected override void OnStart()
 		{
-			Log.Info( "Started Lobby Round" );
-
 			if ( Host.IsServer )
 			{
 				foreach ( var client in Client.All )
@@ -27,7 +25,7 @@ namespace HiddenGamemode
 
 		protected override void OnFinish()
 		{
-			Log.Info( "Finished Lobby Round" );
+
 		}
 
 		public override void OnPlayerKilled( Player player )

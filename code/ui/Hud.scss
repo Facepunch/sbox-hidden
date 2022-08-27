@@ -10,12 +10,12 @@
 	}
 }
 
-chatbox
+ChatBox
 {
 	bottom: 350px;
 }
 
-vitals {
+Vitals {
 	align-items: center;
 	background-image: url( /ui/hidden/player-container.png );
 	background-size: 100%;
@@ -52,7 +52,7 @@ vitals {
 	}
 }
 
-ammo {
+Ammo {
 	background-image: url( /ui/hidden/ammo-menu.png );
 	background-size: 100%;
 	bottom: 32px;
@@ -124,7 +124,7 @@ ammo {
 	}
 }
 
-abilities {
+Abilities {
 	align-items: center;
 	justify-content: center;
 	position: absolute;
