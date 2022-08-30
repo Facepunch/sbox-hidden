@@ -88,7 +88,6 @@ namespace Facepunch.Hidden
 		public override void FrameSimulate( Client client )
 		{
 			SimulateLaserDot( client );
-
 			base.FrameSimulate( client );
 		}
 

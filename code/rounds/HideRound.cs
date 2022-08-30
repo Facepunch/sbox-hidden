@@ -15,7 +15,7 @@ namespace Facepunch.Hidden
 		public override string RoundName => "PREPARE";
 		public override int RoundDuration => 20;
 
-		private Deployment _deploymentPanel;
+		private Deployment DeploymentPanel;
 		private bool RoundStarted;
 
 		[ConCmd.Server( "hdn_select_deployment" )]
@@ -49,9 +49,9 @@ namespace Facepunch.Hidden
 		{
 			CloseDeploymentPanel();
 
-			_deploymentPanel = Local.Hud.AddChild<Deployment>();
+			DeploymentPanel = Local.Hud.AddChild<Deployment>();
 
-			team.AddDeployments( _deploymentPanel, (selection) =>
+			team.AddDeployments( DeploymentPanel, (selection) =>
 			{
 				SelectDeployment( selection );
 				CloseDeploymentPanel();
@@ -139,10 +139,10 @@ namespace Facepunch.Hidden
 
 		private void CloseDeploymentPanel()
 		{
-			if ( _deploymentPanel != null )
+			if ( DeploymentPanel != null )
 			{
-				_deploymentPanel.Delete();
-				_deploymentPanel = null;
+				DeploymentPanel.Delete();
+				DeploymentPanel = null;
 			}
 		}
 	}

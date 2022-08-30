@@ -34,7 +34,7 @@ namespace Facepunch.Hidden
 
 				if ( LaserDot.IsValid() )
 				{
-					var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 4096f )
+					var trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 4096f )
 						.UseHitboxes()
 						.Radius( 2f )
 						.Ignore( weapon )
