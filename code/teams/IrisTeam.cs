@@ -9,9 +9,8 @@ namespace Facepunch.Hidden
 		public override string HudClassName => "team_iris";
 		public override string Name => "I.R.I.S.";
 
-
-		private Battery _batteryHud;
-		private Radar _radarHud;
+		private Battery BatteryHud;
+		private Radar RadarHud;
 
 		public override void SupplyLoadout( Player player  )
 		{
@@ -43,16 +42,13 @@ namespace Facepunch.Hidden
 			player.SetBodyGroup( "Chest", 1 );
 			player.SetBodyGroup( "Legs", 1 );
 
-			if ( Host.IsServer )
-			{
-				player.RemoveClothing();
-				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
-				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
-			}
+			player.RemoveClothing();
+			player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
 
 			player.EnableAllCollisions = true;
 			player.EnableDrawing = true;
@@ -69,7 +65,7 @@ namespace Facepunch.Hidden
 
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
-				_radarHud = Local.Hud.AddChild<Radar>();
+				RadarHud = Local.Hud.AddChild<Radar>();
 			}
 
 			base.OnJoin( player );
@@ -107,16 +103,16 @@ namespace Facepunch.Hidden
 
 			if ( player.IsLocalPawn )
 			{
-				if ( _radarHud != null )
+				if ( RadarHud != null )
 				{
-					_radarHud.Delete( true );
-					_radarHud = null;
+					RadarHud.Delete( true );
+					RadarHud = null;
 				}
 
-				if ( _batteryHud != null )
+				if ( BatteryHud != null )
 				{
-					_batteryHud.Delete( true );
-					_batteryHud = null;
+					BatteryHud.Delete( true );
+					BatteryHud = null;
 				}
 			}
 

@@ -25,12 +25,14 @@ namespace Facepunch.Hidden
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
 
-			if ( Host.IsServer )
-			{
-				player.RemoveClothing();
-			}
+			player.RemoveClothing();
 
 			player.SetModel( "models/citizen/citizen.vmdl" );
+
+			player.SetBodyGroup( "Hands", 0 );
+			player.SetBodyGroup( "Feet", 0 );
+			player.SetBodyGroup( "Chest", 0 );
+			player.SetBodyGroup( "Legs", 0 );
 
 			player.EnableAllCollisions = true;
 			player.EnableDrawing = true;
@@ -39,6 +41,8 @@ namespace Facepunch.Hidden
 
 			player.Controller = new HiddenController();
 			player.CameraMode = new HiddenFirstPersonCamera();
+
+			player.SetMaterialOverride( "materials/cloaked.vmat" );
 		}
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
@@ -194,7 +198,6 @@ namespace Facepunch.Hidden
 
 			player.EnableShadowCasting = false;
 			player.EnableShadowReceive = false;
-			player.RenderColor = player.RenderColor.WithAlpha(0.15f);
 
 			player.Sense = new SenseAbility();
 			player.Scream = new ScreamAbility();
@@ -208,7 +211,6 @@ namespace Facepunch.Hidden
 		{
 			player.EnableShadowReceive = true;
 			player.EnableShadowCasting = true;
-			player.RenderColor = player.RenderColor.WithAlpha(1f);
 
 			Log.Info( $"{ player.Client.Name } left the Hidden team." );
 

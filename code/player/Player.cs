@@ -140,7 +140,7 @@ namespace Facepunch.Hidden
 			{
 				using ( Prediction.Off() )
 				{
-					TickPickupRagdoll();
+					//TickPickupRagdoll();
 					SimulateLaserDot( client );
 				}
 			}
@@ -351,9 +351,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		public void DidDamage( Vector3 position, float amount, float inverseHealth )
 		{
-			Sound.FromScreen( "dm.ui_attacker" )
-				.SetPitch( 1 + inverseHealth * 1 );
-
+			Sound.FromScreen( "dm.ui_attacker" ).SetPitch( 1 + inverseHealth * 1 );
 			HitIndicator.Current?.OnHit( position, amount );
 		}
 
@@ -361,6 +359,7 @@ namespace Facepunch.Hidden
 		public void TookDamage( Vector3 position, DamageFlags flags )
 		{
 			if ( flags.HasFlag( DamageFlags.Fall ) )
+				return;
 
 			DamageIndicator.Current?.OnHit( position );
 		}
@@ -369,7 +368,11 @@ namespace Facepunch.Hidden
 		{
 			ShowSenseParticles( false );
 			RemoveRagdollEntity();
-			DestroyLaserDot();
+
+			if ( IsServer )
+			{
+				DestroyLaserDot();
+			}
 
 			base.OnDestroy();
 		}

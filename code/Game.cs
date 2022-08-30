@@ -176,7 +176,7 @@ namespace Facepunch.Hidden
 		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )
 		{
 			oldRound?.Finish();
-			newRound.Start();
+			newRound?.Start();
 		}
 
 		private void CheckMinimumPlayers()

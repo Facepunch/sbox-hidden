@@ -19,8 +19,6 @@ namespace Facepunch.Hidden
 
 		protected override void OnUse( Player player )
 		{
-			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );
-
 			TimeSinceLastUse = 0;
 
 			using ( Prediction.Off() )

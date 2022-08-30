@@ -16,7 +16,7 @@ namespace Facepunch.Hidden
 		public override int RoundDuration => 20;
 
 		private Deployment _deploymentPanel;
-		private bool _roundStarted;
+		private bool RoundStarted;
 
 		[ConCmd.Server( "hdn_select_deployment" )]
 		private static void SelectDeploymentCmd( string type )
@@ -64,7 +64,7 @@ namespace Facepunch.Hidden
 
 			AddPlayer( player );
 
-			if ( _roundStarted )
+			if ( RoundStarted )
 			{
 				player.Team = Game.Instance.IrisTeam;
 				player.Team.OnStart( player );
@@ -114,7 +114,7 @@ namespace Facepunch.Hidden
 						OpenDeploymentCmd( To.Single( player ), player.TeamIndex );
 				} );
 
-				_roundStarted = true;
+				RoundStarted = true;
 			}
 		}
 
