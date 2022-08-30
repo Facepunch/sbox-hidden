@@ -20,17 +20,19 @@ namespace Facepunch.Hidden
 		private bool RoundStarted;
 
 		[ConCmd.Server( "hdn_select_deployment" )]
-		private static void SelectDeploymentCmd( string type )
+		public static void SelectDeploymentCmd( string type )
 		{
-			if ( ConsoleSystem.Caller is Player player )
+			if ( ConsoleSystem.Caller.Pawn is Player player )
 			{
 				if ( Game.Instance.Round is HideRound )
+				{
 					player.Deployment = Enum.Parse<DeploymentType>( type );
+				}
 			}
 		}
 
 		[ConCmd.Client( "hdn_open_deployment", CanBeCalledFromServer = true) ]
-		private static void OpenDeploymentCmd( int teamIndex )
+		public static void OpenDeploymentCmd( int teamIndex )
 		{
 			if ( Game.Instance.Round is HideRound round )
 			{

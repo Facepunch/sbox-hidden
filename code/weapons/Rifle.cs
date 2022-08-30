@@ -20,7 +20,7 @@ namespace Facepunch.Hidden
 	public partial class Rifle : Weapon
 	{
 		public override string ViewModelPath => "models/f1/fp_f1.vmdl";
-		public override WeaponConfig Config => new PistolConfig();
+		public override WeaponConfig Config => new RifleConfig();
 
 		public override bool UnlimitedAmmo => true;
 		public override int ClipSize => 25;

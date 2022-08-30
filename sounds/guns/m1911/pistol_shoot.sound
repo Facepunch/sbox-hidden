@@ -6,12 +6,11 @@
 		Volume = 1
 		VolumeRandom = 0
 		Pitch = 1
-		PitchRandom = 0
+		PitchRandom = 0.1
 		Decibels = 140
 		Sounds = 
 		[
 			resource:"sounds/guns/m1911/pistol_shoot.vsnd",
-			resource:"sounds/guns/m1911/pistol_shoot 01.vsnd",
 		]
 		SelectionMode = "Random"
 		MaximumDistance = 4479.734

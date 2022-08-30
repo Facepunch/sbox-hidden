@@ -17,6 +17,8 @@ namespace Facepunch.Hidden
 			player.Inventory.DeleteContents();
 			player.Inventory.Add( new Pistol(), true );
 
+			Log.Info( player.Deployment );
+
 			if ( player.Deployment == DeploymentType.IRIS_ASSAULT )
 			{
 				player.Inventory.Add( new SMG(), true );
@@ -24,6 +26,7 @@ namespace Facepunch.Hidden
 			}
 			else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
 			{
+				Log.Info( "Tactical yea" );
 				player.Inventory.Add( new Rifle(), true );
 				player.GiveAmmo( AmmoType.Rifle, 50 );
 			}

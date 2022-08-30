@@ -464,7 +464,7 @@ namespace Facepunch.Hidden
 
 		public bool IsUsable()
 		{
-			if ( IsMelee || ClipSize == 0 || AmmoClip > 0 )
+			if ( IsMelee || ClipSize == 0 || AmmoClip > 0 || UnlimitedAmmo )
 			{
 				return true;
 			}
