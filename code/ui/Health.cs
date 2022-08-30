@@ -9,14 +9,12 @@ namespace Facepunch.Hidden
 	{
 		public Panel InnerBar;
 		public Panel OuterBar;
-		public Panel Icon;
 		public Label Text;
 
 		public Health()
 		{
 			StyleSheet.Load( "/ui/Health.scss" );
 
-			Icon = Add.Panel( "icon" );
 			OuterBar = Add.Panel( "outerBar" );
 			InnerBar = OuterBar.Add.Panel( "innerBar" );
 			Text = Add.Label( "0", "text" );
@@ -30,10 +28,8 @@ namespace Facepunch.Hidden
 			SetClass("low-health", player.Health < 30);
 
 			InnerBar.Style.Width = Length.Percent( player.Health );
-			InnerBar.Style.Dirty();
-			
 
-			Text.Text = player.Health.ToString();
+			Text.Text = ((int)player.Health).ToString();
 		}
 	}
 }

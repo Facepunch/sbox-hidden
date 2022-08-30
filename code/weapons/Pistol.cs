@@ -3,30 +3,53 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	[Library( "hdn_pistol", Title = "Baretta" )]
-	partial class Pistol : Weapon
+	[Library]
+	public class PistolConfig : WeaponConfig
+	{
+		public override string Name => "Pistol";
+		public override string Description => "Short-range hitscan pistol";
+		public override string ClassName => "hdn_pistol";
+		public override string Icon => "ui/weapons/pistol.png";
+		public override AmmoType AmmoType => AmmoType.Pistol;
+		public override WeaponType Type => WeaponType.Hitscan;
+		public override int Ammo => 0;
+		public override int Damage => 8;
+	}
+
+	[Library( "hdn_pistol" )]
+	public partial class Pistol : Weapon
 	{
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+		public override WeaponConfig Config => new PistolConfig();
 
 		public override bool UnlimitedAmmo => true;
 		public override int ClipSize => 10;
-		public override float PrimaryRate => 15.0f;
+		public override float PrimaryRate => 3f;
 		public override float SecondaryRate => 1.0f;
 		public override float ReloadTime => 3.0f;
 		public override bool HasLaserDot => true;
-		public override int BaseDamage => 8;
-		public override int Bucket => 1;
+
+		[ClientRpc]
+		protected override void ShootEffects()
+		{
+			Host.AssertClient();
+
+			base.ShootEffects();
+
+			Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
+			Particles.Create( "particles/pistol_ejectbrass.vpcf", EffectEntity, "ejection_point" );
+		}
 
 		public override void Spawn()
 		{
 			base.Spawn();
-
-			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+			SetModel( "weapons/rust_smg/rust_pistol.vmdl" );
 		}
 
-		public override bool CanPrimaryAttack()
+		public override void PlayReloadSound()
 		{
-			return base.CanPrimaryAttack() && Input.Pressed( InputButton.PrimaryAttack );
+			PlaySound( "rust_pistol.reload" );
+			base.PlayReloadSound();
 		}
 
 		public override void AttackPrimary()
@@ -37,30 +60,14 @@ namespace Facepunch.Hidden
 				return;
 			}
 
+			TimeSincePrimaryAttack = 0f;
+
+			Rand.SetSeed( Time.Tick );
+
 			ShootEffects();
-			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 0.05f, 1.5f, BaseDamage, 3.0f );
-		}
-
-		public override void RenderCrosshair( in Vector2 center, float lastAttack, float lastReload )
-		{
-			var draw = Render.Draw2D;
-
-			var shootEase = Easing.EaseIn( lastAttack.LerpInverse( 0.2f, 0.0f ) );
-			var color = Color.Lerp( Color.Red, Color.Yellow, lastReload.LerpInverse( 0.0f, 0.4f ) );
-
-			draw.BlendMode = BlendMode.Lighten;
-			draw.Color = color.WithAlpha( 0.2f + lastAttack.LerpInverse( 1.2f, 0 ) * 0.5f );
-
-			var length = 8.0f - shootEase * 2.0f;
-			var gap = 10.0f + shootEase * 30.0f;
-			var thickness = 2.0f;
-
-			draw.Line( thickness, center + Vector2.Left * gap, center + Vector2.Left * (length + gap) );
-			draw.Line( thickness, center - Vector2.Left * gap, center - Vector2.Left * (length + gap) );
-
-			draw.Line( thickness, center + Vector2.Up * gap, center + Vector2.Up * (length + gap) );
-			draw.Line( thickness, center - Vector2.Up * gap, center - Vector2.Up * (length + gap) );
+			PlaySound( $"rust_pistol.shoot" );
+			ShootBullet( 0.01f, 1.5f, Config.Damage, 8.0f );
+			PlayAttackAnimation();
 		}
 	}
 }

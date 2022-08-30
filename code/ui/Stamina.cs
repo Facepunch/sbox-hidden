@@ -10,14 +10,12 @@ namespace Facepunch.Hidden
 	{
 		public Panel InnerBar;
 		public Panel OuterBar;
-		public Panel Icon;
 		public Label Text;
 
 		public Stamina()
 		{
 			StyleSheet.Load( "/ui/Stamina.scss" );
 
-			Icon = Add.Panel( "icon" );
 			OuterBar = Add.Panel( "outerBar" );
 			InnerBar = OuterBar.Add.Panel( "innerBar" );
 			Text = Add.Label( "0", "text" );
@@ -31,7 +29,6 @@ namespace Facepunch.Hidden
 			SetClass("low-stamina", player.Stamina < 30);
 
 			InnerBar.Style.Width = Length.Percent( player.Stamina );
-			InnerBar.Style.Dirty();
 
 			Text.Text = ((int)player.Stamina).ToString();
 		}

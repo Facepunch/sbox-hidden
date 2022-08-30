@@ -26,7 +26,7 @@ namespace Facepunch.Hidden
 			else
 			{
 				player.Inventory.Add( new Shotgun(), true );
-				player.GiveAmmo( AmmoType.Buckshot, 16 );
+				player.GiveAmmo( AmmoType.Shotgun, 16 );
 			}
 		}
 
@@ -49,6 +49,8 @@ namespace Facepunch.Hidden
 			player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
 			player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
 			player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
+
+			player.ClearMaterialOverride();
 
 			player.EnableAllCollisions = true;
 			player.EnableDrawing = true;

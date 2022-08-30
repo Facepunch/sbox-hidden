@@ -24,10 +24,10 @@ namespace Facepunch.Hidden
 
 		public override void Tick()
 		{
-			var player = Local.Pawn;
+			var player = Local.Pawn as Player;
 			if ( player == null ) return;
 
-			var weapon = player.Children as Weapon;
+			var weapon = player.ActiveChild as Weapon;
 			var isValid = (weapon != null && !weapon.IsMelee);
 
 			SetClass( "active", isValid );

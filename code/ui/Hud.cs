@@ -17,6 +17,9 @@ namespace Facepunch.Hidden
 
 			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );
 
+			var rightPanel = RootPanel.Add.Panel( "hud_right" );
+			rightPanel.AddChild<WeaponList>();
+
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<Vitals>();
 			RootPanel.AddChild<Ammo>();
@@ -24,7 +27,6 @@ namespace Facepunch.Hidden
 			RootPanel.AddChild<Nameplates>();
 			RootPanel.AddChild<DamageIndicator>();
 			RootPanel.AddChild<HitIndicator>();
-			RootPanel.AddChild<InventoryBar>();
 			RootPanel.AddChild<ChatBox>();
 			RootPanel.AddChild<Scoreboard>();
 			RootPanel.AddChild<LoadingScreen>();

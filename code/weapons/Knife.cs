@@ -3,48 +3,34 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	[Library( "hdn_knife", Title = "Knife" )]
-	partial class Knife : Weapon
+	[Library]
+	public class KnifeConfig : WeaponConfig
+	{
+		public override string Name => "Knife";
+		public override string Description => "Brutal slashing melee weapon";
+		public override string ClassName => "hdn_knife";
+		public override string Icon => "ui/weapons/knife.png";
+		public override WeaponType Type => WeaponType.Hitscan;
+		public override int Ammo => 0;
+		public override int Damage => 35;
+	}
+
+	[Library( "hdn_knife" )]
+	public partial class Knife : Weapon
 	{
 		public override string ViewModelPath => "weapons/rust_boneknife/v_rust_boneknife.vmdl";
+		public override WeaponConfig Config => new KnifeConfig();
+
 		public override float PrimaryRate => 1.0f;
 		public override float SecondaryRate => 0.3f;
 		public override bool IsMelee => true;
 		public override int HoldType => 0;
-		public override int Bucket => 1;
-		public override int BaseDamage => 35;
-		public virtual int MeleeDistance => 80;
+		public override float MeleeRange => 80f;
 
 		public override void Spawn()
 		{
 			base.Spawn();
-			RenderColor = RenderColor.WithAlpha(0f);
 			SetModel( "weapons/rust_boneknife/rust_boneknife.vmdl" );
-		}
-
-		public virtual void MeleeStrike( float damage, float force )
-		{
-			var forward = Owner.EyeRotation.Forward;
-			forward = forward.Normal;
-
-			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeDistance, 10f ) )
-			{
-				if ( !tr.Entity.IsValid() ) continue;
-
-				tr.Surface.DoBulletImpact( tr );
-
-				if ( !IsServer ) continue;
-
-				using ( Prediction.Off() )
-				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
-						.UsingTraceResult( tr )
-						.WithAttacker( Owner )
-						.WithWeapon( this );
-
-					tr.Entity.TakeDamage( damageInfo );
-				}
-			}
 		}
 
 		public override void AttackSecondary()
@@ -56,14 +42,14 @@ namespace Facepunch.Hidden
 		{
 			ShootEffects();
 			PlaySound( "rust_boneknife.attack" );
-			MeleeStrike( BaseDamage, 1.5f );
+			MeleeStrike( Config.Damage, 1.5f );
 		}
 
 		public override void OnChargeAttackFinish()
 		{
 			ShootEffects();
 			PlaySound( "rust_boneknife.attack" );
-			MeleeStrike( BaseDamage * 3f, 1.5f );
+			MeleeStrike( Config.Damage * 3f, 1.5f );
 		}
 	}
 }

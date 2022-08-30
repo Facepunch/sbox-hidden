@@ -3,7 +3,7 @@ namespace Sandbox
 {
 	public class HiddenFirstPersonCamera : CameraMode
 	{
-		Vector3 lastPos;
+		private Vector3 LastPosition { get; set; }
 
 		public override void Activated()
 		{
@@ -13,7 +13,7 @@ namespace Sandbox
 			Position = pawn.EyePosition;
 			Rotation = pawn.EyeRotation;
 
-			lastPos = Position;
+			LastPosition = Position;
 		}
 
 		public override void Update()
@@ -22,9 +22,9 @@ namespace Sandbox
 			if ( pawn == null ) return;
 
 			var eyePos = pawn.EyePosition;
-			if ( eyePos.Distance( lastPos ) < 300 ) // TODO: Tweak this, or add a way to invalidate lastpos when teleporting
+			if ( eyePos.Distance( LastPosition ) < 300 )
 			{
-				Position = Vector3.Lerp( eyePos.WithZ( lastPos.z ), eyePos, 20.0f * Time.Delta );
+				Position = Vector3.Lerp( eyePos.WithZ( LastPosition.z ), eyePos, 20f * Time.Delta );
 			}
 			else
 			{
@@ -34,7 +34,7 @@ namespace Sandbox
 			Rotation = pawn.EyeRotation;
 
 			Viewer = pawn;
-			lastPos = Position;
+			LastPosition = Position;
 		}
 	}
 }

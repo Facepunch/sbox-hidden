@@ -1,23 +1,52 @@
-﻿using Sandbox;
-using System;
+﻿using Gamelib.Extensions;
+using Gamelib.Utility;
+using Sandbox;
+using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	partial class Weapon : BaseWeapon
+	public abstract partial class Weapon : BaseWeapon
 	{
-		public virtual AmmoType AmmoType => AmmoType.Pistol;
+		public abstract WeaponConfig Config { get; }
+		public virtual string MuzzleAttachment => "muzzle";
+		public virtual string MuzzleFlashEffect => "particles/pistol_muzzleflash.vpcf";
+		public virtual List<string> FlybySounds => new()
+		{
+			"flyby.rifleclose1",
+			"flyby.rifleclose2",
+			"flyby.rifleclose3",
+			"flyby.rifleclose4"
+		};
+		public virtual string CrosshairClass => "automatic";
+		public virtual string ImpactEffect => null;
 		public virtual int ClipSize => 16;
+		public virtual float AutoReloadDelay => 1.5f;
 		public virtual float ReloadTime => 3.0f;
 		public virtual bool IsMelee => false;
-		public virtual int Bucket => 1;
-		public virtual int BucketWeight => 100;
+		public virtual float DamageFalloffStart => 0f;
+		public virtual float DamageFalloffEnd => 0f;
+		public virtual float BulletRange => 20000f;
+		public virtual bool AutoReload => true;
+		public virtual string TracerEffect => null;
+		public virtual bool ReloadAnimation => true;
 		public virtual bool UnlimitedAmmo => false;
-		public virtual float ChargeAttackDuration => 2;
-		public virtual bool HasFlashlight => false;
-		public virtual bool HasLaserDot => false;
-		public virtual int BaseDamage => 10;
+		public virtual bool CanMeleeAttack => false;
+		public virtual bool IsPassive => false;
+		public virtual bool HasFlashlight => true;
+		public virtual bool HasLaserDot => true;
+		public virtual float MeleeDuration => 0.4f;
+		public virtual float MeleeDamage => 80f;
+		public virtual float MeleeForce => 2f;
+		public virtual float MeleeRange => 200f;
+		public virtual float MeleeRate => 1f;
+		public virtual float ChargeAttackDuration => 2f;
+		public virtual DamageFlags DamageType => DamageFlags.Bullet;
 		public virtual int HoldType => 1;
+		public virtual int ViewModelMaterialGroup => 0;
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+
+		[Net]
+		public int Slot { get; set; }
 
 		[Net, Predicted]
 		public int AmmoClip { get; set; }
@@ -34,19 +63,76 @@ namespace Facepunch.Hidden
 		[Net, Predicted]
 		public TimeSince TimeSinceChargeAttack { get; set; }
 
-		public float ChargeAttackEndTime;
+		[Net, Predicted]
+		public TimeSince TimeSinceMeleeAttack { get; set; }
+
+		public float ChargeAttackEndTime { get; private set; }
+		public AnimatedEntity AnimationOwner => Owner as AnimatedEntity;
 
 		public int AvailableAmmo()
 		{
 			if ( Owner is not Player owner ) return 0;
-			return owner.AmmoCount( AmmoType );
+			return owner.AmmoCount( Config.AmmoType );
+		}
+
+		public float GetDamageFalloff( float distance, float damage )
+		{
+			return Weapons.GetDamageFalloff( distance, damage, DamageFalloffStart, DamageFalloffEnd );
+		}
+
+		public virtual void Restock()
+		{
+			var remainingAmmo = (ClipSize - AmmoClip);
+
+			if ( remainingAmmo > 0 && Owner is Player player )
+			{
+				player.GiveAmmo( Config.AmmoType, remainingAmmo );
+			}
+		}
+
+		public virtual bool IsAvailable()
+		{
+			return true;
+		}
+
+		public virtual void PlayAttackAnimation()
+		{
+			AnimationOwner?.SetAnimParameter( "b_attack", true );
+		}
+
+		public virtual void PlayReloadAnimation()
+		{
+			AnimationOwner?.SetAnimParameter( "b_reload", true );
+		}
+
+		public virtual void OnMeleeAttack()
+		{
+			ViewModelEntity?.SetAnimParameter( "melee", true );
+			TimeSinceMeleeAttack = 0f;
+			MeleeStrike( MeleeDamage, MeleeForce );
+			PlaySound( "player.melee" );
+		}
+
+		public override bool CanReload()
+		{
+			if ( CanMeleeAttack && TimeSinceMeleeAttack < (1 / MeleeRate) )
+			{
+				return false;
+			}
+
+			if ( AutoReload && TimeSincePrimaryAttack > AutoReloadDelay && AmmoClip == 0 )
+			{
+				return true;
+			}
+
+			return base.CanReload();
 		}
 
 		public override void ActiveStart( Entity owner )
 		{
 			base.ActiveStart( owner );
 
-			TimeSinceDeployed = 0;
+			TimeSinceDeployed = 0f;
 		}
 
 		public override void Spawn()
@@ -66,29 +152,31 @@ namespace Facepunch.Hidden
 			if ( AmmoClip >= ClipSize )
 				return;
 
-			TimeSinceReload = 0;
+			TimeSinceReload = 0f;
 
 			if ( Owner is Player player )
 			{
 				if ( !UnlimitedAmmo )
 				{
-					if ( player.AmmoCount( AmmoType ) <= 0 )
+					if ( player.AmmoCount( Config.AmmoType ) <= 0 )
 						return;
 				}
 			}
 
 			IsReloading = true;
 
-			(Owner as AnimatedEntity).SetAnimParameter( "b_reload", true );
+			if ( ReloadAnimation )
+				PlayReloadAnimation();
 
+			PlayReloadSound();
 			DoClientReload();
 		}
 
 		public override void Simulate( Client owner )
 		{
-			if ( owner.Pawn is Player player )
+			if ( owner.Pawn is Player )
 			{
-				if ( player.LifeState == LifeState.Alive )
+				if ( owner.Pawn.LifeState == LifeState.Alive )
 				{
 					if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
 					{
@@ -99,6 +187,16 @@ namespace Facepunch.Hidden
 				else
 				{
 					ChargeAttackEndTime = 0f;
+				}
+			}
+
+			if ( Input.Down( InputButton.Zoom ) )
+			{
+				if ( CanMeleeAttack && TimeSinceMeleeAttack > (1 / MeleeRate) )
+				{
+					IsReloading = false;
+					OnMeleeAttack();
+					return;
 				}
 			}
 
@@ -116,6 +214,12 @@ namespace Facepunch.Hidden
 		public override bool CanPrimaryAttack()
 		{
 			if ( ChargeAttackEndTime > 0f && Time.Now < ChargeAttackEndTime )
+				return false;
+
+			if ( TimeSinceMeleeAttack < MeleeDuration )
+				return false;
+
+			if ( TimeSinceDeployed < 0.3f )
 				return false;
 
 			return base.CanPrimaryAttack();
@@ -144,7 +248,7 @@ namespace Facepunch.Hidden
 			{
 				if ( !UnlimitedAmmo )
 				{
-					var ammo = player.TakeAmmo( AmmoType, ClipSize - AmmoClip );
+					var ammo = player.TakeAmmo( Config.AmmoType, ClipSize - AmmoClip );
 
 					if ( ammo == 0 )
 						return;
@@ -158,34 +262,62 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		public virtual void PlayReloadSound()
+		{
+
+		}
+
 		[ClientRpc]
 		public virtual void DoClientReload()
 		{
-			ViewModelEntity?.SetAnimParameter( "reload", true );
+			if ( ReloadAnimation )
+			{
+				ViewModelEntity?.SetAnimParameter( "reload", true );
+			}
 		}
 
 		public override void AttackPrimary()
 		{
-			TimeSincePrimaryAttack = 0;
-			TimeSinceSecondaryAttack = 0;
+			TimeSincePrimaryAttack = 0f;
+			TimeSinceSecondaryAttack = 0f;
+
+			Rand.SetSeed( Time.Tick );
 
 			ShootEffects();
-			ShootBullet( 0.05f, 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 0.05f, 1.5f, Config.Damage, 3.0f );
 		}
 
-		[ClientRpc]
-		protected virtual void ShootEffects()
+		public virtual void MeleeStrike( float damage, float force )
 		{
-			Host.AssertClient();
+			var forward = Owner.EyeRotation.Forward;
+			forward = forward.Normal;
 
-			if (!IsMelee)
+			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, 10f ) )
 			{
-				Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
-			}
+				if ( !trace.Entity.IsValid() )
+					continue;
 
-			CrosshairLastShoot = 0;
-			
-			ViewModelEntity?.SetAnimParameter( "fire", true );
+				if ( !IsValidMeleeTarget( trace.Entity ) )
+					continue;
+
+				if ( IsServer )
+				{
+					using ( Prediction.Off() )
+					{
+						var damageInfo = new DamageInfo()
+							.WithPosition( trace.EndPosition )
+							.WithFlag( DamageFlags.Blunt )
+							.WithForce( forward * 100f * force )
+							.UsingTraceResult( trace )
+							.WithAttacker( Owner )
+							.WithWeapon( this );
+
+						damageInfo.Damage = damage;
+
+						trace.Entity.TakeDamage( damageInfo );
+					}
+				}
+			}
 		}
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
@@ -194,21 +326,49 @@ namespace Facepunch.Hidden
 			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
 			forward = forward.Normal;
 
-			foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 5000, bulletSize ) )
+			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * BulletRange, bulletSize ) )
 			{
-				tr.Surface.DoBulletImpact( tr );
-
-				if ( !IsServer ) continue;
-				if ( !tr.Entity.IsValid() ) continue;
-
-				using ( Prediction.Off() )
+				if ( string.IsNullOrEmpty( ImpactEffect ) )
 				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
-						.UsingTraceResult( tr )
-						.WithAttacker( Owner )
-						.WithWeapon( this );
+					trace.Surface.DoBulletImpact( trace );
+				}
 
-					tr.Entity.TakeDamage( damageInfo );
+				var fullEndPos = trace.EndPosition + trace.Direction * bulletSize;
+
+				if ( !string.IsNullOrEmpty( TracerEffect ) )
+				{
+					var tracer = Particles.Create( TracerEffect, GetEffectEntity(), MuzzleAttachment );
+					tracer?.SetPosition( 1, fullEndPos );
+					tracer?.SetPosition( 2, trace.Distance );
+				}
+
+				if ( !string.IsNullOrEmpty( ImpactEffect ) )
+				{
+					var impact = Particles.Create( ImpactEffect, fullEndPos );
+					impact?.SetForward( 0, trace.Normal );
+				}
+
+				if ( !IsServer )
+					continue;
+
+				Weapons.PlayFlybySounds( Owner, trace.Entity, trace.StartPosition, trace.EndPosition, bulletSize * 2f, bulletSize * 50f, FlybySounds );
+
+				if ( trace.Entity.IsValid() )
+				{
+					using ( Prediction.Off() )
+					{
+						var damageInfo = new DamageInfo()
+							.WithPosition( trace.EndPosition )
+							.WithFlag( DamageType )
+							.WithForce( forward * 100f * force )
+							.UsingTraceResult( trace )
+							.WithAttacker( Owner )
+							.WithWeapon( this );
+
+						damageInfo.Damage = GetDamageFalloff( trace.Distance, damage );
+
+						trace.Entity.TakeDamage( damageInfo );
+					}
 				}
 			}
 		}
@@ -231,12 +391,21 @@ namespace Facepunch.Hidden
 
 			ViewModelEntity = new ViewModel
 			{
+				EnableViewmodelRendering = true,
 				Position = Position,
-				Owner = Owner,
-				EnableViewmodelRendering = true
+				Owner = Owner
 			};
 
 			ViewModelEntity.SetModel( ViewModelPath );
+			ViewModelEntity.SetMaterialGroup( ViewModelMaterialGroup );
+		}
+
+		public override void CreateHudElements()
+		{
+			if ( Local.Hud == null ) return;
+
+			//CrosshairPanel = Local.Hud.AddChild<Crosshair>();
+			//CrosshairPanel.AddClass( CrosshairClass );
 		}
 
 		public bool IsUsable()
@@ -249,22 +418,64 @@ namespace Facepunch.Hidden
 			return AvailableAmmo() > 0;
 		}
 
-		protected TimeSince CrosshairLastShoot { get; set; }
-		protected TimeSince CrosshairLastReload { get; set; }
-
-		public virtual void RenderHud( in Vector2 screensize )
+		public override IEnumerable<TraceResult> TraceBullet( Vector3 start, Vector3 end, float radius = 2.0f )
 		{
-			var center = screensize * 0.5f;
-
-			if ( IsReloading || (AmmoClip == 0 && ClipSize > 1) )
-				CrosshairLastReload = 0;
-
-			RenderCrosshair( center, CrosshairLastShoot.Relative, CrosshairLastReload.Relative );
+			yield return Trace.Ray( start, end )
+				.UseHitboxes()
+				.Ignore( Owner )
+				.Ignore( this )
+				.Size( radius )
+				.Run();
 		}
 
-		public virtual void RenderCrosshair( in Vector2 center, float lastAttack, float lastReload )
+		protected virtual void CreateMuzzleFlash()
 		{
-			var draw = Render.Draw2D;
+			if ( !string.IsNullOrEmpty( MuzzleFlashEffect ) )
+			{
+				Particles.Create( MuzzleFlashEffect, GetEffectEntity(), "muzzle" );
+			}
+		}
+
+		[ClientRpc]
+		protected virtual void ShootEffects()
+		{
+			Host.AssertClient();
+
+			if ( !IsMelee )
+			{
+				CreateMuzzleFlash();
+			}
+
+			ViewModelEntity?.SetAnimParameter( "fire", true );
+		}
+
+		protected virtual ModelEntity GetEffectEntity()
+		{
+			return EffectEntity;
+		}
+
+		protected virtual bool IsValidMeleeTarget( Entity target )
+		{
+			return target is Player;
+		}
+
+		protected void DealDamage( Entity target, Vector3 position, Vector3 force )
+		{
+			DealDamage( target, position, force, Config.Damage );
+		}
+
+		protected void DealDamage( Entity target, Vector3 position, Vector3 force, float damage )
+		{
+			var damageInfo = new DamageInfo()
+				.WithAttacker( Owner )
+				.WithWeapon( this )
+				.WithPosition( position )
+				.WithForce( force )
+				.WithFlag( DamageType );
+
+			damageInfo.Damage = damage;
+
+			target.TakeDamage( damageInfo );
 		}
 	}
 }

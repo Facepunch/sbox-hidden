@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 					await Task.DelaySeconds( 1 );
 					OnSecond();
 				}
-				catch( TaskCanceledException _ )
+				catch ( TaskCanceledException )
 				{
 					break;
 				}

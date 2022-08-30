@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
@@ -11,10 +12,12 @@ namespace Facepunch.Hidden
 		[Net, Local] public ScreamAbility Scream { get; set; }
 		[Net, Local] public DeploymentType Deployment { get; set; }
 
+		public ProjectileSimulator Projectiles { get; private set; }
+
 		private Rotation LastCameraRotation = Rotation.Identity;
 		private DamageInfo LastDamageInfo;
 		private PhysicsBody RagdollBody;
-		public PhysicsJoint RagdollWeld;
+		private PhysicsJoint RagdollWeld;
 		private Particles SenseParticles;
 		private float WalkBob = 0;
 		private float Lean = 0;
@@ -27,8 +30,10 @@ namespace Facepunch.Hidden
 
 		public Player()
 		{
+			Projectiles = new( this );
 			Inventory = new Inventory( this );
 			Animator = new StandardPlayerAnimator();
+			Ammo = new List<int>();
 		}
 
 		public bool IsSpectator
@@ -118,6 +123,8 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client client )
 		{
+			Projectiles.Simulate();
+
 			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
@@ -191,7 +198,6 @@ namespace Facepunch.Hidden
 		{
 			var best = Children.Select( x => x as Weapon )
 				.Where( x => x.IsValid() && x.IsUsable() )
-				.OrderByDescending( x => x.BucketWeight )
 				.FirstOrDefault();
 
 			if ( best == null ) return;

@@ -1,0 +1,3 @@
+[submodule "code/gamelib"]
+	path = code/gamelib
+	url = https://github.com/kurozael/sbox-gamelib.git

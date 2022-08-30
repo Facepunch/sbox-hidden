@@ -1,12 +1,15 @@
 ﻿Stamina {
 	align-items: center;
+	justify-content: center;
 	color: #fff;
 	height: 20px;
 	margin-bottom: 2px;
 	width: 100%;
 
 	.outerBar {
-		width: 180px;
+		background-color: rgba(black, 0.4);
+		border-radius: 4px;
+		width: 100%;
 		height: 16px;
 	}
 
@@ -28,15 +31,6 @@
 		font-weight: 500;
 		text-shadow: 0 1px 1px rgba(#000,0.2);
 		position: absolute;
-		left: 32px;
-	}
-
-	.icon {
-		background-image: url( /ui/hidden/icon-stamina.png );
-		background-size: 100%;
-		margin-right: 8px;
-		width: 20px;
-		height: 20px;
 	}
 
 	&.low-stamina {

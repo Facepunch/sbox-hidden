@@ -17,8 +17,6 @@ ChatBox
 
 Vitals {
 	align-items: center;
-	background-image: url( /ui/hidden/player-container.png );
-	background-size: 100%;
 	color: #fff;
 	padding-left: 20px;
 	padding-right: 24px;
@@ -30,7 +28,7 @@ Vitals {
 	left: 64px;
 	font-size: 40px;
 	height: 80px;
-	width: 280px;
+	width: 20%;
 
 	label {
 		text-shadow: 0px 0px 20px #000;
@@ -46,10 +44,10 @@ Vitals {
 	}
 }
 
-.team_hidden {
-	vitals {
-		background-image: url( /ui/hidden/player-container.png );
-	}
+.hud_right {
+	position: absolute;
+	bottom: 32px;
+	right: 64px;
 }
 
 Ammo {
@@ -211,19 +209,4 @@ Abilities {
 	&.hidden {
 		display: none;
 	}
-}
-
-.hdn_pistol .icon
-{
-	background-image: url( /ui/weapons/dm_pistol.png );
-}
-
-.hdn_shotgun .icon
-{
-	background-image: url( /ui/weapons/dm_shotgun.png );
-}
-
-.hdn_smg .icon
-{
-	background-image: url( /ui/weapons/dm_smg.png );
 }
