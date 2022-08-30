@@ -25,7 +25,7 @@ namespace Facepunch.Hidden
 			{
 				if ( Host.IsClient )
 				{
-					_ = StartGlowAbility();
+					_ = StartGlowAbility( player );
 				}
 				else
 				{
@@ -44,9 +44,11 @@ namespace Facepunch.Hidden
 			return base.GetCooldown( player );
 		}
 
-		private async Task StartGlowAbility()
+		private async Task StartGlowAbility( Player caller )
 		{
 			var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
+
+			caller.IsSenseActive = true;
 
 			players.ForEach( ( player ) =>
 			{
@@ -59,6 +61,8 @@ namespace Facepunch.Hidden
 			{
 				player.ShowSenseParticles( false );
 			} );
+
+			caller.IsSenseActive = false;
 		}
 	}
 }

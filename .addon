@@ -26,6 +26,14 @@
         "ConVarName": "hdn_friendly_fire",
         "DisplayName": "Friendly Fire",
         "DefaultValue": "false"
+      },
+      "hdn_voice_radius": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "hdn_voice_radius",
+        "DisplayName": "Voice Radius",
+        "DefaultValue": "3000",
+        "Maximum": 8000
       }
     },
     "Physics": {

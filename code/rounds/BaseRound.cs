@@ -21,18 +21,17 @@ namespace Facepunch.Hidden
 		{
 			get
 			{
-				return RoundEndTime - Sandbox.Time.Now;
+				return RoundEndTime - Time.Now;
 			}
 		}
 
-		// TODO: This can be done better by using a shared timestamp.
 		[Net] public string TimeLeftFormatted { get; set; }
 
 		public void Start()
 		{
 			if ( Host.IsServer && RoundDuration > 0 )
 			{
-				RoundEndTime = Sandbox.Time.Now + RoundDuration;
+				RoundEndTime = Time.Now + RoundDuration;
 			}
 			
 			OnStart();
@@ -74,7 +73,13 @@ namespace Facepunch.Hidden
 		{
 			if ( Host.IsServer )
 			{
-				if ( RoundEndTime > 0 && Sandbox.Time.Now >= RoundEndTime )
+				if ( RoundEndTime == 0f )
+				{
+					TimeLeftFormatted = TimeSpan.FromSeconds( 0f ).ToString( @"mm\:ss" );
+					return;
+				}
+
+				if ( RoundEndTime > 0f && Time.Now >= RoundEndTime )
 				{
 					RoundEndTime = 0f;
 					OnTimeUp();

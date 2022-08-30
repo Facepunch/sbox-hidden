@@ -41,6 +41,9 @@ namespace Facepunch.Hidden
 			PostProcess.Add( HealthPostProcessing );
 		}
 
+		private Color OverlayColor { get; set; } = Color.Orange;
+		private float BlurAmount { get; set; } = 0f;
+
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
@@ -72,12 +75,29 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.LensDistortion.K2 = -0.1f;
 
 				ImmersionPostProcessing.ColorOverlay.Enabled = true;
-				ImmersionPostProcessing.ColorOverlay.Color = Color.Orange;
+
+				if ( player.IsSenseActive )
+				{
+					OverlayColor = Color.Lerp( OverlayColor, Color.Red, Time.Delta * 4f );
+					BlurAmount = BlurAmount.LerpTo( 0.3f, Time.Delta * 4f );
+				}
+				else
+				{
+					OverlayColor = Color.Lerp( OverlayColor, Color.Orange, Time.Delta * 4f );
+					BlurAmount = BlurAmount.LerpTo( 0f, Time.Delta * 4f );
+				}
+
+				ImmersionPostProcessing.ColorOverlay.Color = OverlayColor;
 				ImmersionPostProcessing.ColorOverlay.Mode = StandardPostProcess.ColorOverlaySettings.OverlayMode.Multiply;
 				ImmersionPostProcessing.ColorOverlay.Amount = 0.8f;
+
+				ImmersionPostProcessing.Blur.Enabled = true;
+				ImmersionPostProcessing.Blur.Strength = BlurAmount;
 			}
 			else
 			{
+				ImmersionPostProcessing.Blur.Enabled = false;
+
 				ImmersionPostProcessing.Saturate.Enabled = true;
 				ImmersionPostProcessing.Saturate.Amount = 0.9f;
 

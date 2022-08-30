@@ -13,6 +13,7 @@ namespace Facepunch.Hidden
 		[Net, Local] public DeploymentType Deployment { get; set; }
 
 		public ProjectileSimulator Projectiles { get; private set; }
+		public bool IsSenseActive { get; set; }
 
 		private Rotation LastCameraRotation = Rotation.Identity;
 		private DamageInfo LastDamageInfo;

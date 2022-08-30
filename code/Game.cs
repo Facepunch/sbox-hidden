@@ -112,6 +112,20 @@ namespace Facepunch.Hidden
 			// Do nothing. The player can't suicide in this mode.
 		}
 
+		public override bool CanHearPlayerVoice( Client source, Client dest )
+		{
+			if ( !source.Pawn.IsValid() || !dest.Pawn.IsValid() )
+				return false;
+
+			return source.Pawn.Position.Distance( dest.Pawn.Position ) <= VoiceRadius;
+		}
+
+		public override void OnVoicePlayed( Client client )
+		{
+			client.VoiceStereo = false;
+			base.OnVoicePlayed( client );
+		}
+
 		public override void PostLevelLoaded()
 		{
 			base.PostLevelLoaded();

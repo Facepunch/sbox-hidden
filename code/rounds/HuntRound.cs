@@ -115,7 +115,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private async Task LoadStatsRound(string winner, int delay = 3)
+		private async Task LoadStatsRound( string winner, int delay = 3 )
 		{
 			_isGameOver = true;
 
