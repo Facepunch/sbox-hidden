@@ -140,6 +140,7 @@ namespace Facepunch.Hidden
 			base.Spawn();
 
 			AmmoClip = ClipSize;
+			EnableShadowInFirstPerson = false;
 
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
@@ -398,14 +399,6 @@ namespace Facepunch.Hidden
 
 			ViewModelEntity.SetModel( ViewModelPath );
 			ViewModelEntity.SetMaterialGroup( ViewModelMaterialGroup );
-		}
-
-		public override void CreateHudElements()
-		{
-			if ( Local.Hud == null ) return;
-
-			//CrosshairPanel = Local.Hud.AddChild<Crosshair>();
-			//CrosshairPanel.AddClass( CrosshairClass );
 		}
 
 		public bool IsUsable()
