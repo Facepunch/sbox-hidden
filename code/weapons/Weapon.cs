@@ -1,5 +1,4 @@
-﻿using Gamelib.Extensions;
-using Gamelib.Utility;
+﻿using Gamelib.Utility;
 using Sandbox;
 using System.Collections.Generic;
 
@@ -17,7 +16,7 @@ namespace Facepunch.Hidden
 			"flyby.rifleclose3",
 			"flyby.rifleclose4"
 		};
-		public virtual string CrosshairClass => "automatic";
+		public virtual bool ShouldRenderCrosshair => false;
 		public virtual string ImpactEffect => null;
 		public virtual int ClipSize => 16;
 		public virtual float AutoReloadDelay => 1.5f;
@@ -266,6 +265,57 @@ namespace Facepunch.Hidden
 		public virtual void PlayReloadSound()
 		{
 
+		}
+
+		public virtual void RenderHud( Vector2 screenSize )
+		{
+			if ( Owner is not Player player )
+				return;
+
+			if ( ShouldRenderCrosshair )
+			{
+				RenderCrosshair( player, screenSize * 0.5f );
+			}
+		}
+
+		public virtual void RenderCrosshair( Player player, Vector2 center )
+		{
+			var draw = Render.Draw2D;
+			var lastHitTime = player.TimeSinceLastHit.Relative;
+			var lastAttackTime = TimeSincePrimaryAttack.Relative;
+			var shootEase = Easing.EaseIn( lastAttackTime.LerpInverse( 0.2f, 0.0f ) );
+			var color = Color.Lerp( Color.Red, Color.White, lastHitTime.LerpInverse( 0.0f, 0.4f ) );
+
+			var hitEase = Easing.BounceIn( lastHitTime.LerpInverse( 0.5f, 0.0f ) );
+			var circleSize = 80f * hitEase;
+			var circleThickness = 32f * hitEase;
+
+			draw.BlendMode = BlendMode.Lighten;
+			draw.Color = Color.Red.WithAlpha( 0.8f );
+			draw.CircleEx( center, circleSize, circleSize - circleThickness );
+
+			if ( ChargeAttackEndTime > 0f )
+			{
+				var fraction = Easing.EaseIn( (ChargeAttackEndTime - Time.Now) / ChargeAttackDuration );
+
+				circleSize = 48f * ( 1f - fraction);
+				circleThickness = 8f * (1f - fraction);
+
+				draw.BlendMode = BlendMode.Lighten;
+				draw.Color = Color.Red.Darken( 0.3f ).WithAlpha( 0.8f );
+				draw.CircleEx( center, circleSize, circleSize - circleThickness );
+			}
+
+			draw.Color = color.WithAlpha( 0.4f + lastAttackTime.LerpInverse( 1f, 0 ) * 0.5f );
+
+			var length = 8.0f - shootEase * 2.0f;
+			var gap = 10.0f + shootEase * 50.0f;
+			var thickness = 6.0f;
+
+			draw.Line( thickness, center + Vector2.Left * gap, center + Vector2.Left * (length + gap) );
+			draw.Line( thickness, center - Vector2.Left * gap, center - Vector2.Left * (length + gap) );
+			draw.Line( thickness, center + Vector2.Up * gap, center + Vector2.Up * (length + gap) );
+			draw.Line( thickness, center - Vector2.Up * gap, center - Vector2.Up * (length + gap) );
 		}
 
 		[ClientRpc]

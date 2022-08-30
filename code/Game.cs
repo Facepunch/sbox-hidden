@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
@@ -149,6 +150,29 @@ namespace Facepunch.Hidden
 		{
 			Round?.OnPlayerLeave( client.Pawn as Player );
 			base.ClientDisconnect( client, reason );
+		}
+
+		public override void RenderHud()
+		{
+			var pawn = Local.Pawn as Player;
+			if ( !pawn.IsValid() ) return;
+
+			var scale = Screen.Height / 1080.0f;
+			var screenSize = Screen.Size / scale;
+			var matrix = Matrix.CreateScale( scale );
+
+			using ( Render.Draw2D.MatrixScope( matrix ) )
+			{
+				pawn.RenderHud( screenSize );
+
+				foreach ( var entity in All.OfType<IHudRenderer>() )
+				{
+					if ( entity.IsValid() )
+					{
+						entity.RenderHud( screenSize );
+					}
+				}
+			}
 		}
 
 		public override void ClientJoined( Client client )

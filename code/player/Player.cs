@@ -13,6 +13,7 @@ namespace Facepunch.Hidden
 		[Net, Local] public DeploymentType Deployment { get; set; }
 		[Net] public ModelEntity PickupEntity { get; set; }
 
+		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
 		public bool IsSenseActive { get; set; }
 
@@ -64,6 +65,14 @@ namespace Facepunch.Hidden
 				TimeSinceDied = 0,
 				IsHidden = Team is HiddenTeam
 			};
+		}
+
+		public virtual void RenderHud( Vector2 screenSize )
+		{
+			if ( ActiveChild is Weapon weapon && weapon.IsValid() )
+			{
+				weapon.RenderHud( screenSize );
+			}
 		}
 
 		public override void Respawn()
@@ -158,11 +167,23 @@ namespace Facepunch.Hidden
 			Clothing.ForEach( x => x.EnableDrawing = shouldDraw );
 		}
 
+		[ClientRpc]
+		public void ShowHitMarker( int hitboxGroup )
+		{
+			if ( hitboxGroup == 1 )
+				Sound.FromScreen( "hitmarker.headshot" );
+			else
+				Sound.FromScreen( "hitmarker.hit" );
+
+			TimeSinceLastHit = 0f;
+		}
+
+		[ClientRpc]
 		public void ShowSenseParticles( bool shouldShow )
 		{
 			if ( SenseParticles != null )
 			{
-				SenseParticles.Destroy( false );
+				SenseParticles.Destroy();
 				SenseParticles = null;
 			}
 
@@ -371,7 +392,9 @@ namespace Facepunch.Hidden
 
 				Team?.OnTakeDamageFromPlayer( this, attacker, info );
 				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
-				attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
+
+				var hitboxGroup = GetHitboxGroup( info.HitboxIndex );
+				attacker.ShowHitMarker( To.Single( attacker ), hitboxGroup );
 			}
 
 			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.Flags );
@@ -400,13 +423,6 @@ namespace Facepunch.Hidden
 				Ragdoll.Delete();
 				Ragdoll = null;
 			}
-		}
-
-		[ClientRpc]
-		public void DidDamage( Vector3 position, float amount, float inverseHealth )
-		{
-			Sound.FromScreen( "dm.ui_attacker" ).SetPitch( 1 + inverseHealth * 1 );
-			HitIndicator.Current?.OnHit( position, amount );
 		}
 
 		[ClientRpc]

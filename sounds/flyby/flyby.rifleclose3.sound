@@ -2,15 +2,15 @@
 {
 	data = 
 	{
-		volume = 1.0
 		sounds = 
 		[
-			"sounds/impact/flesh-3.vsnd",
+			"sound/weapons/flyby/flyby.rifleclose3.vsnd",
 		]
+		UI = true
+		Volume = 1.0
 		VolumeRandom = 0.0
 		Pitch = 1.0
 		PitchRandom = 0.0
-		DistanceMax = 1000.0
-		UI = true
+		DistanceMax = 400.0
 	}
 }
