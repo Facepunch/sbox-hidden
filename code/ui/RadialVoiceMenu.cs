@@ -20,6 +20,11 @@ namespace Facepunch.Hidden
 			base.Populate();
 		}
 
+		protected override bool ShouldOpen( InputBuilder builder )
+		{
+			return Local.Pawn.Player is Player player && player.Team is IrisTeam;
+		}
+
 		private void AddRadioCommand( string name, string command, string icon = null )
 		{
 			AddAction( name, "Play through radio", string.IsNullOrEmpty( icon ) ? "ui/icons/icon-ability-2.png" : icon, () => Player.PlayVoiceCmd( command ) );
