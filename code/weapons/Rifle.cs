@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 
 			if ( IsClient && ViewModelEntity is ViewModel vm )
 			{
-				//vm.SetIsAiming( Input.Down( InputButton.SecondaryAttack ) );
+				//vm.IsAiming = Input.Down( InputButton.SecondaryAttack );
 			}
 
 			if ( BulletsToFire > 0 && (LastBulletTime > 0.075f || FireBulletNow) )
