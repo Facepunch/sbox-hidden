@@ -386,7 +386,7 @@ namespace Facepunch.Hidden
 		[Event.Tick.Client]
 		protected virtual void ClientTick()
 		{
-			if ( Team is HiddenTeam && !IsLocalPawn )
+			if ( Team is HiddenTeam && !IsLocalPawn && LifeState == LifeState.Alive )
 			{
 				if ( StealthParticles == null )
 				{
