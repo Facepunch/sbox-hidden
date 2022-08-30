@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.SMG;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 24;
+		public override int Damage => 16;
 	}
 
 	[Library( "hdn_smg" )]

@@ -8,7 +8,6 @@ namespace Facepunch.Hidden
 	{
 		public virtual float SprintSpeed { get; set; } = 320.0f;
 		public virtual float WalkSpeed { get; set; } = 150.0f;
-		public virtual float DefaultSpeed { get; set; } = 190.0f;
 		public float Acceleration { get; set; } = 10.0f;
 		public float AirAcceleration { get; set; } = 50.0f;
 		public float FallSoundZ { get; set; } = -30.0f;
@@ -50,19 +49,19 @@ namespace Facepunch.Hidden
 			return new BBox( mins, maxs );
 		}
 
-		protected bool _isTouchingLadder = false;
-		protected Vector3 _ladderNormal;
-		protected float _surfaceFriction;
-		protected Vector3 _mins;
-		protected Vector3 _maxs;
+		protected bool IsTouchingLadder = false;
+		protected Vector3 LadderNormal;
+		protected float SurfaceFriction;
+		protected Vector3 Mins;
+		protected Vector3 Maxs;
 
 		public virtual void SetBBox( Vector3 mins, Vector3 maxs )
 		{
-			if ( _mins == mins && _maxs == maxs )
+			if ( Mins == mins && Maxs == maxs )
 				return;
 
-			_mins = mins;
-			_maxs = maxs;
+			Mins = mins;
+			Maxs = maxs;
 		}
 
 		/// <summary>
@@ -93,7 +92,7 @@ namespace Facepunch.Hidden
 			CheckLadder();
 			Swimming = Pawn.WaterLevel > 0.6f;
 
-			if ( !Swimming && !_isTouchingLadder )
+			if ( !Swimming && !IsTouchingLadder )
 			{
 				Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
 				Velocity += new Vector3( 0, 0, BaseVelocity.z ) * Time.Delta;
@@ -114,7 +113,7 @@ namespace Facepunch.Hidden
 
 				if ( GroundEntity != null )
 				{
-					ApplyFriction( GroundFriction * _surfaceFriction );
+					ApplyFriction( GroundFriction * SurfaceFriction );
 				}
 			}
 
@@ -122,7 +121,7 @@ namespace Facepunch.Hidden
 			var inSpeed = WishVelocity.Length.Clamp( 0, 1 );
 			WishVelocity *= Input.Rotation;
 
-			if ( !Swimming && !_isTouchingLadder )
+			if ( !Swimming && !IsTouchingLadder )
 			{
 				WishVelocity = WishVelocity.WithZ( 0 );
 			}
@@ -141,7 +140,7 @@ namespace Facepunch.Hidden
 				ApplyFriction( 1 );
 				WaterMove();
 			}
-			else if ( _isTouchingLadder )
+			else if ( IsTouchingLadder )
 			{
 				LadderMove();
 			}
@@ -157,7 +156,7 @@ namespace Facepunch.Hidden
 
 			CategorizePosition( stayOnGround );
 
-			if ( !Swimming && !_isTouchingLadder )
+			if ( !Swimming && !IsTouchingLadder )
 			{
 				Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
 			}
@@ -173,10 +172,10 @@ namespace Facepunch.Hidden
 			var ws = Duck.GetWishSpeed();
 			if ( ws >= 0 ) return ws;
 
-			if ( Input.Down( InputButton.Run ) ) return SprintSpeed;
-			if ( Input.Down( InputButton.Walk ) ) return WalkSpeed;
+			if ( Input.Down( InputButton.Run ) )
+				return SprintSpeed;
 
-			return DefaultSpeed;
+			return WalkSpeed;
 		}
 
 		private void WalkMove()
@@ -280,7 +279,7 @@ namespace Facepunch.Hidden
 			if ( addSpeed <= 0 )
 				return;
 
-			var accelSpeed = acceleration * Time.Delta * wishSpeed * _surfaceFriction;
+			var accelSpeed = acceleration * Time.Delta * wishSpeed * SurfaceFriction;
 
 			if ( accelSpeed > addSpeed )
 				accelSpeed = addSpeed;
@@ -370,40 +369,40 @@ namespace Facepunch.Hidden
 
 		public virtual void CheckLadder()
 		{
-			if ( _isTouchingLadder && Input.Pressed( InputButton.Jump ) )
+			if ( IsTouchingLadder && Input.Pressed( InputButton.Jump ) )
 			{
-				Velocity = _ladderNormal * 100.0f;
-				_isTouchingLadder = false;
+				Velocity = LadderNormal * 100.0f;
+				IsTouchingLadder = false;
 
 				return;
 			}
 
 			var ladderDistance = 1.0f;
 			var start = Position;
-			var end = start + (_isTouchingLadder ? (_ladderNormal * -1.0f) : WishVelocity.Normal) * ladderDistance;
+			var end = start + (IsTouchingLadder ? (LadderNormal * -1.0f) : WishVelocity.Normal) * ladderDistance;
 
 			var pm = Trace.Ray( start, end )
-						.Size( _mins, _maxs )
-						.WithTag( "ladder" )
-						.Ignore( Pawn )
-						.Run();
+				.Size( Mins, Maxs )
+				.WithTag( "ladder" )
+				.Ignore( Pawn )
+				.Run();
 
-			_isTouchingLadder = false;
+			IsTouchingLadder = false;
 
 			if ( pm.Hit )
 			{
-				_isTouchingLadder = true;
-				_ladderNormal = pm.Normal;
+				IsTouchingLadder = true;
+				LadderNormal = pm.Normal;
 			}
 		}
 
 		public virtual void LadderMove()
 		{
 			var velocity = WishVelocity;
-			var normalDot = velocity.Dot( _ladderNormal );
-			var cross = _ladderNormal * normalDot;
+			var normalDot = velocity.Dot( LadderNormal );
+			var cross = LadderNormal * normalDot;
 
-			Velocity = (velocity - cross) + (-normalDot * _ladderNormal.Cross( Vector3.Up.Cross( _ladderNormal ).Normal ));
+			Velocity = (velocity - cross) + (-normalDot * LadderNormal.Cross( Vector3.Up.Cross( LadderNormal ).Normal ));
 
 			TryPlayerMove();
 		}
@@ -411,7 +410,7 @@ namespace Facepunch.Hidden
 		public virtual void TryPlayerMove()
 		{
 			var mover = new MoveHelper( Position, Velocity );
-			mover.Trace = mover.Trace.Size( _mins, _maxs ).Ignore( Pawn );
+			mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
 			mover.MaxStandableAngle = GroundAngle;
 			mover.TryMove( Time.Delta );
 
@@ -421,13 +420,11 @@ namespace Facepunch.Hidden
 
 		private void CategorizePosition( bool stayOnGround )
 		{
-			_surfaceFriction = 1.0f;
+			SurfaceFriction = 1.0f;
 
 			var point = Position - Vector3.Up * 2;
 			var bumpOrigin = Position;
 			var isMovingUpFast = Velocity.z > MaxNonJumpVelocity;
-			var isMovingUp = Velocity.z > 0;
-
 			var moveToEndPos = false;
 
 			if ( GroundEntity != null )
@@ -455,7 +452,7 @@ namespace Facepunch.Hidden
 				moveToEndPos = false;
 
 				if ( Velocity.z > 0 )
-					_surfaceFriction = 0.25f;
+					SurfaceFriction = 0.25f;
 			}
 			else
 			{
@@ -477,8 +474,8 @@ namespace Facepunch.Hidden
 		{
 			GroundNormal = tr.Normal;
 
-			_surfaceFriction = tr.Surface.Friction * 1.25f;
-			if ( _surfaceFriction > 1 ) _surfaceFriction = 1;
+			SurfaceFriction = tr.Surface.Friction * 1.25f;
+			if ( SurfaceFriction > 1 ) SurfaceFriction = 1;
 
 			GroundEntity = tr.Entity;
 
@@ -497,7 +494,7 @@ namespace Facepunch.Hidden
 
 			GroundEntity = null;
 			GroundNormal = Vector3.Up;
-			_surfaceFriction = 1.0f;
+			SurfaceFriction = 1.0f;
 		}
 
 		/// <summary>
@@ -507,7 +504,7 @@ namespace Facepunch.Hidden
 		/// </summary>
 		public override TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f )
 		{
-			return TraceBBox( start, end, _mins, _maxs, liftFeet );
+			return TraceBBox( start, end, Mins, Maxs, liftFeet );
 		}
 
 		/// <summary>

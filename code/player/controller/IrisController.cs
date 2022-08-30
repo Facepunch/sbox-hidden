@@ -8,7 +8,6 @@ namespace Facepunch.Hidden
 		public float FallDamageVelocity = 550f;
 		public float FallDamageScale = 0.25f;
 		public float MaxSprintSpeed = 300f;
-		public float MaxDefaultSpeed = 190f;
 		public float MaxWalkSpeed = 150f;
 		public float StaminaLossPerSecond = 15f;
 		public float StaminaGainPerSecond = 20f;
@@ -25,21 +24,22 @@ namespace Facepunch.Hidden
 				{
 					staminaLossPerSecond *= 1.3f;
 
-					MaxSprintSpeed = 250f;
-					MaxDefaultSpeed = 170f;
+					MaxSprintSpeed = 200f;
 					MaxWalkSpeed = 120f;
 				}
 				else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
 				{
 					MaxSprintSpeed = 250f;
+					MaxWalkSpeed = 120f;
 				}
 
-				if ( Input.Down( InputButton.Run ) && Velocity.Length >= (SprintSpeed * 0.8f) )
+				if ( Input.Down( InputButton.Run ) && Velocity.Length >= SprintSpeed * 0.8f )
 					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
 				else
 					player.Stamina = MathF.Min( player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
 
-				SprintSpeed = WalkSpeed + (((MaxSprintSpeed - WalkSpeed) / 100f) * player.Stamina) + 40f;
+				SprintSpeed = MaxWalkSpeed + (((MaxSprintSpeed - MaxWalkSpeed) / 100f) * player.Stamina) + 40f;
+				WalkSpeed = MaxWalkSpeed;
 			}
 
 			base.Simulate();

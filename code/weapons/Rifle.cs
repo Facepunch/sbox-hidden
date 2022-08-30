@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.Rifle;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 30;
+		public override int Damage => 24;
 	}
 
 	[Library( "hdn_rifle" )]
@@ -22,9 +22,8 @@ namespace Facepunch.Hidden
 		public override string ViewModelPath => "models/f1/fp_f1.vmdl";
 		public override WeaponConfig Config => new RifleConfig();
 
-		public override bool UnlimitedAmmo => true;
 		public override int ClipSize => 25;
-		public override float PrimaryRate => 2f;
+		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 1.0f;
 		public override float DamageFalloffStart => 1000f;
 		public override float DamageFalloffEnd => 12000f;
@@ -63,7 +62,7 @@ namespace Facepunch.Hidden
 
 		public override void AttackPrimary()
 		{
-			if ( !TakeAmmo( 1 ) )
+			if ( AmmoClip == 0 )
 			{
 				PlaySound( "pistol.dryfire" );
 				return;
@@ -74,9 +73,30 @@ namespace Facepunch.Hidden
 			AmmoClip = Math.Max( AmmoClip - BulletsPerBurst, 0 );
 		}
 
+		public override void CreateViewModel()
+		{
+			base.CreateViewModel();
+
+			if ( ViewModelEntity is ViewModel vm )
+			{
+				var aimConfig = new ViewModelAimConfig
+				{
+					Position = Vector3.Backward * 20f + Vector3.Left * 18f + Vector3.Up * 4f,
+					Speed = 1f
+				};
+
+				vm.AimConfig = aimConfig;
+			}
+		}
+
 		public override void Simulate( Client owner )
 		{
 			base.Simulate( owner );
+
+			if ( IsClient && ViewModelEntity is ViewModel vm )
+			{
+				//vm.SetIsAiming( Input.Down( InputButton.SecondaryAttack ) );
+			}
 
 			if ( BulletsToFire > 0 && (LastBulletTime > 0.075f || FireBulletNow) )
 			{
