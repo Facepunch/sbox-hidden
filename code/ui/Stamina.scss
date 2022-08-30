@@ -9,19 +9,19 @@
 	.outerBar {
 		background-color: rgba(black, 0.4);
 		border-radius: 4px;
+		border: 1px rgba( black, 0.1 ) solid;
 		width: 100%;
-		height: 16px;
+		height: 12px;
 	}
 
 	.innerBar {
-		background-image: url( /ui/hidden/player-stamina.png );
-		background-size: 100%;
-		background-repeat: no-repeat;
+		background-color: rgba( steelblue, 0.6 );
+		border-radius: 4px;
 		width: 100%;
 		height: 100%;
-		min-width: 1px;
-		opacity: 1;
 		transition: opacity 0.5s ease;
+		min-width: 8px;
+		opacity: 1;
 	}
 
 	.text {
@@ -31,6 +31,7 @@
 		font-weight: 500;
 		text-shadow: 0 1px 1px rgba(#000,0.2);
 		position: absolute;
+		display: none;
 	}
 
 	&.low-stamina {
