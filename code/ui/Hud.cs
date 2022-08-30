@@ -96,6 +96,7 @@ namespace Facepunch.Hidden
 			}
 			else
 			{
+				ImmersionPostProcessing.ColorOverlay.Enabled = false;
 				ImmersionPostProcessing.Blur.Enabled = false;
 
 				ImmersionPostProcessing.Saturate.Enabled = true;
