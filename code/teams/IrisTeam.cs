@@ -20,12 +20,17 @@ namespace Facepunch.Hidden
 			if ( player.Deployment == DeploymentType.IRIS_ASSAULT )
 			{
 				player.Inventory.Add( new SMG(), true );
-				player.GiveAmmo( AmmoType.Pistol, 120 );
+				player.GiveAmmo( AmmoType.SMG, 90 );
+			}
+			else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
+			{
+				player.Inventory.Add( new Rifle(), true );
+				player.GiveAmmo( AmmoType.Rifle, 50 );
 			}
 			else
 			{
 				player.Inventory.Add( new Shotgun(), true );
-				player.GiveAmmo( AmmoType.Shotgun, 16 );
+				player.GiveAmmo( AmmoType.Shotgun, 24 );
 			}
 		}
 
@@ -83,9 +88,17 @@ namespace Facepunch.Hidden
 			panel.AddDeployment( new DeploymentInfo
 			{
 				Title = "BRAWLER",
-				Description = "Moves slower and is equipped with a high damage shotgun.",
+				Description = "Moves slower in general but is equipped with a high damage shotgun.",
 				ClassName = "brawler",
 				OnDeploy = () => callback( DeploymentType.IRIS_BRAWLER )
+			} );
+
+			panel.AddDeployment( new DeploymentInfo
+			{
+				Title = "TACTICAL",
+				Description = "Sprints slower and is equipped with a burst mode rifle.",
+				ClassName = "tactical",
+				OnDeploy = () => callback( DeploymentType.IRIS_TACTICAL )
 			} );
 		}
 

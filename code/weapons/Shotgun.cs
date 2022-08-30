@@ -5,7 +5,7 @@ namespace Facepunch.Hidden
 	[Library]
 	public class ShotgunConfig : WeaponConfig
 	{
-		public override string Name => "SPAS-12";
+		public override string Name => "R870";
 		public override string Description => "Short-range hitscan shotgun";
 		public override string ClassName => "hdn_shotgun";
 		public override string Icon => "ui/weapons/shotgun.png";

@@ -6,7 +6,7 @@ namespace Facepunch.Hidden
 	[Library]
 	public class SMGConfig : WeaponConfig
 	{
-		public override string Name => "SMG";
+		public override string Name => "MP5";
 		public override string Description => "Medium-range hitscan SMG";
 		public override string ClassName => "hdn_smg";
 		public override string Icon => "ui/weapons/smg.png";

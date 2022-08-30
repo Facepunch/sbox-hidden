@@ -29,6 +29,10 @@ namespace Facepunch.Hidden
 					MaxDefaultSpeed = 170f;
 					MaxWalkSpeed = 120f;
 				}
+				else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
+				{
+					MaxSprintSpeed = 250f;
+				}
 
 				if ( Input.Down( InputButton.Run ) && Velocity.Length >= (SprintSpeed * 0.8f) )
 					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );

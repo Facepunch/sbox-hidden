@@ -6,7 +6,7 @@ namespace Facepunch.Hidden
 	[Library]
 	public class PistolConfig : WeaponConfig
 	{
-		public override string Name => "Pistol";
+		public override string Name => "M1911";
 		public override string Description => "Short-range hitscan pistol";
 		public override string ClassName => "hdn_pistol";
 		public override string Icon => "ui/weapons/pistol.png";
