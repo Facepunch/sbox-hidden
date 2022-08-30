@@ -31,7 +31,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll" />
+		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll"/>
 		<Reference Include="..\..\..\bin\managed/Sandbox.System.dll" />
 		<Reference Include="..\..\..\bin\managed/Sandbox.Engine.dll" />
 		<Reference Include="..\..\..\bin\managed/Sandbox.Game.dll" />
@@ -42,27 +42,6 @@
 
   <ItemGroup>
 <ProjectReference Include="S:\Steam\steamapps\common\sbox\addons\base\code\base.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ui\RadialMenuItem.html">
-      <DependentUpon>%(Filename).cs</DependentUpon>
-    </None>
-    <None Update="ui\RadialMenuItem.scss">
-      <DependentUpon>%(Filename).cs</DependentUpon>
-    </None>
-    <None Update="ui\SimpleRadialMenu.html">
-      <DependentUpon>%(Filename).cs</DependentUpon>
-    </None>
-    <None Update="ui\SimpleRadialMenu.scss">
-      <DependentUpon>%(Filename).cs</DependentUpon>
-    </None>
-    <None Update="ui\RadialVoiceMenu.html">
-      <DependentUpon>RadialVoiceMenu.cs</DependentUpon>
-    </None>
-    <None Update="ui\RadialVoiceMenu.scss">
-      <DependentUpon>RadialVoiceMenu.cs</DependentUpon>
-    </None>
   </ItemGroup>
 
 </Project>

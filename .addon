@@ -34,6 +34,13 @@
         "DisplayName": "Voice Radius",
         "DefaultValue": "3000",
         "Maximum": 8000
+      },
+      "hdn_sense_enabled": {
+        "DisplayType": "Boolean",
+        "Choices": [],
+        "ConVarName": "hdn_sense_enabled",
+        "DisplayName": "Sense Ability",
+        "DefaultValue": "true"
       }
     },
     "Physics": {

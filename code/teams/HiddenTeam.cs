@@ -201,7 +201,11 @@ namespace Facepunch.Hidden
 			player.EnableShadowCasting = false;
 			player.EnableShadowReceive = false;
 
-			player.Sense = new SenseAbility();
+			if ( Game.IsSenseEnabled )
+				player.Sense = new SenseAbility();
+			else
+				player.Sense = null;
+
 			player.Scream = new ScreamAbility();
 
 			CurrentPlayer = player;
