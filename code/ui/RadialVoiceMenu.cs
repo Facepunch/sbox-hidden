@@ -22,7 +22,7 @@ namespace Facepunch.Hidden
 
 		protected override bool ShouldOpen( InputBuilder builder )
 		{
-			return Local.Pawn.Player is Player player && player.Team is IrisTeam;
+			return Local.Pawn is Player player && player.Team is IrisTeam;
 		}
 
 		private void AddRadioCommand( string name, string command, string icon = null )
