@@ -18,7 +18,7 @@ namespace Facepunch.Hidden
 	[Library( "hdn_shotgun" )]
 	public partial class Shotgun : Weapon
 	{
-		public override string ViewModelPath => "weapons/rust_pumpshotgun/v_rust_pumpshotgun.vmdl";
+		public override string ViewModelPath => "models/r870/fp_r870.vmdl";
 		public override WeaponConfig Config => new ShotgunConfig();
 
 		public override float PrimaryRate => 1f;
@@ -45,7 +45,7 @@ namespace Facepunch.Hidden
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModel( "weapons/rust_pumpshotgun/rust_pumpshotgun.vmdl" );
+			SetModel( "models/r870/w_r870.vmdl" );
 		}
 
 		public override void AttackPrimary()
@@ -59,7 +59,7 @@ namespace Facepunch.Hidden
 			Rand.SetSeed( Time.Tick );
 
 			ShootEffects();
-			PlaySound( $"rust_pumpshotgun.shoot" );
+			PlaySound( $"shotgun1_shoot" );
 
 			for ( int i = 0; i < 8; i++ )
 			{

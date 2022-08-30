@@ -19,7 +19,7 @@ namespace Facepunch.Hidden
 	[Library( "hdn_smg" )]
 	public partial class SMG : Weapon
 	{
-		public override string ViewModelPath => "weapons/rust_smg/v_rust_smg.vmdl";
+		public override string ViewModelPath => "models/mp5/fp_mp5.vmdl";
 		public override WeaponConfig Config => new SMGConfig();
 
 		public override float PrimaryRate => 10f;
@@ -30,6 +30,7 @@ namespace Facepunch.Hidden
 		public override float ReloadTime => 4.0f;
 		public override bool HasFlashlight => true;
 		public override bool HasLaserDot => true;
+		public override int HoldType => 2;
 
 		[ClientRpc]
 		protected override void ShootEffects()
@@ -45,7 +46,7 @@ namespace Facepunch.Hidden
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModel( "weapons/rust_smg/rust_smg.vmdl" );
+			SetModel( "models/mp5/w_mp5.vmdl" );
 		}
 
 		public override void PlayReloadSound()
@@ -65,7 +66,7 @@ namespace Facepunch.Hidden
 			Rand.SetSeed( Time.Tick );
 
 			ShootEffects();
-			PlaySound( $"rust_smg.shoot" );
+			PlaySound( $"smg1_shoot" );
 			ShootBullet( 0.01f, 1.5f, Config.Damage, 8.0f );
 			PlayAttackAnimation();
 		}

@@ -50,6 +50,8 @@ namespace Facepunch.Hidden
 			base.PostCameraSetup( ref camSetup );
 
 			AddCameraEffects( ref camSetup );
+
+			camSetup.ViewModel.FieldOfView = 75f;
 		}
 
 		private void AddCameraEffects( ref CameraSetup camSetup )

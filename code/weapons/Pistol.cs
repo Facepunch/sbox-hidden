@@ -19,7 +19,7 @@ namespace Facepunch.Hidden
 	[Library( "hdn_pistol" )]
 	public partial class Pistol : Weapon
 	{
-		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+		public override string ViewModelPath => "models/m1911/fp_m1911.vmdl";
 		public override WeaponConfig Config => new PistolConfig();
 
 		public override bool UnlimitedAmmo => true;
@@ -30,6 +30,7 @@ namespace Facepunch.Hidden
 		public override float DamageFalloffEnd => 8000f;
 		public override float ReloadTime => 3.0f;
 		public override bool HasLaserDot => true;
+		public override int HoldType => 2;
 
 		[ClientRpc]
 		protected override void ShootEffects()
@@ -45,7 +46,7 @@ namespace Facepunch.Hidden
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+			SetModel( "models/m1911/w_m1911.vmdl" );
 		}
 
 		public override void PlayReloadSound()
@@ -65,7 +66,7 @@ namespace Facepunch.Hidden
 			Rand.SetSeed( Time.Tick );
 
 			ShootEffects();
-			PlaySound( $"rust_pistol.shoot" );
+			PlaySound( $"pistol_shoot" );
 			ShootBullet( 0.01f, 1.5f, Config.Damage, 8.0f );
 			PlayAttackAnimation();
 		}
