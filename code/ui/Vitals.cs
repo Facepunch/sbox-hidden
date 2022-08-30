@@ -19,9 +19,7 @@ namespace Facepunch.Hidden
 		public override void Tick()
 		{
 			if ( Local.Pawn is not Player player ) return;
-
 			SetClass( "hidden", player.LifeState != LifeState.Alive );
-
 			base.Tick();
 		}
 	}

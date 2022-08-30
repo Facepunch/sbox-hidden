@@ -85,7 +85,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			SetClass( "hidden", weapons.Count <= 1 );
+			SetClass( "hidden", weapons.Count <= 1 || player.LifeState == LifeState.Dead );
 		}
 
 		private string IndexToSlotKey( int index )

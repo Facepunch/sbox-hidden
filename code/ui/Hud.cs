@@ -30,9 +30,9 @@ namespace Facepunch.Hidden
 			RootPanel.AddChild<Nameplates>();
 			RootPanel.AddChild<DamageIndicator>();
 			RootPanel.AddChild<HitIndicator>();
+			RootPanel.AddChild<CCTVViewer>();
 			RootPanel.AddChild<ChatBox>();
 			RootPanel.AddChild<Scoreboard>();
-			RootPanel.AddChild<LoadingScreen>();
 
 			HealthPostProcessing = new();
 			ImmersionPostProcessing = new();
@@ -113,6 +113,15 @@ namespace Facepunch.Hidden
 
 				ImmersionPostProcessing.FilmGrain.Enabled = true;
 				ImmersionPostProcessing.FilmGrain.Response = 0.6f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
+			}
+
+			if ( player.CameraMode is SpectateCamera camera && camera.CCTVEntity.IsValid() )
+			{
+				ImmersionPostProcessing.Saturate.Amount = 0f;
+				ImmersionPostProcessing.LensDistortion.K1 = 0.05f;
+				ImmersionPostProcessing.LensDistortion.K2 = -0.05f;
+				ImmersionPostProcessing.FilmGrain.Response = 0.3f;
 				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
 			}
 

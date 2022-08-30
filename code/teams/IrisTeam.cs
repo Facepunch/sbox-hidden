@@ -9,7 +9,6 @@ namespace Facepunch.Hidden
 		public override string HudClassName => "team_iris";
 		public override string Name => "I.R.I.S.";
 
-		private Battery BatteryHud;
 		private Radar RadarHud;
 
 		public override void SupplyLoadout( Player player  )
@@ -109,12 +108,6 @@ namespace Facepunch.Hidden
 				{
 					RadarHud.Delete( true );
 					RadarHud = null;
-				}
-
-				if ( BatteryHud != null )
-				{
-					BatteryHud.Delete( true );
-					BatteryHud = null;
 				}
 			}
 

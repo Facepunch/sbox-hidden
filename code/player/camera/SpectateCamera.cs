@@ -1,24 +1,29 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.Hidden
 {
 	public partial class SpectateCamera : CameraMode
 	{
-		[Net, Predicted] public TimeSince TimeSinceDied { get; set; }
-		[Net, Predicted] public Vector3 DeathPosition { get; set; }
+		[Net] public TimeSince TimeSinceDied { get; set; }
+		[Net] public Vector3 DeathPosition { get; set; }
+		[Net] public bool IsHidden { get; set; }
 
 		public Player TargetPlayer { get; set; }
+		public CCTVCamera CCTVEntity { get; set; }
 
-		private Vector3 _focusPoint;
-		public int _targetIdx;
+		private List<CCTVCamera> CCTVEntities;
+		private Vector3 FocusPoint;
+		private int TargetIdx;
 
 		public override void Activated()
 		{
 			base.Activated();
 
-			_focusPoint = CurrentView.Position - GetViewOffset();
-
-			FieldOfView = 70;
+			FocusPoint = CurrentView.Position - GetViewOffset();
+			FieldOfView = 70f;
+			CCTVEntities = Entity.All.OfType<CCTVCamera>().ToList();
 		}
 
 		public override void Update()
@@ -26,25 +31,49 @@ namespace Facepunch.Hidden
 			if ( Local.Pawn is not Player player )
 				return;
 
-			if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed(InputButton.PrimaryAttack) )
+			if ( !IsHidden )
 			{
-				var players = Game.Instance.GetTeamPlayers<IrisTeam>(true);
-
-				if ( players != null && players.Count > 0 )
+				if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
 				{
-					if ( ++_targetIdx >= players.Count )
-						_targetIdx = 0;
+					var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
 
-					TargetPlayer = players[_targetIdx];
+					if ( players != null && players.Count > 0 )
+					{
+						if ( ++TargetIdx >= players.Count )
+							TargetIdx = 0;
+
+						TargetPlayer = players[TargetIdx];
+					}
+				}
+
+				if ( CCTVEntity == null || !CCTVEntity.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
+				{
+					var cameras = CCTVEntities;
+
+					if ( cameras.Count > 0 )
+					{
+						if ( ++TargetIdx >= cameras.Count )
+							TargetIdx = 0;
+
+						CCTVEntity = cameras[TargetIdx];
+					}
 				}
 			}
 
-			_focusPoint = Vector3.Lerp( _focusPoint, GetSpectatePoint(), Time.Delta * 5.0f );
+			FocusPoint = Vector3.Lerp( FocusPoint, GetSpectatePoint(), Time.Delta * 5f );
 
-			Position = _focusPoint + GetViewOffset();
-			Rotation = player.EyeRotation;
+			if ( !IsHidden && CCTVEntity.IsValid() )
+			{
+				Position = CCTVEntity.Position;
+				Rotation = CCTVEntity.Rotation;
+			}
+			else
+			{
+				Position = FocusPoint + GetViewOffset();
+				Rotation = player.EyeRotation;
+			}
 
-			FieldOfView = FieldOfView.LerpTo( 50, Time.Delta * 3.0f );
+			FieldOfView = FieldOfView.LerpTo( 50, Time.Delta * 3f );
 			Viewer = null;
 		}
 
@@ -64,7 +93,7 @@ namespace Facepunch.Hidden
 			if ( Local.Pawn is not Player player )
 				return Vector3.Zero;
 
-			return player.EyeRotation.Forward * -150 + Vector3.Up * 10;
+			return player.EyeRotation.Forward * -150f + Vector3.Up * 10f;
 		}
 	}
 }

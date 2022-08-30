@@ -15,10 +15,20 @@ namespace Facepunch.Hidden
 
 		public List<Player> Spectators = new();
 
-		private string _hiddenHunter;
-		private string _firstDeath;
-		private bool _isGameOver;
-		private int _hiddenKills;
+		private string HiddenHunter;
+		private string FirstDeath;
+		private bool IsGameOver;
+		private int HiddenKills;
+
+		[ConCmd.Admin( "hdn_end_round" )]
+		public static void EndRoundCmd()
+		{
+			if ( Game.Instance.Round is HuntRound round )
+			{
+				round.RoundEndTime = 0f;
+				round.OnTimeUp();
+			}
+		}
 
 		public override void OnPlayerKilled( Player player )
 		{
@@ -31,7 +41,7 @@ namespace Facepunch.Hidden
 			{
 				if ( player.LastAttacker is Player attacker )
 				{
-					_hiddenHunter = attacker.Client.Name;
+					HiddenHunter = attacker.Client.Name;
 				}
 
 				_ = LoadStatsRound( "I.R.I.S. Eliminated The Hidden" );
@@ -40,12 +50,12 @@ namespace Facepunch.Hidden
 			}
 			else
 			{
-				if ( string.IsNullOrEmpty( _firstDeath ) )
+				if ( string.IsNullOrEmpty( FirstDeath ) )
 				{
-					_firstDeath = player.Client.Name;
+					FirstDeath = player.Client.Name;
 				}
 
-				_hiddenKills++;
+				HiddenKills++;
 			}
 
 			if ( Players.Count <= 1 )
@@ -98,7 +108,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnTimeUp()
 		{
-			if ( _isGameOver ) return;
+			if ( IsGameOver ) return;
 
 			_ = LoadStatsRound( "I.R.I.S. Survived Long Enough" );
 
@@ -117,7 +127,7 @@ namespace Facepunch.Hidden
 
 		private async Task LoadStatsRound( string winner, int delay = 3 )
 		{
-			_isGameOver = true;
+			IsGameOver = true;
 
 			await Task.Delay( delay * 1000 );
 
@@ -130,9 +140,9 @@ namespace Facepunch.Hidden
 			Game.Instance.ChangeRound( new StatsRound
 			{
 				HiddenName = hiddenName,
-				HiddenKills = _hiddenKills,
-				FirstDeath = _firstDeath,
-				HiddenHunter = _hiddenHunter,
+				HiddenKills = HiddenKills,
+				FirstDeath = FirstDeath,
+				HiddenHunter = HiddenHunter,
 				Winner = winner
 			} );
 		}

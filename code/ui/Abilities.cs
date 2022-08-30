@@ -53,7 +53,7 @@ namespace Facepunch.Hidden
 			if ( Local.Pawn is not Player player )
 				return;
 
-			info.Panel.SetClass( "hidden", ability == null );
+			info.Panel.SetClass( "hidden", ability == null || player.LifeState == LifeState.Dead );
 
 			if ( ability == null ) return;
 

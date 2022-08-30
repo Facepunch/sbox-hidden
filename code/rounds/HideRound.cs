@@ -9,8 +9,8 @@ namespace Facepunch.Hidden
 {
 	public partial class HideRound : BaseRound
 	{
-		[ConVar.Server( "hdn_host_always_hidden", Help = "Make the host always the hidden." )]
-		public static bool HostAlwaysHidden { get; set; } = false;
+		[ConVar.Server( "hdn_host_team", Help = "Make the host always this team." )]
+		public static string HostTeam { get; set; }
 
 		public override string RoundName => "PREPARE";
 		public override int RoundDuration => 20;
@@ -88,10 +88,17 @@ namespace Facepunch.Hidden
 
 				if ( Players.Count == 0 ) return;
 
-				// Select a random Hidden player.
-				var hidden = Players[Rand.Int( Players.Count - 1 )];
+				var selectStartIndex = 0;
 
-				if ( HostAlwaysHidden )
+				if ( !string.IsNullOrEmpty( HostTeam ) && HostTeam == "iris" )
+				{
+					selectStartIndex = 1;
+				}
+
+				// Select a random Hidden player.
+				var hidden = Players[Rand.Int( selectStartIndex, Players.Count - 1 )];
+
+				if ( !string.IsNullOrEmpty( HostTeam ) && HostTeam == "hidden" )
 				{
 					hidden = Players[0];
 				}

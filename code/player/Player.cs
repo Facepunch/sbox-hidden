@@ -42,37 +42,6 @@ namespace Facepunch.Hidden
 			get => (CameraMode is SpectateCamera);
 		}
 
-		public Vector3 SpectatorDeathPosition
-		{
-			get
-			{
-				if ( CameraMode is SpectateCamera camera )
-					return camera.DeathPosition;
-
-				return Vector3.Zero;
-			}
-		}
-
-		public bool HasSpectatorTarget
-		{
-			get
-			{
-				var target = SpectatorTarget;
-				return (target != null && target.IsValid());
-			}
-		}
-
-		public Player SpectatorTarget
-		{
-			get
-			{
-				if ( CameraMode is SpectateCamera camera )
-					return camera.TargetPlayer;
-
-				return null;
-			}
-		}
-
 		public void MakeSpectator( Vector3 position = default )
 		{
 			EnableAllCollisions = false;
@@ -81,7 +50,8 @@ namespace Facepunch.Hidden
 			CameraMode = new SpectateCamera
 			{
 				DeathPosition = position,
-				TimeSinceDied = 0
+				TimeSinceDied = 0,
+				IsHidden = Team is HiddenTeam
 			};
 		}
 
