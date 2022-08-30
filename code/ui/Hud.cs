@@ -63,10 +63,9 @@ namespace Facepunch.Hidden
 
 			if ( isHiddenTeam )
 			{
-				ImmersionPostProcessing.Contrast.Enabled = false;
 				ImmersionPostProcessing.Saturate.Enabled = false;
-				ImmersionPostProcessing.Brightness.Enabled = false;
 				ImmersionPostProcessing.Vignette.Enabled = false;
+				ImmersionPostProcessing.FilmGrain.Enabled = false;
 
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.1f;
@@ -74,14 +73,8 @@ namespace Facepunch.Hidden
 			}
 			else
 			{
-				ImmersionPostProcessing.Contrast.Enabled = true;
-				ImmersionPostProcessing.Contrast.Contrast = 1.1f;
-
-				ImmersionPostProcessing.Brightness.Enabled = true;
-				ImmersionPostProcessing.Brightness.Multiplier = 0.9f;
-
 				ImmersionPostProcessing.Saturate.Enabled = true;
-				ImmersionPostProcessing.Saturate.Amount = 0.85f;
+				ImmersionPostProcessing.Saturate.Amount = 0.9f;
 
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.02f;
@@ -91,7 +84,11 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.Vignette.Intensity = 1f;
 				ImmersionPostProcessing.Vignette.Color = Color.Black;
 				ImmersionPostProcessing.Vignette.Smoothness = 2f;
-				ImmersionPostProcessing.Vignette.Roundness = 1.6f;
+				ImmersionPostProcessing.Vignette.Roundness = 1.7f;
+
+				ImmersionPostProcessing.FilmGrain.Enabled = true;
+				ImmersionPostProcessing.FilmGrain.Response = 0.6f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
 			}
 
 			var healthScale = (0.4f / 100f) * player.Health;
