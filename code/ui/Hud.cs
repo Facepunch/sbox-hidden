@@ -70,6 +70,11 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.1f;
 				ImmersionPostProcessing.LensDistortion.K2 = -0.1f;
+
+				ImmersionPostProcessing.ColorOverlay.Enabled = true;
+				ImmersionPostProcessing.ColorOverlay.Color = Color.Orange;
+				ImmersionPostProcessing.ColorOverlay.Mode = StandardPostProcess.ColorOverlaySettings.OverlayMode.Multiply;
+				ImmersionPostProcessing.ColorOverlay.Amount = 0.8f;
 			}
 			else
 			{

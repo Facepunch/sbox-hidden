@@ -39,6 +39,11 @@ namespace Facepunch.Hidden
 			player.EnableHideInFirstPerson = true;
 			player.EnableShadowInFirstPerson = true;
 
+			player.AttachClothing( "models/citizen_clothes/hair/hair_balding/models/hair_baldinggrey.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/jacket/hoodie/models/hoodie.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/shoes/sneakers/models/sneakers.vmdl" );
+			player.AttachClothing( "models/citizen_clothes/trousers/trousers_tracksuit.vmdl" );
+
 			player.Controller = new HiddenController();
 			player.CameraMode = new HiddenFirstPersonCamera();
 

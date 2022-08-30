@@ -26,6 +26,8 @@ namespace Facepunch.Hidden
 		public override bool IsMelee => true;
 		public override int HoldType => 0;
 		public override float MeleeRange => 80f;
+		public override bool HasLaserDot => false;
+		public override bool HasFlashlight => false;
 
 		public override void Spawn()
 		{

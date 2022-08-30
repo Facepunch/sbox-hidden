@@ -85,7 +85,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			SetClass( "hidden", weapons.Count == 0 );
+			SetClass( "hidden", weapons.Count <= 1 );
 		}
 
 		private string IndexToSlotKey( int index )
