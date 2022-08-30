@@ -26,8 +26,11 @@ namespace Facepunch.Hidden
 		[ConVar.Server( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
 		public static bool FriendlyFire { get; set; } = true;
 
-		[ConVar.Replicated( "hdn_sense_enabled", Help = "Whether or not The Hidden can use their Sense ability." )]
-		public static bool IsSenseEnabled { get; set; } = true;
+		[ConVar.Replicated( "hdn_sense", Help = "Whether or not The Hidden can use their Sense ability." )]
+		public static bool CanUseSense { get; set; } = true;
+
+		[ConVar.Replicated( "hdn_charge_attack", Help = "Whether or not The Hidden can use their charge attack." )]
+		public static bool CanUseChargeAttack { get; set; } = true;
 
 		[ConVar.Server( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
 		public static int VoiceRadius { get; set; } = 2048;

@@ -35,11 +35,18 @@
         "DefaultValue": "3000",
         "Maximum": 8000
       },
-      "hdn_sense_enabled": {
+      "hdn_sense": {
         "DisplayType": "Boolean",
         "Choices": [],
-        "ConVarName": "hdn_sense_enabled",
+        "ConVarName": "hdn_sense",
         "DisplayName": "Sense Ability",
+        "DefaultValue": "true"
+      },
+      "hdn_charge_attack": {
+        "DisplayType": "Boolean",
+        "Choices": [],
+        "ConVarName": "hdn_charge_attack",
+        "DisplayName": "Charge Attack",
         "DefaultValue": "true"
       }
     },
