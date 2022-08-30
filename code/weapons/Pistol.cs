@@ -43,7 +43,7 @@ namespace Facepunch.Hidden
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModel( "weapons/rust_smg/rust_pistol.vmdl" );
+			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
 
 		public override void PlayReloadSound()
