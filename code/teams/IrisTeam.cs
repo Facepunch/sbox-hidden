@@ -62,8 +62,6 @@ namespace Facepunch.Hidden
 
 		public override void OnJoin( Player player  )
 		{
-			Log.Info( $"{ player.Client.Name } joined the Military team." );
-
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
 				RadarHud = Local.Hud.AddChild<Radar>();

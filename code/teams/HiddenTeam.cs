@@ -193,8 +193,6 @@ namespace Facepunch.Hidden
 
 		public override void OnJoin( Player player  )
 		{
-			Log.Info( $"{ player.Client.Name } joined the Hidden team." );
-
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
 				AbilitiesHud = Local.Hud.AddChild<Abilities>();

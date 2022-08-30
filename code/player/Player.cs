@@ -26,6 +26,15 @@ namespace Facepunch.Hidden
 		private float Lean = 0;
 		private float FOV = 0;
 
+		[ConCmd.Server]
+		public static void PlayVoiceCmd( string name )
+		{
+			if ( ConsoleSystem.Caller is Player player )
+			{
+				player.PlaySound( name );
+			}
+		}
+
 		public bool HasTeam
 		{
 			get => Team != null;

@@ -34,6 +34,9 @@ namespace Facepunch.Hidden
 			RootPanel.AddChild<ChatBox>();
 			RootPanel.AddChild<Scoreboard>();
 
+			var centerPanel = RootPanel.Add.Panel( "hud_center" );
+			centerPanel.AddChild<RadialVoiceMenu>();
+
 			HealthPostProcessing = new();
 			ImmersionPostProcessing = new();
 

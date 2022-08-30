@@ -50,6 +50,16 @@ Vitals {
 	right: 64px;
 }
 
+.hud_center {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
 Ammo {
 	background-image: url( /ui/hidden/ammo-menu.png );
 	background-size: 100%;
@@ -209,4 +219,10 @@ Abilities {
 	&.hidden {
 		display: none;
 	}
+}
+
+voicelist {
+	position: absolute;
+	bottom: 300px;
+	right: 32px;
 }
