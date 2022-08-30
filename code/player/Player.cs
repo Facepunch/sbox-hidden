@@ -135,7 +135,7 @@ namespace Facepunch.Hidden
 
 			if ( Team != null )
 			{
-				Team.OnTick( this );
+				Team.Simulate( this );
 			}
 
 			if ( ActiveChild is Weapon weapon && !weapon.IsUsable() && weapon.TimeSincePrimaryAttack > 0.5f && weapon.TimeSinceSecondaryAttack > 0.5f )
@@ -399,6 +399,12 @@ namespace Facepunch.Hidden
 			else
 			{
 				StealthParticles?.Destroy( true );
+			}
+
+			if ( SenseParticles != null )
+			{
+				var color = Color.Lerp( Color.Red, Color.Green, (1f / 100f) * Health );
+				SenseParticles.SetPosition( 1, color * 255f );
 			}
 		}
 

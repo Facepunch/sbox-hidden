@@ -1,18 +1,14 @@
 ﻿using Sandbox;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
 {
-	public class HiddenController : CustomWalkController
+	public partial class HiddenController : CustomWalkController
 	{
+		[Net, Predicted] public bool IsFrozen { get; set; }
+
 		public override float SprintSpeed { get; set; } = 380f;
-		public bool IsFrozen { get; set; }
-		public bool IsSliding { get; set; }
-		public float SlideVelocity { get; set; }
+
 		public float LeapVelocity { get; set; } = 300f;
 		public float LeapStaminaLoss { get; set; } = 40f;
 
@@ -39,7 +35,7 @@ namespace Facepunch.Hidden
 			if ( Pawn is Player player )
 			{
 				if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
-					speed *= 0.7f;
+					speed *= 0.75f;
 				else if ( player.Deployment == DeploymentType.HIDDEN_ROGUE )
 					speed *= 1.25f;
 			}

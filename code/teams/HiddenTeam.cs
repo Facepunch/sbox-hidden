@@ -146,7 +146,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnTick( Player player )
+		public override void Simulate( Player player )
 		{
 			if ( Input.Pressed( InputButton.Drop ) )
 			{
@@ -180,7 +180,9 @@ namespace Facepunch.Hidden
 					.Run();
 
 				if ( trace.Hit )
+				{
 					controller.IsFrozen = true;
+				}
 			}
 		}
 

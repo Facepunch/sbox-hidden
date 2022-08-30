@@ -7,7 +7,7 @@ namespace Facepunch.Hidden
 	{
 		public BasePlayerController Controller;
 
-		public bool IsActive;
+		public bool IsActive { get; private set; }
 
 		public DuckController( BasePlayerController controller )
 		{
@@ -33,14 +33,14 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		void TryDuck()
+		private void TryDuck()
 		{
 			IsActive = true;
 		}
 
-		void TryUnDuck()
+		private void TryUnDuck()
 		{
-			var pm = Controller.TraceBBox( Controller.Position, Controller.Position, _originalMins, _originalMaxs );
+			var pm = Controller.TraceBBox( Controller.Position, Controller.Position, OriginalMins, OriginalMaxs );
 
 			if ( pm.StartedSolid )
 				return;
@@ -48,13 +48,13 @@ namespace Facepunch.Hidden
 			IsActive = false;
 		}
 
-		private Vector3 _originalMins;
-		private Vector3 _originalMaxs;
+		private Vector3 OriginalMins;
+		private Vector3 OriginalMaxs;
 
 		internal void UpdateBBox( ref Vector3 mins, ref Vector3 maxs )
 		{
-			_originalMins = mins;
-			_originalMaxs = maxs;
+			OriginalMins = mins;
+			OriginalMaxs = maxs;
 
 			if ( IsActive )
 				maxs = maxs.WithZ( 36 );
@@ -62,8 +62,8 @@ namespace Facepunch.Hidden
 
 		public float GetWishSpeed()
 		{
-			if ( !IsActive ) return -1;
-			return 64.0f;
+			if ( !IsActive ) return -1f;
+			return 64f;
 		}
 	}
 }

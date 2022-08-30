@@ -34,7 +34,7 @@ namespace Facepunch.Hidden
 
 		public virtual void OnTick() { }
 
-		public virtual void OnTick( Player player ) { }
+		public virtual void Simulate( Player player ) { }
 
 		public virtual void OnLeave( Player player  ) { }
 

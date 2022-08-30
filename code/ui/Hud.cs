@@ -82,7 +82,7 @@ namespace Facepunch.Hidden
 				if ( player.IsSenseActive )
 				{
 					OverlayColor = Color.Lerp( OverlayColor, Color.Red, Time.Delta * 4f );
-					BlurAmount = BlurAmount.LerpTo( 0.3f, Time.Delta * 4f );
+					BlurAmount = BlurAmount.LerpTo( 0f, Time.Delta * 4f );
 				}
 				else
 				{
