@@ -16,6 +16,7 @@ namespace Facepunch.Hidden
 		public bool IsSenseActive { get; set; }
 
 		private Rotation LastCameraRotation = Rotation.Identity;
+		private TimeSince TimeSinceLastFootstep;
 		private DamageInfo LastDamageInfo;
 		private PhysicsBody RagdollBody;
 		private PhysicsJoint RagdollWeld;
@@ -184,6 +185,33 @@ namespace Facepunch.Hidden
 			}
 
 			base.OnActiveChildChanged( from, to );
+		}
+
+		public override void OnAnimEventFootstep( Vector3 position, int foot, float volume )
+		{
+			if ( LifeState == LifeState.Dead || !IsClient )
+				return;
+
+			if ( TimeSinceLastFootstep < 0.2f )
+				return;
+
+			volume *= FootstepVolume();
+
+			TimeSinceLastFootstep = 0f;
+
+			var trace = Trace.Ray( position, position + Vector3.Down * 20f )
+				.Radius( 1f )
+				.Ignore( this )
+				.Run();
+
+			if ( !trace.Hit ) return;
+
+			trace.Surface.DoFootstep( this, trace, foot, volume );
+		}
+
+		public override float FootstepVolume()
+		{
+			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 200f ) * 0.3f;
 		}
 
 		public override void PostCameraSetup( ref CameraSetup setup )
