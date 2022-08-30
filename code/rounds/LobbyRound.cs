@@ -1,8 +1,4 @@
 ﻿using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
@@ -10,6 +6,7 @@ namespace Facepunch.Hidden
     public class LobbyRound : BaseRound
 	{
 		public override string RoundName => "LOBBY";
+		public override bool CanPlayerTakeDamage => false;
 
 		protected override void OnStart()
 		{

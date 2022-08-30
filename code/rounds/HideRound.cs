@@ -12,6 +12,7 @@ namespace Facepunch.Hidden
 		[ConVar.Server( "hdn_host_team", Help = "Make the host always this team." )]
 		public static string HostTeam { get; set; }
 
+		public override bool CanPlayerTakeDamage => false;
 		public override string RoundName => "PREPARE";
 		public override int RoundDuration => 20;
 

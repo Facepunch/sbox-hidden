@@ -280,6 +280,11 @@ namespace Facepunch.Hidden
 
 		public override void TakeDamage( DamageInfo info )
 		{
+			if ( !Game.Instance.Round.CanPlayerTakeDamage )
+			{
+				return;
+			}
+
 			if ( info.HitboxIndex == 0 )
 			{
 				info.Damage *= 2.0f;

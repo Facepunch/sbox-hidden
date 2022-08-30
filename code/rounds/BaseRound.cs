@@ -12,6 +12,7 @@ namespace Facepunch.Hidden
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";
 		public virtual bool CanPlayerSuicide => false;
+		public virtual bool CanPlayerTakeDamage => true;
 
 		public List<Player> Players = new();
 
