@@ -11,6 +11,7 @@ namespace Facepunch.Hidden
 		[Net, Local] public SenseAbility Sense { get; set; }
 		[Net, Local] public ScreamAbility Scream { get; set; }
 		[Net, Local] public DeploymentType Deployment { get; set; }
+		[Net] public ModelEntity PickupEntity { get; set; }
 
 		public ProjectileSimulator Projectiles { get; private set; }
 		public bool IsSenseActive { get; set; }
@@ -18,8 +19,7 @@ namespace Facepunch.Hidden
 		private Rotation LastCameraRotation = Rotation.Identity;
 		private TimeSince TimeSinceLastFootstep;
 		private DamageInfo LastDamageInfo;
-		private PhysicsBody RagdollBody;
-		private PhysicsJoint RagdollWeld;
+		private PhysicsBody PickupEntityBody;
 		private Particles SenseParticles;
 		private Particles StealthParticles;
 		private float WalkBob = 0;
@@ -73,8 +73,8 @@ namespace Facepunch.Hidden
 			RemoveRagdollEntity();
 			DrawPlayer( true );
 
-			RagdollWeld = null;
-			RagdollBody = null;
+			PickupEntityBody = null;
+			PickupEntity = null;
 
 			Stamina = 100f;
 
@@ -128,7 +128,7 @@ namespace Facepunch.Hidden
 			{
 				using ( Prediction.Off() )
 				{
-					//TickPickupRagdoll();
+					TickPickupRagdollOrProp();
 					SimulateLaserDot( client );
 				}
 			}
@@ -245,44 +245,79 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private void TickPickupRagdoll()
+		private void TickPickupRagdollOrProp()
 		{
-			if ( !Input.Pressed( InputButton.Use ) ) return;
+			if ( PickupEntity.IsValid() && PickupEntity.Position.Distance( Position ) > 300f )
+			{
+				PickupEntityBody = null;
+				PickupEntity = null;
+			}
 
-			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
+			var trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 100f )
 				.EntitiesOnly()
+				.WithoutTags( "stuck" )
 				.Ignore( ActiveChild )
 				.Ignore( this )
-				.Radius( 2 )
+				.Radius( 2f )
 				.Run();
 
-			if ( trace.Hit && trace.Entity is PlayerCorpse corpse && corpse.Player != null )
+			if ( PickupEntityBody.IsValid() )
 			{
-				if ( !RagdollWeld.IsValid() )
+				var velocity = PickupEntityBody.Velocity;
+				Vector3.SmoothDamp( PickupEntityBody.Position, Input.Position + Input.Rotation.Forward * 100f, ref velocity, 0.2f, Time.Delta * 2f );
+				PickupEntityBody.AngularVelocity = Vector3.Zero;
+				PickupEntityBody.Velocity = velocity.ClampLength( 400f );
+			}
+
+			if ( !Input.Pressed( InputButton.Use ) )
+				return;
+
+			var entity = trace.Entity;
+
+			if ( trace.Hit && entity is ModelEntity model && model.PhysicsEnabled )
+			{
+				if ( !PickupEntityBody.IsValid() && model.CollisionBounds.Size.Length < 128f )
 				{
-					RagdollBody = trace.Body;
-					RagdollWeld = PhysicsJoint.CreateLength( PhysicsPoint.Local( PhysicsBody, Vector3.Up * 2f ), PhysicsPoint.World( trace.Body, trace.EndPosition ), 20f );
-					return;
+					if ( trace.Body.Mass < 100f )
+					{
+						PickupEntityBody = trace.Body;
+						PickupEntity = model;
+						PickupEntity.Tags.Add( "held" );
+						return;
+					}
 				}
 			}
 
-			if ( RagdollBody.IsValid() )
+			if ( PickupEntityBody.IsValid() )
 			{
-				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 40f )
+				trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 80f )
 					.WorldOnly()
 					.Ignore( ActiveChild )
 					.Ignore( this )
-					.Radius( 2 )
+					.Radius( 2f )
 					.Run();
 
-				if ( trace.Hit && RagdollBody != null && RagdollBody.IsValid() )
+				if ( PickupEntityBody.IsValid() )
 				{
-					PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PhysicsPoint.World( RagdollBody, trace.EndPosition ), 4f );
+					if ( PickupEntity.IsValid() )
+					{
+						if ( PickupEntity is PlayerCorpse && trace.Hit )
+						{
+							PickupEntityBody.Position = trace.EndPosition + trace.Direction * -8f;
+							PickupEntity.Tags.Add( "stuck" );
+
+							PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PickupEntityBody, 8f );
+						}
+						else
+						{
+							PickupEntityBody.ApplyImpulse( Input.Rotation.Forward * 500f * PickupEntityBody.Mass );
+						}
+
+						PickupEntity.Tags.Remove( "held" );
+					}
 				}
 
-				RagdollWeld.Remove();
-				RagdollBody = null;
-				RagdollWeld = null;
+				PickupEntityBody = null;
 			}
 		}
 

@@ -449,7 +449,7 @@ namespace Facepunch.Hidden
 
 		protected virtual bool IsValidMeleeTarget( Entity target )
 		{
-			return target is Player;
+			return true;
 		}
 
 		protected void DealDamage( Entity target, Vector3 position, Vector3 force )

@@ -53,8 +53,6 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			TimeSincePrimaryAttack = 0f;
-
 			Rand.SetSeed( Time.Tick );
 
 			ShootEffects();

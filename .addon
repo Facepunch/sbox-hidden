@@ -69,7 +69,8 @@
         "ladder": "Ignore",
         "water": "Trigger",
         "corpse": "Collide",
-        "player": "Collide"
+        "player": "Collide",
+        "held": "Collide"
       },
       "Pairs": [
         {
@@ -100,6 +101,11 @@
         {
           "a": "corpse",
           "b": "player",
+          "r": "Ignore"
+        },
+        {
+          "a": "player",
+          "b": "held",
           "r": "Ignore"
         }
       ]

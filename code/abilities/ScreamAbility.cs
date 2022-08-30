@@ -7,7 +7,7 @@ namespace Facepunch.Hidden
 		public override float Cooldown => 10;
 		public override string Name => "Scream";
 
-		private string[] _screamSounds = new string[]
+		private string[] ScreamSounds = new string[]
 		{
 			"scream-01",
 			"scream-02",
@@ -22,8 +22,6 @@ namespace Facepunch.Hidden
 
 		protected override void OnUse( Player player )
 		{
-			Log.Info( (Host.IsServer ? "Server: " : "Client: ") + "Time Since Last: " + TimeSinceLastUse );
-
 			TimeSinceLastUse = 0;
 
 			if ( Host.IsServer )
@@ -37,7 +35,7 @@ namespace Facepunch.Hidden
 
 		private void PlayScreamSound( Player from )
 		{
-			var soundName = Rand.FromArray( _screamSounds );
+			var soundName = Rand.FromArray( ScreamSounds );
 			from.PlaySound( soundName );
 		}
 	}

@@ -164,7 +164,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Input.Pressed( InputButton.Use ) )
+			if ( Input.Pressed( InputButton.Use ) && !player.PickupEntity.IsValid() )
 			{
 				if ( player.Controller is not HiddenController controller )
 					return;

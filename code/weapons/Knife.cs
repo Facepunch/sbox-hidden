@@ -21,8 +21,8 @@ namespace Facepunch.Hidden
 		public override string ViewModelPath => "weapons/rust_boneknife/v_rust_boneknife.vmdl";
 		public override WeaponConfig Config => new KnifeConfig();
 
-		public override float PrimaryRate => 1.0f;
-		public override float SecondaryRate => 0.3f;
+		public override float PrimaryRate => 1f;
+		public override float SecondaryRate => 0f;
 		public override bool IsMelee => true;
 		public override int HoldType => 0;
 		public override float MeleeRange => 80f;
