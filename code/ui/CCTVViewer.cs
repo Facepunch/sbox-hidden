@@ -36,7 +36,7 @@ namespace Facepunch.Hidden
 				shouldShow = camera.CCTVEntity.IsValid();
 			}
 
-			//SetClass( "hidden", !shouldShow );
+			SetClass( "hidden", !shouldShow );
 
 			base.Tick();
 		}

@@ -34,7 +34,6 @@ namespace Facepunch.Hidden
 			player.SetBodyGroup( "Chest", 0 );
 			player.SetBodyGroup( "Legs", 0 );
 
-			player.EnableDrawing = false;
 			player.EnableAllCollisions = true;
 			player.EnableHideInFirstPerson = true;
 			player.EnableShadowInFirstPerson = true;
@@ -47,7 +46,7 @@ namespace Facepunch.Hidden
 			player.Controller = new HiddenController();
 			player.CameraMode = new HiddenFirstPersonCamera();
 
-			//player.SetMaterialOverride( "materials/cloaked.vmat" );
+			player.DrawPlayer( false );
 		}
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )

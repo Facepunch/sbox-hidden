@@ -11,23 +11,23 @@
         background-size: cover;
         border-radius: 50%;
         animation-name: blinker;
-        animation-duration: 1s;
-        animation-timing-function: linear;
+        animation-duration: 0.8s;
+        animation-timing-function: ease-out;
         animation-iteration-count: infinite;
-        width: 64px;
-        height: 64px;
+        width: 48px;
+        height: 48px;
         position: absolute;
-        left: 32px;
+        left: 48px;
         top: 64px;
     }
 
     .name {
         position: absolute;
         font-family: Lexend;
-        top: 68px;
+        top: 60px;
         left: 120px;
         font-size: 40px;
-        text-shadow: 2px 2px 2px rgba( red, 0.2 );
+        text-shadow: 2px 2px 16px rgba( red, 0.2 );
         color: red;
     }
 
@@ -38,12 +38,12 @@
 
 @keyframes blinker {
     0% {
-        opacity: 0.1;
+        opacity: 0.3;
     }
     50% {
         opacity: 1;
     }
     100% {
-        opacity: 0.1;
+        opacity: 0.3;
     }
 }

@@ -20,6 +20,7 @@ namespace Facepunch.Hidden
 		private PhysicsBody RagdollBody;
 		private PhysicsJoint RagdollWeld;
 		private Particles SenseParticles;
+		private Particles StealthParticles;
 		private float WalkBob = 0;
 		private float Lean = 0;
 		private float FOV = 0;
@@ -340,10 +341,31 @@ namespace Facepunch.Hidden
 			DamageIndicator.Current?.OnHit( position );
 		}
 
+		[Event.Tick.Client]
+		protected virtual void ClientTick()
+		{
+			if ( Team is HiddenTeam && !IsLocalPawn )
+			{
+				if ( StealthParticles == null )
+				{
+					StealthParticles = Particles.Create( "particles/hidden_effect.vpcf", this );
+					StealthParticles.SetEntity( 0, this );
+				}
+
+				StealthParticles.SetPosition( 1, Velocity.Length.Remap( 0f, 400f, 0.3f, 1f ).Clamp( 0.3f, 1f ) * 0.5f );
+			}
+			else
+			{
+				StealthParticles?.Destroy( true );
+			}
+		}
+
 		protected override void OnDestroy()
 		{
 			ShowSenseParticles( false );
 			RemoveRagdollEntity();
+
+			StealthParticles?.Destroy( true );
 
 			if ( IsServer )
 			{

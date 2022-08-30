@@ -33,6 +33,7 @@ namespace Facepunch.Hidden
 		{
 			base.Spawn();
 			SetModel( "weapons/rust_boneknife/rust_boneknife.vmdl" );
+			EnableDrawing = false;
 		}
 
 		public override void AttackSecondary()
