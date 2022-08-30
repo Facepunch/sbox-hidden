@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.SMG;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 4;
+		public override int Damage => 24;
 	}
 
 	[Library( "hdn_smg" )]
@@ -24,6 +24,8 @@ namespace Facepunch.Hidden
 
 		public override float PrimaryRate => 10f;
 		public override float SecondaryRate => 1f;
+		public override float DamageFalloffStart => 500f;
+		public override float DamageFalloffEnd => 8000f;
 		public override int ClipSize => 30;
 		public override float ReloadTime => 4.0f;
 		public override bool HasFlashlight => true;

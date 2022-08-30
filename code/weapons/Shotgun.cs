@@ -12,7 +12,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.Shotgun;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 4;
+		public override int Damage => 16;
 	}
 
 	[Library( "hdn_shotgun" )]
@@ -24,6 +24,9 @@ namespace Facepunch.Hidden
 		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 1f;
 		public override int ClipSize => 8;
+		public override int HoldType => 2;
+		public override float DamageFalloffStart => 0f;
+		public override float DamageFalloffEnd => 1024f;
 		public override float ReloadTime => 0.5f;
 		public override bool HasLaserDot => true;
 		public override bool HasFlashlight => true;
@@ -58,7 +61,7 @@ namespace Facepunch.Hidden
 			ShootEffects();
 			PlaySound( $"rust_pumpshotgun.shoot" );
 
-			for ( int i = 0; i < 10; i++ )
+			for ( int i = 0; i < 8; i++ )
 			{
 				ShootBullet( 0.15f, 0.3f, Config.Damage, 3.0f );
 			}
@@ -98,12 +101,6 @@ namespace Facepunch.Hidden
 		protected virtual void FinishReload()
 		{
 			ViewModelEntity?.SetAnimParameter( "reload_finished", true );
-		}
-
-		public override void SimulateAnimator( PawnAnimator anim )
-		{
-			anim.SetAnimParameter( "holdtype", 2 );
-			anim.SetAnimParameter( "aim_body_weight", 1.0f );
 		}
 	}
 }

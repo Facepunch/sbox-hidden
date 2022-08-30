@@ -21,7 +21,6 @@ namespace Facepunch.Hidden
 		public override string ViewModelPath => "weapons/rust_boneknife/v_rust_boneknife.vmdl";
 		public override WeaponConfig Config => new KnifeConfig();
 
-		public override bool ShouldRenderCrosshair => true;
 		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 0f;
 		public override bool IsMelee => true;

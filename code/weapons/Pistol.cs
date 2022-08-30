@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.Pistol;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 8;
+		public override int Damage => 20;
 	}
 
 	[Library( "hdn_pistol" )]
@@ -26,6 +26,8 @@ namespace Facepunch.Hidden
 		public override int ClipSize => 10;
 		public override float PrimaryRate => 3f;
 		public override float SecondaryRate => 1.0f;
+		public override float DamageFalloffStart => 500f;
+		public override float DamageFalloffEnd => 8000f;
 		public override float ReloadTime => 3.0f;
 		public override bool HasLaserDot => true;
 
