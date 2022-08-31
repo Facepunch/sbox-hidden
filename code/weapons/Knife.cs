@@ -18,7 +18,7 @@ namespace Facepunch.Hidden
 	[Library( "hdn_knife" )]
 	public partial class Knife : Weapon
 	{
-		public override string ViewModelPath => "weapons/rust_boneknife/v_rust_boneknife.vmdl";
+		public override string ViewModelPath => "models/knife/fp_knife.vmdl";
 		public override WeaponConfig Config => new KnifeConfig();
 
 		public override float PrimaryRate => 1f;
@@ -32,7 +32,7 @@ namespace Facepunch.Hidden
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModel( "weapons/rust_boneknife/rust_boneknife.vmdl" );
+			SetModel( "models/knife/w_knife.vmdl" );
 			EnableDrawing = false;
 		}
 
