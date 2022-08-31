@@ -23,12 +23,21 @@
 	.chat_canvas {
 		flex-direction: column;
 		align-items: flex-start;
+		overflow: scroll;
+		max-height: 480px;
 	}
 
 	&.open {
-		TextEntry {
+		pointer-events: all;
+
+		textentry {
 			opacity: 1;
 			backdrop-filter: blur( 10px );
+			cursor: text;
+		}
+
+		.faded {
+			opacity: 1;
 		}
 	}
 }
@@ -37,7 +46,7 @@ ChatEntry {
 	background-color: transparent;
 	margin-bottom: 5px;
 	color: white;
-	transition: all 0.1s ease-out;
+	transition: transform 0.1s ease-out, opacity 0.1s ease-out;
 	opacity: 1;
 	max-height: 200px;
 	flex-shrink: 0;
@@ -58,9 +67,8 @@ ChatEntry {
 		transform: scale( 0 );
 	}
 
-	&:outro {
+	&.faded {
 		opacity: 0;
-		transition: all 2s ease-out;
 	}
 
 	.name {

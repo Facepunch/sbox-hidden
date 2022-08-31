@@ -53,6 +53,7 @@ namespace Facepunch.Hidden
 			StyleSheet.Load( "/ui/ChatBox.scss" );
 
 			Canvas = Add.Panel( "chat_canvas" );
+			Canvas.PreferScrollToBottom = true;
 
 			Input = Add.TextEntry( "" );
 			Input.AddEventListener( "onsubmit", () => Submit() );
@@ -89,6 +90,7 @@ namespace Facepunch.Hidden
 			{
 				e.Message.Style.FontColor = color;
 			}
+			Canvas.TryScrollToBottom();
 		}
 
 		private bool CanTalkInChat()
@@ -106,6 +108,7 @@ namespace Facepunch.Hidden
 
 			AddClass( "open" );
 			Input.Focus();
+			Canvas.TryScrollToBottom();
 		}
 
 		private void Close()
