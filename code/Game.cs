@@ -207,6 +207,8 @@ namespace Facepunch.Hidden
 			client.Pawn = pawn;
 			pawn.Respawn();
 
+			pawn.outfit = Rand.Int( 0, 3 );
+
 			base.ClientJoined( client );
 		}
 

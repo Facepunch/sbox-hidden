@@ -4,7 +4,7 @@ using Sandbox.Component;
 
 namespace Facepunch.Hidden
 {
-    class IrisTeam : BaseTeam
+	class IrisTeam : BaseTeam
 	{
 		public override string HudClassName => "team_iris";
 		public override Color Color => Color.Parse( "#4a8a59" ).Value;
@@ -12,7 +12,7 @@ namespace Facepunch.Hidden
 
 		private Radar RadarHud;
 
-		public override void SupplyLoadout( Player player  )
+		public override void SupplyLoadout( Player player )
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
@@ -34,7 +34,6 @@ namespace Facepunch.Hidden
 				player.GiveAmmo( AmmoType.Shotgun, 24 );
 			}
 		}
-
 		public override void OnStart( Player player )
 		{
 			player.ClearAmmo();
@@ -48,14 +47,9 @@ namespace Facepunch.Hidden
 			player.SetBodyGroup( "Legs", 1 );
 
 			player.RemoveClothing();
-			player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
-			player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
+			player.Dress(player);
 
-			player.ClearMaterialOverride();
+			//player.ClearMaterialOverride();
 
 			player.EnableAllCollisions = true;
 			player.EnableDrawing = true;
@@ -66,13 +60,12 @@ namespace Facepunch.Hidden
 			player.CameraMode = new HiddenFirstPersonCamera();
 		}
 
-		public override void OnJoin( Player player  )
+		public override void OnJoin( Player player )
 		{
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
-				RadarHud = Local.Hud.AddChild<Radar>();
+				RadarHud = Local.Hud.AddChild<Radar>();	
 			}
-
 			base.OnJoin( player );
 		}
 
@@ -110,9 +103,9 @@ namespace Facepunch.Hidden
 			playerglow.Color = Color.White;
 		}
 
-		public override void OnLeave( Player player  )
+		public override void OnLeave( Player player )
 		{
-			Log.Info( $"{ player.Client.Name } left the Military team." );
+			Log.Info( $"{player.Client.Name} left the Military team." );
 
 			if ( player.IsLocalPawn )
 			{
