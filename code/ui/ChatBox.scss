@@ -1,0 +1,87 @@
+﻿ChatBox {
+	position: absolute;
+	bottom: 150px;
+	left: 88px;
+	z-index: 100;
+	flex-direction: column;
+	width: 500px;
+	font-family: Poppins;
+	font-size: 13px;
+
+	TextEntry {
+		background-color: black;
+		opacity: 0;
+		color: white;
+		padding: 15px;
+		background-color: rgba( black, 0.5 );
+		font-size: 14px;
+		flex-shrink: 0;
+		flex-grow: 0;
+		width: 100%;
+	}
+
+	.chat_canvas {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	&.open {
+		TextEntry {
+			opacity: 1;
+			backdrop-filter: blur( 10px );
+		}
+	}
+}
+
+ChatEntry {
+	background-color: transparent;
+	margin-bottom: 5px;
+	color: white;
+	transition: all 0.1s ease-out;
+	opacity: 1;
+	max-height: 200px;
+	flex-shrink: 0;
+	flex-grow: 0;
+	min-height: 20px;
+	max-width: 100%;
+	transform: scale( 1 );
+	backdrop-filter: blur( 5px );
+	align-items: center;
+	justify-content: center;
+
+	&:intro {
+		max-height: 0px;
+		padding-top: 0;
+		padding-bottom: 0;
+		margin-bottom: 0;
+		opacity: 0;
+		transform: scale( 0 );
+	}
+
+	&:outro {
+		opacity: 0;
+		transition: all 2s ease-out;
+	}
+
+	.name {
+		padding-right: 20px;
+		font-weight: 600;
+		font-family: Lexend;
+		text-shadow: 1px 1px 2px black;
+		font-size: 18px;
+		color: #c0fb2e;
+		flex-shrink: 0;
+	}
+
+	.message {
+		color: #ccc;
+		text-shadow: 1px 1px 2px black;
+		font-family: Lexend;
+		font-size: 18px;
+		flex-grow: 1;
+	}
+
+	&.noname .name {
+		display: none;
+	}
+}

@@ -7,6 +7,7 @@ namespace Facepunch.Hidden
 	{
 		public int Index { get; internal set; }
 
+		public virtual Color Color => Color.White;
 		public virtual bool HasDeployments => true;
 		public virtual bool HideNameplate => false;
 		public virtual string HudClassName => "";

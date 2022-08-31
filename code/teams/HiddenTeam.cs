@@ -5,6 +5,7 @@ namespace Facepunch.Hidden
 {
     class HiddenTeam : BaseTeam
 	{
+		public override Color Color => Color.Parse( "#8a4a4a" ).Value;
 		public override bool HideNameplate => true;
 		public override string HudClassName => "team_hidden";
 		public override string Name => "Hidden";
@@ -102,25 +103,7 @@ namespace Facepunch.Hidden
 
 		public override void OnTick()
 		{
-			if ( Host.IsClient )
-			{
-				/*
-				if ( Local.Pawn is not Player localPlayer )
-					return;
-
-				if ( localPlayer.Team == this )
-					return;
-
-				var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>( true ).FirstOrDefault();
-
-				if ( hidden != null && hidden.IsValid() )
-				{
-					var distance = localPlayer.Pos.Distance( hidden.Pos );
-					hidden.RenderAlpha = 0.2f - ((0.2f / 1500f) * distance);
-				}
-				*/
-			}
-			else
+			if ( Host.IsServer )
 			{
 				if ( Time.Now <= NextLightFlicker )
 					return;
