@@ -285,6 +285,9 @@ namespace Facepunch.Hidden
 			if ( !trace.Hit ) return;
 
 			trace.Surface.DoFootstep( this, trace, foot, volume );
+
+			var sound = PlaySound( "add.walking" );
+			sound.SetVolume( volume * 0.3f );
 		}
 
 		public override float FootstepVolume()
