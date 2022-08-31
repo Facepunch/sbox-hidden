@@ -70,6 +70,7 @@ namespace Facepunch.Hidden
 			Projectiles = new( this );
 			Inventory = new Inventory( this );
 			Animator = new StandardPlayerAnimator();
+			//Transmit = TransmitType.Always;
 			Ammo = new List<int>();
 		}
 
@@ -127,6 +128,8 @@ namespace Facepunch.Hidden
 			PickupEntity = null;
 
 			Stamina = 100f;
+
+			InputHints.UpdateOnClient( To.Single( this ) );
 
 			base.Respawn();
 		}

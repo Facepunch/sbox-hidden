@@ -7,25 +7,25 @@ namespace Facepunch.Hidden
 	{
 		[Net] public int TeamIndex { get; set; }
 		public int LastTeamIndex { get; set; }
-		private BaseTeam _team;
+
+		private BaseTeam CurrentTeam;
 
 		public BaseTeam Team
 		{
-			get => _team;
+			get => CurrentTeam;
 
 			set
 			{
 				// A player must be on a valid team.
-				if ( value != null && value != _team )
+				if ( value != null && value != CurrentTeam )
 				{
-					_team?.Leave( this );
-					_team = value;
-					_team.Join( this );
+					CurrentTeam?.Leave( this );
+					CurrentTeam = value;
+					CurrentTeam.Join( this );
 
 					if ( IsServer )
 					{
-						TeamIndex = _team.Index;
-
+						TeamIndex = CurrentTeam.Index;
 						Client.SetInt("team", TeamIndex);
 					}
 				}

@@ -24,6 +24,8 @@ namespace Facepunch.Hidden
 			FocusPoint = CurrentView.Position - GetViewOffset();
 			FieldOfView = 70f;
 			CCTVEntities = Entity.All.OfType<CCTVCamera>().ToList();
+
+			InputHints.UpdateOnClient();
 		}
 
 		public override void Update()

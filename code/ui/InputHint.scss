@@ -1,0 +1,44 @@
+InputHint {
+    align-items: center;
+    height: 32px;
+
+    .glyph {
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .action {
+        margin-left: 8px;
+        margin-bottom: 2px;
+        font-size: 18px;
+        font-family: Lexend;
+        color: white;
+        text-shadow: 0px 0px 2px black;
+    }
+
+    flex-direction: row;
+
+    &.small {
+        margin-right: 0px;
+        margin-left: 0px;
+
+        .action {
+            display: none;
+        }
+    }
+
+    &.invert {
+        .action {
+            margin-right: 8px;
+        }
+
+        flex-direction: row-reverse;
+    }
+
+
+    &.noaction {
+        .action {
+            display: none;
+        }
+    }
+}

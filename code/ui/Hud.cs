@@ -29,6 +29,7 @@ namespace Facepunch.Hidden
 			RootPanel.AddChild<VoiceList>();
 			RootPanel.AddChild<Nameplates>();
 			RootPanel.AddChild<DamageIndicator>();
+			RootPanel.AddChild<InputHints>();
 			RootPanel.AddChild<CCTVViewer>();
 			RootPanel.AddChild<ChatBox>();
 			RootPanel.AddChild<Scoreboard>();

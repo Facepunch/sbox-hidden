@@ -18,6 +18,7 @@ namespace Facepunch.Hidden
 			if ( player.IsLocalPawn )
 			{
 				Local.Hud.AddClass( HudClassName );
+				InputHints.UpdateOnClient();
 			}
 
 			OnJoin( player );
