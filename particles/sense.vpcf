@@ -4,6 +4,7 @@
 	m_nBehaviorVersion = 10
 	m_nSnapshotControlPoint = 6
 	m_hSnapshot = resource:"particles/particles/snapshot/snapshot/citizen.vsnap"
+	m_bInfiniteBounds = true
 	m_controlPointConfigurations = 
 	[
 		{
