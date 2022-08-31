@@ -575,15 +575,18 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Team is IrisTeam && NextLonelyCheck )
+			if ( Team is IrisTeam )
 			{
-				var otherPlayersNearby = FindInSphere( Position, 4096f )
-					.OfType<Player>()
-					.Where( p => p.Team is IrisTeam && p != this )
-					.Count();
+				if ( NextLonelyCheck )
+				{
+					var otherPlayersNearby = FindInSphere( Position, 4096f )
+						.OfType<Player>()
+						.Where( p => p.Team is IrisTeam && p != this )
+						.Count();
 
-				NextLonelyCheck = 1f;
-				IsLonely = otherPlayersNearby == 0;
+					NextLonelyCheck = 1f;
+					IsLonely = otherPlayersNearby == 0;
+				}
 			}
 			else
 			{
