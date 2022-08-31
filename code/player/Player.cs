@@ -7,7 +7,7 @@ namespace Facepunch.Hidden
 {
 	public partial class Player : Sandbox.Player
 	{
-		[Net, Predicted] public RealTimeUntil StaminaRegenTime { get; set; }
+		[Net, Predicted] public TimeUntil StaminaRegenTime { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
 		[Net, Local] public SenseAbility Sense { get; set; }
 		[Net, Local] public ScreamAbility Scream { get; set; }
