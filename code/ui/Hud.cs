@@ -120,24 +120,29 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
 			}
 
-			if ( player.CameraMode is SpectateCamera camera && camera.CCTVEntity.IsValid() )
+			if ( player.CameraMode is SpectateCamera camera )
 			{
 				ImmersionPostProcessing.Saturate.Amount = 0f;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.05f;
 				ImmersionPostProcessing.LensDistortion.K2 = -0.05f;
-				ImmersionPostProcessing.FilmGrain.Response = 0.3f;
-				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
+				ImmersionPostProcessing.FilmGrain.Response = 0.2f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.7f;
+
+				HealthPostProcessing.Saturate.Enabled = false;
+				HealthPostProcessing.Vignette.Enabled = false;
 			}
+			else
+			{
+				var healthScale = (0.4f / 100f) * player.Health;
+				HealthPostProcessing.Saturate.Enabled = true;
+				HealthPostProcessing.Saturate.Amount = 0.6f + healthScale;
 
-			var healthScale = (0.4f / 100f) * player.Health;
-			HealthPostProcessing.Saturate.Enabled = true;
-			HealthPostProcessing.Saturate.Amount = 0.6f + healthScale;
-
-			HealthPostProcessing.Vignette.Enabled = true;
-			HealthPostProcessing.Vignette.Intensity = 0.8f - healthScale * 2f;
-			HealthPostProcessing.Vignette.Color = Color.Red;
-			HealthPostProcessing.Vignette.Smoothness = 4f;
-			HealthPostProcessing.Vignette.Roundness = 2f;
+				HealthPostProcessing.Vignette.Enabled = true;
+				HealthPostProcessing.Vignette.Intensity = 0.8f - healthScale * 2f;
+				HealthPostProcessing.Vignette.Color = Color.Red;
+				HealthPostProcessing.Vignette.Smoothness = 4f;
+				HealthPostProcessing.Vignette.Roundness = 2f;
+			}
 		}
 	}
 }

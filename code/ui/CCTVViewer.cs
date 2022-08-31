@@ -33,7 +33,14 @@ namespace Facepunch.Hidden
 
 			if ( player.CameraMode is SpectateCamera camera )
 			{
-				shouldShow = camera.CCTVEntity.IsValid();
+				shouldShow = true;
+
+				if ( camera.CCTVEntity.IsValid() )
+					Name.Text = camera.CCTVEntity.AreaName;
+				else if ( camera.TargetPlayer.IsValid() )
+					Name.Text = camera.TargetPlayer.Client.Name;
+				else
+					Name.Text = "CCTV";
 			}
 
 			SetClass( "hidden", !shouldShow );
