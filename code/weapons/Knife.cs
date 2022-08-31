@@ -74,6 +74,11 @@ namespace Facepunch.Hidden
 					}
 
 					corpse.NumberOfFeedsLeft--;
+
+					if ( corpse.NumberOfFeedsLeft == 0 )
+					{
+						corpse.SetMaterialGroup( 5 );
+					}
 				}
 
 				Sound.FromEntity( "slash", corpse );
