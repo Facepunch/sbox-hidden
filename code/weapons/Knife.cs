@@ -71,13 +71,13 @@ namespace Facepunch.Hidden
 					{
 						owner.Health = Math.Min( owner.Health + 15f, 100f );
 						Sound.FromEntity( "hidden.feed", owner );
-					}
 
-					corpse.NumberOfFeedsLeft--;
+						corpse.NumberOfFeedsLeft--;
 
-					if ( corpse.NumberOfFeedsLeft == 0 )
-					{
-						corpse.SetMaterialGroup( 5 );
+						if ( corpse.NumberOfFeedsLeft == 0 )
+						{
+							corpse.SetMaterialGroup( 5 );
+						}
 					}
 				}
 
