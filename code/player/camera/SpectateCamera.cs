@@ -14,6 +14,7 @@ namespace Facepunch.Hidden
 		public CCTVCamera CCTVEntity { get; set; }
 
 		private List<CCTVCamera> CCTVEntities;
+		private Sound StaticLoopSound;
 		private Vector3 FocusPoint;
 		private int TargetIdx;
 
@@ -25,7 +26,16 @@ namespace Facepunch.Hidden
 			FieldOfView = 70f;
 			CCTVEntities = Entity.All.OfType<CCTVCamera>().ToList();
 
+			StaticLoopSound = Sound.FromScreen( "cctv.static" );
+
 			InputHints.UpdateOnClient();
+		}
+
+		public override void Deactivated()
+		{
+			StaticLoopSound.Stop();
+
+			base.Deactivated();
 		}
 
 		public override void Update()
