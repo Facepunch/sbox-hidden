@@ -14,6 +14,7 @@ namespace Facepunch.Hidden
 		[Net] public DeploymentType Deployment { get; set; }
 		[Net] public TimeSince TimeSinceDroppedEntity { get; set; }
 		[Net] public ModelEntity PickupEntity { get; set; }
+		[Net] public Color RandomColor { get; set; }
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
@@ -41,7 +42,21 @@ namespace Facepunch.Hidden
 		{
 			if ( ConsoleSystem.Caller is Player player )
 			{
-				player.PlaySound( name );
+				var playerId = player.Client.PlayerId.ToString();
+
+				if ( name == "man_down" )
+					ChatBox.AddChatEntry( playerId, "Man down!" );
+				else if ( name == "subject_spotted" )
+					ChatBox.AddChatEntry( playerId, "Subject spotted!" );
+				else if ( name == "help" )
+					ChatBox.AddChatEntry( playerId, "Help!" );
+				else if ( name == "where_are_you" )
+					ChatBox.AddChatEntry( playerId, "Where are you..." );
+				else if ( name == "on_me" )
+					ChatBox.AddChatEntry( playerId, "On me!" );
+
+				Sound.FromScreen( To.Multiple( Game.Instance.GetTeamPlayers<IrisTeam>().Select( p => p.Client ) ), name );
+				Sound.FromWorld( To.Single( Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault() ), name, player.Position );
 			}
 		}
 
@@ -105,6 +120,8 @@ namespace Facepunch.Hidden
 
 			RemoveRagdollEntity();
 			DrawPlayer( true );
+
+			RandomColor = Color.Random.Lighten( 1f );
 
 			PickupEntityBody = null;
 			PickupEntity = null;
@@ -487,6 +504,9 @@ namespace Facepunch.Hidden
 
 				var start = attachment.Value.Position;
 				var end = trace.EndPosition;
+
+				LaserDot.LaserParticles.SetPosition( 2, RandomColor * 255f );
+				LaserDot.DotParticles.SetPosition( 2, RandomColor * 255f );
 
 				LaserDot.LaserParticles.SetPosition( 0, start );
 				LaserDot.LaserParticles.SetPosition( 1, end );
