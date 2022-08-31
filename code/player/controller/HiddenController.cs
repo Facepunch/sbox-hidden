@@ -12,6 +12,8 @@ namespace Facepunch.Hidden
 		public float LeapVelocity { get; set; } = 300f;
 		public float LeapStaminaLoss { get; set; } = 25f;
 
+		private float FallVelocity;
+
 		public override void AddJumpVelocity()
 		{
 			if ( Pawn is Player player && player.Stamina > 20f )
@@ -21,6 +23,8 @@ namespace Facepunch.Hidden
 				var actualLeapVelocity = minLeapVelocity + ( extraLeapVelocity / 100f) * player.Stamina;
 
 				Velocity += (Pawn.EyeRotation.Forward * actualLeapVelocity);
+
+				player.PlaySound( "hidden.leap" );
 
 				player.StaminaRegenTime = 1f;
 				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
@@ -65,6 +69,19 @@ namespace Facepunch.Hidden
 			}
 
 			base.Simulate();
+		}
+
+		public override void OnPreTickMove()
+		{
+			FallVelocity = Velocity.z;
+		}
+
+		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
+		{
+			if ( trace.Hit && FallVelocity < -200f )
+			{
+				Pawn.PlaySound( "soft.impact" );
+			}
 		}
 	}
 }

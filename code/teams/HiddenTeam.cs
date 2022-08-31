@@ -165,6 +165,7 @@ namespace Facepunch.Hidden
 				if ( trace.Hit )
 				{
 					controller.IsFrozen = true;
+					player.PlaySound( "hidden.stick" );
 				}
 			}
 		}

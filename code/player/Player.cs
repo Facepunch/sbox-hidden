@@ -121,7 +121,7 @@ namespace Facepunch.Hidden
 			RemoveRagdollEntity();
 			DrawPlayer( true );
 
-			RandomColor = Color.Random.Lighten( 1f );
+			RandomColor = Color.Random.Lighten( 1f ).Saturate( 2f );
 
 			PickupEntityBody = null;
 			PickupEntity = null;
@@ -447,7 +447,7 @@ namespace Facepunch.Hidden
 			{
 				PlaySound( "fall" );
 			}
-			else if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
+			else if ( info.Flags.HasFlag( DamageFlags.Bullet ) || info.Flags.HasFlag( DamageFlags.Blunt ) )
 			{
 				if ( !Team?.PlayPainSounds( this ) == false )
 				{

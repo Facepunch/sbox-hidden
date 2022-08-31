@@ -72,6 +72,10 @@ namespace Facepunch.Hidden
 					Pawn.TakeDamage( damageInfo );
 				}
 			}
+			else if ( trace.Hit && FallVelocity < -(FallDamageVelocity * 0.4f) )
+			{
+				Pawn.PlaySound( "soft.impact" );
+			}
 		}
 	}
 }

@@ -3,17 +3,17 @@
 	data = 
 	{
 		UI = false
-		Volume = 1
+		Volume = 0.4
 		VolumeRandom = 0
 		Pitch = 1
 		PitchRandom = 0
-		Decibels = 35
+		Decibels = 50
 		Sounds = 
 		[
-			resource:"sounds/player/grunt1.wav",
+			resource:"sounds/player/soft.impact.vsnd",
 		]
 		SelectionMode = "Random"
-		MaximumDistance = 309.98337
-		MinimumDistance = 15.499168
+		MaximumDistance = 599.31305
+		MinimumDistance = 29.965652
 	}
 }
