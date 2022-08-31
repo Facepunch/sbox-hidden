@@ -37,21 +37,28 @@ namespace Facepunch.Hidden
 
 		public override void AttackSecondary()
 		{
-			StartChargeAttack();
+			if ( Owner is Player player && player.Stamina > 20f )
+			{
+				player.StaminaRegenTime = 1f;
+				player.Stamina = Math.Max( player.Stamina - 80f, 0f );
+				player.PlaySound( "pigstick.whisper" );
+
+				StartChargeAttack();
+			}
 		}
 
 		public override void AttackPrimary()
 		{
 			ShootEffects();
-			PlaySound( "rust_boneknife.attack" );
+			PlaySound( "knife.swipe" );
 			MeleeStrike( Config.Damage, 1.5f );
 		}
 
 		public override void OnChargeAttackFinish()
 		{
 			ShootEffects();
-			PlaySound( "rust_boneknife.attack" );
-			MeleeStrike( Config.Damage * 3f, 1.5f );
+			PlaySound( "knife.swipe" );
+			MeleeStrike( Config.Damage * 3f, 2f );
 		}
 
 		protected override void OnMeleeStrikeHit( Entity entity, DamageInfo info )
