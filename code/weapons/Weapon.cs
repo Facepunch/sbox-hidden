@@ -377,6 +377,8 @@ namespace Facepunch.Hidden
 						damageInfo.Damage = damage;
 
 						trace.Entity.TakeDamage( damageInfo );
+
+						OnMeleeStrikeHit( trace.Entity, damageInfo );
 					}
 				}
 			}
@@ -488,6 +490,11 @@ namespace Facepunch.Hidden
 			{
 				Particles.Create( MuzzleFlashEffect, GetEffectEntity(), "muzzle" );
 			}
+		}
+
+		protected virtual void OnMeleeStrikeHit( Entity entity, DamageInfo info )
+		{
+
 		}
 
 		[ClientRpc]

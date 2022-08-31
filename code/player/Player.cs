@@ -9,9 +9,10 @@ namespace Facepunch.Hidden
 	{
 		[Net, Predicted] public TimeUntil StaminaRegenTime { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
-		[Net, Local] public SenseAbility Sense { get; set; }
-		[Net, Local] public ScreamAbility Scream { get; set; }
-		[Net, Local] public DeploymentType Deployment { get; set; }
+		[Net] public SenseAbility Sense { get; set; }
+		[Net] public ScreamAbility Scream { get; set; }
+		[Net] public DeploymentType Deployment { get; set; }
+		[Net] public TimeSince TimeSinceDroppedEntity { get; set; }
 		[Net] public ModelEntity PickupEntity { get; set; }
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }
@@ -26,6 +27,7 @@ namespace Facepunch.Hidden
 		private Particles StealthParticles;
 		private TimeUntil NextLonelyCheck;
 		private bool IsLonely;
+		private Sound? BodyDragSound;
 		private Sound? TiredSoundLoop;
 		private float TiredSoundVolume;
 		private Sound? HeartbeatLoop;
@@ -91,6 +93,9 @@ namespace Facepunch.Hidden
 			HeartbeatLoop?.Stop();
 			HeartbeatLoop = null;
 
+			BodyDragSound?.Stop();
+			BodyDragSound = null;
+
 			IsLonely = false;
 		}
 
@@ -118,6 +123,9 @@ namespace Facepunch.Hidden
 			DrawPlayer( false );
 
 			BecomeRagdollOnServer( LastDamageInfo.Force, GetHitboxBone( LastDamageInfo.HitboxIndex ) );
+
+			PickupEntityBody = null;
+			PickupEntity = null;
 
 			Inventory.DeleteContents();
 
@@ -341,6 +349,7 @@ namespace Facepunch.Hidden
 						if ( PickupEntity is PlayerCorpse && trace.Hit )
 						{
 							PickupEntityBody.Position = trace.EndPosition + trace.Direction * -8f;
+							PickupEntity.PlaySound( "body.stick" );
 							PickupEntity.Tags.Add( "stuck" );
 
 							PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PickupEntityBody, 8f );
@@ -354,7 +363,9 @@ namespace Facepunch.Hidden
 					}
 				}
 
+				TimeSinceDroppedEntity = 0f;
 				PickupEntityBody = null;
+				PickupEntity = null;
 			}
 		}
 
@@ -569,6 +580,19 @@ namespace Facepunch.Hidden
 					HeartbeatLoop = null;
 				}
 			}
+
+			if ( PickupEntity.IsValid() && PickupEntity is PlayerCorpse )
+			{
+				if ( !BodyDragSound.HasValue )
+				{
+					BodyDragSound = Sound.FromEntity( "body.drag", PickupEntity );
+				}
+			}
+			else if ( BodyDragSound.HasValue )
+			{
+				BodyDragSound.Value.Stop();
+				BodyDragSound = null;
+			}
 		}
 
 		protected override void OnDestroy()
@@ -579,6 +603,7 @@ namespace Facepunch.Hidden
 			StealthParticles?.Destroy( true );
 			TiredSoundLoop?.Stop();
 			HeartbeatLoop?.Stop();
+			BodyDragSound?.Stop();
 
 			if ( IsServer )
 			{

@@ -54,6 +54,21 @@ namespace Facepunch.Hidden
 			MeleeStrike( Config.Damage * 3f, 1.5f );
 		}
 
+		protected override void OnMeleeStrikeHit( Entity entity, DamageInfo info )
+		{
+			if ( entity is Player player )
+			{
+				if ( info.Damage > Config.Damage * 1.5f )
+					Sound.FromEntity( "pigstick.slash", player );
+				else
+					Sound.FromEntity( "slash", player );
+			}
+			else
+			{
+				Sound.FromWorld( "knife.slash", info.Position );
+			}
+		}
+
 		[Event.Frame]
 		protected virtual void OnFrame()
 		{
