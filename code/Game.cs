@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,15 +122,34 @@ namespace Facepunch.Hidden
 
 		public override bool CanHearPlayerVoice( Client source, Client dest )
 		{
+			if ( !source.IsValid() || !dest.IsValid() )
+				return false;
+
 			if ( !source.Pawn.IsValid() || !dest.Pawn.IsValid() )
+				return false;
+
+			// Don't play our own voice back to us.
+			if ( source == dest )
 				return false;
 
 			return source.Pawn.Position.Distance( dest.Pawn.Position ) <= VoiceRadius;
 		}
 
+		public override void Simulate( Client cl )
+		{
+			if ( Input.Down( InputButton.Voice ) )
+			{
+				// Show a voice list entry if we're holding down the voice button.
+				VoiceList.Current?.OnVoicePlayed( cl.PlayerId, 0.5f );
+			}
+
+			base.Simulate( cl );
+		}
+
 		public override void OnVoicePlayed( Client client )
 		{
 			client.VoiceStereo = false;
+
 			base.OnVoicePlayed( client );
 		}
 

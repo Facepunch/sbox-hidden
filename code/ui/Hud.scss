@@ -225,4 +225,15 @@ VoiceList {
 	position: absolute;
 	bottom: 300px;
 	right: 32px;
+
+	VoiceEntry {
+		background-color: transparent;
+		background-image: url( /ui/grayscale/ammo-gs.png );
+		background-size: cover;
+
+		.name {
+			font-family: Lexend;
+			color: #fff;
+		}
+	}
 }

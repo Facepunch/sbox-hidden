@@ -13,7 +13,6 @@ namespace Facepunch.Hidden
 	public partial class ViewModel : BaseViewModel
 	{
 		public ViewModelAimConfig AimConfig { get; set; }
-		public RealTimeUntil? AimHideTime { get; set; }
 		public bool IsAiming { get; set; }
 
 		private Vector3 PositionOffset { get; set; }
