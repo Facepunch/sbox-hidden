@@ -2,9 +2,18 @@
 {
 	data = 
 	{
-		sounds = 
+		UI = false
+		Volume = 1
+		VolumeRandom = 0
+		Pitch = 1
+		PitchRandom = 0
+		Decibels = 70
+		Sounds = 
 		[
-			"weapons/pistol-dryfire.wav",
+			resource:"sounds/pistol-dryfire.vsnd",
 		]
+		SelectionMode = "Random"
+		MaximumDistance = 1143.9335
+		MinimumDistance = 57.196674
 	}
 }
