@@ -63,6 +63,21 @@ namespace Facepunch.Hidden
 				else
 					Sound.FromEntity( "slash", player );
 			}
+			else if ( entity is PlayerCorpse corpse )
+			{
+				if ( corpse.NumberOfFeedsLeft > 0 )
+				{
+					if ( Owner is Player owner && owner.Health < 100f )
+					{
+						owner.Health = Math.Min( owner.Health + 15f, 100f );
+						Sound.FromEntity( "hidden.feed", owner );
+					}
+
+					corpse.NumberOfFeedsLeft--;
+				}
+
+				Sound.FromEntity( "slash", corpse );
+			}
 			else
 			{
 				Sound.FromWorld( "knife.slash", info.Position );

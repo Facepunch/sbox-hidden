@@ -4,6 +4,7 @@ namespace Facepunch.Hidden
 {
 	public class PlayerCorpse : ModelEntity
 	{
+		public int NumberOfFeedsLeft { get; set; } = 4;
 		public Player Player { get; set; }
 
 		public PlayerCorpse()

@@ -41,7 +41,7 @@ namespace Facepunch.Hidden
 				}
 				else if ( player.Team is HiddenTeam )
 				{
-					AddHint( InputButton.PrimaryAttack, "Slice" );
+					AddHint( InputButton.PrimaryAttack, "Slash or Feed on Corpse" );
 					AddHint( InputButton.SecondaryAttack, "Charge Instagib" );
 					UseHint = AddHint( InputButton.Use, "Grab, Throw, or Attach" );
 					RunHint = AddHint( InputButton.Run, "Leap" );
