@@ -107,12 +107,6 @@ namespace Facepunch.Hidden
 			Team?.OnPlayerKilled( this );
 		}
 
-		public override void FrameSimulate( Client client )
-		{
-			SimulateLaserDot( client );
-			base.FrameSimulate( client );
-		}
-
 		public override void Simulate( Client client )
 		{
 			Projectiles.Simulate();
@@ -434,6 +428,43 @@ namespace Facepunch.Hidden
 				return;
 
 			DamageIndicator.Current?.OnHit( position );
+		}
+
+		[Event.Frame]
+		protected virtual void OnFrame()
+		{
+			if ( ActiveChild is Weapon weapon && LaserDot.IsValid() && LifeState == LifeState.Alive )
+			{
+				var attachment = weapon.EffectEntity.GetAttachment( "lazer" );
+				if ( !attachment.HasValue ) return;
+
+				var position = EyePosition;
+				var rotation = EyeRotation;
+
+				if ( !LaserDot.IsAuthority )
+				{
+					position = attachment.Value.Position;
+					rotation = attachment.Value.Rotation;
+				}
+
+				var trace = Trace.Ray( position, position + rotation.Forward * 4096f )
+					.UseHitboxes()
+					.Radius( 2f )
+					.Ignore( weapon )
+					.Ignore( this )
+					.Run();
+
+				var start = attachment.Value.Position;
+				var end = trace.EndPosition;
+
+				LaserDot.LaserParticles.SetPosition( 0, start );
+				LaserDot.LaserParticles.SetPosition( 1, end );
+
+				if ( LaserDot.IsAuthority )
+				{
+					LaserDot.Position = end;
+				}
+			}
 		}
 
 		[Event.Tick.Client]

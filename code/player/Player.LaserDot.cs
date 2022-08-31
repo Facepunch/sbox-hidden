@@ -37,6 +37,17 @@ namespace Facepunch.Hidden
 					var position = IsServer ? EyePosition : Input.Position;
 					var rotation = IsServer ? EyeRotation : Input.Rotation;
 
+					if ( IsServer )
+					{
+						var attachment = weapon.GetAttachment( "lazer" );
+
+						if ( attachment.HasValue )
+						{
+							position = attachment.Value.Position;
+							rotation = attachment.Value.Rotation;
+						}
+					}
+
 					var trace = Trace.Ray( position, position + rotation.Forward * 4096f )
 						.UseHitboxes()
 						.Radius( 2f )
@@ -44,10 +55,7 @@ namespace Facepunch.Hidden
 						.Ignore( this )
 						.Run();
 
-					if ( trace.Hit )
-					{
-						LaserDot.Position = trace.EndPosition;
-					}
+					LaserDot.Position = trace.EndPosition;
 				}
 			}
 			else if ( IsServer )

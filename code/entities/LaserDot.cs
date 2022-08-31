@@ -4,7 +4,8 @@ namespace Facepunch.Hidden
 {
 	public partial class LaserDot : Entity
 	{
-		private Particles Particles;
+		public Particles LaserParticles { get; private set; }
+		public Particles DotParticles { get; private set; }
 
 		public LaserDot()
 		{
@@ -13,16 +14,18 @@ namespace Facepunch.Hidden
 
 			if ( IsClient )
 			{
-				Particles = Particles.Create( "particles/laserdot.vpcf" );
+				DotParticles = Particles.Create( "particles/laserdot.vpcf" );
+				DotParticles.SetEntity( 0, this, true );
 
-				if ( Particles != null )
-					Particles.SetEntity( 0, this, true );
+				LaserParticles = Particles.Create( "particles/laserline.vpcf" );
 			}
 		}
 
 		protected override void OnDestroy()
 		{
-			Particles?.Destroy( true );
+			DotParticles?.Destroy( true );
+			LaserParticles?.Destroy( true );
+
 			base.OnDestroy();
 		}
 	}
