@@ -174,7 +174,8 @@ namespace Facepunch.Hidden
 			{
 				return SprintSpeed;
 			}
-
+			if ( Input.Down( InputButton.Walk ) ) return WalkSpeed/2;
+			
 			return WalkSpeed;
 		}
 
