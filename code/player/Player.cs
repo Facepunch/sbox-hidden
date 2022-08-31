@@ -23,6 +23,8 @@ namespace Facepunch.Hidden
 		private PhysicsBody PickupEntityBody;
 		private Particles SenseParticles;
 		private Particles StealthParticles;
+		private Sound? TiredSoundLoop;
+		private float TiredSoundVolume;
 		private float WalkBob = 0;
 		private float Lean = 0;
 		private float FOV = 0;
@@ -241,7 +243,7 @@ namespace Facepunch.Hidden
 
 		public override float FootstepVolume()
 		{
-			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 200f ) * 0.3f;
+			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * 1f;
 		}
 
 		public override void PostCameraSetup( ref CameraSetup setup )
@@ -457,6 +459,25 @@ namespace Facepunch.Hidden
 				var color = Color.Lerp( Color.Red, Color.Green, (1f / 100f) * Health );
 				SenseParticles.SetPosition( 1, color * 255f );
 			}
+
+			if ( Stamina < 30 )
+			{
+				if ( !TiredSoundLoop.HasValue )
+				{
+					TiredSoundLoop = Sound.FromEntity( "sprint.tired", this );
+				}
+
+				TiredSoundVolume = TiredSoundVolume.LerpTo( 1f, Time.Delta * 3f );
+				TiredSoundLoop.Value.SetVolume( TiredSoundVolume );
+			}
+			else if ( TiredSoundLoop.HasValue )
+			{
+				TiredSoundVolume = TiredSoundVolume.LerpTo( 0f, Time.Delta * 2f );
+				TiredSoundLoop.Value.SetVolume( TiredSoundVolume );
+
+				if ( TiredSoundVolume <= 0f )
+					TiredSoundLoop = null;
+			}
 		}
 
 		protected override void OnDestroy()
@@ -465,6 +486,7 @@ namespace Facepunch.Hidden
 			RemoveRagdollEntity();
 
 			StealthParticles?.Destroy( true );
+			TiredSoundLoop?.Stop();
 
 			if ( IsServer )
 			{

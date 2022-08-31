@@ -7,8 +7,8 @@ namespace Facepunch.Hidden
 	{
 		[Net, Local, Predicted] public float FlashlightBattery { get; set; } = 100f;
 
-		private Flashlight _worldFlashlight;
-		private Flashlight _viewFlashlight;
+		private Flashlight WorldFlashlight;
+		private Flashlight ViewFlashlight;
 
 		public bool HasFlashlightEntity
 		{
@@ -16,10 +16,10 @@ namespace Facepunch.Hidden
 			{
 				if ( IsLocalPawn )
 				{
-					return (_viewFlashlight != null && _viewFlashlight.IsValid());
+					return (ViewFlashlight != null && ViewFlashlight.IsValid());
 				}
 
-				return (_worldFlashlight != null && _worldFlashlight.IsValid());
+				return (WorldFlashlight != null && WorldFlashlight.IsValid());
 			}
 		}
 
@@ -28,9 +28,9 @@ namespace Facepunch.Hidden
 			get
 			{
 				if ( IsLocalPawn )
-					return (HasFlashlightEntity && _viewFlashlight.Enabled);
+					return (HasFlashlightEntity && ViewFlashlight.Enabled);
 
-				return (HasFlashlightEntity && _worldFlashlight.Enabled);
+				return (HasFlashlightEntity && WorldFlashlight.Enabled);
 			}
 		}
 
@@ -44,9 +44,9 @@ namespace Facepunch.Hidden
 			if ( IsFlashlightOn )
 			{
 				if ( IsServer )
-					_worldFlashlight.Enabled = false;
+					WorldFlashlight.Enabled = false;
 				else
-					_viewFlashlight.Enabled = false;
+					ViewFlashlight.Enabled = false;
 			}
 
 			if ( IsServer && IsFlashlightOn != shouldShow )
@@ -61,18 +61,18 @@ namespace Facepunch.Hidden
 				{
 					if ( IsServer )
 					{
-						_worldFlashlight = new Flashlight();
-						_worldFlashlight.EnableHideInFirstPerson = true;
-						_worldFlashlight.LocalRotation = EyeRotation;
-						_worldFlashlight.SetParent( weapon, "muzzle" );
-						_worldFlashlight.LocalPosition = Vector3.Zero;
+						WorldFlashlight = new Flashlight();
+						WorldFlashlight.EnableHideInFirstPerson = true;
+						WorldFlashlight.LocalRotation = EyeRotation;
+						WorldFlashlight.SetParent( weapon, "muzzle" );
+						WorldFlashlight.LocalPosition = Vector3.Zero;
 					}
 					else
 					{
-						_viewFlashlight = new Flashlight();
-						_viewFlashlight.EnableViewmodelRendering = true;
-						_viewFlashlight.Rotation = EyeRotation;
-						_viewFlashlight.Position = EyePosition + EyeRotation.Forward * 10f;
+						ViewFlashlight = new Flashlight();
+						ViewFlashlight.EnableViewmodelRendering = true;
+						ViewFlashlight.Rotation = EyeRotation;
+						ViewFlashlight.Position = EyePosition + EyeRotation.Forward * 10f;
 					}
 				}
 				else
@@ -80,27 +80,27 @@ namespace Facepunch.Hidden
 					if ( IsServer )
 					{
 						// TODO: This is a weird hack to make sure the rotation is right.
-						_worldFlashlight.SetParent( null );
-						_worldFlashlight.LocalRotation = EyeRotation;
-						_worldFlashlight.SetParent( weapon, "muzzle" );
-						_worldFlashlight.LocalPosition = Vector3.Zero;
-						_worldFlashlight.Enabled = true;
+						WorldFlashlight.SetParent( null );
+						WorldFlashlight.LocalRotation = EyeRotation;
+						WorldFlashlight.SetParent( weapon, "muzzle" );
+						WorldFlashlight.LocalPosition = Vector3.Zero;
+						WorldFlashlight.Enabled = true;
 					}
 					else
 					{
-						_viewFlashlight.Enabled = true;
+						ViewFlashlight.Enabled = true;
 					}
 				}
 
 				if ( IsServer )
 				{
-					_worldFlashlight.UpdateFromBattery( FlashlightBattery );
-					_worldFlashlight.Reset();
+					WorldFlashlight.UpdateFromBattery( FlashlightBattery );
+					WorldFlashlight.Reset();
 				}
 				else
 				{
-					_viewFlashlight.UpdateFromBattery( FlashlightBattery );
-					_viewFlashlight.Reset();
+					ViewFlashlight.UpdateFromBattery( FlashlightBattery );
+					ViewFlashlight.Reset();
 				}
 
 				if ( IsServer && playSounds )
@@ -134,34 +134,34 @@ namespace Facepunch.Hidden
 				{
 					if ( IsServer )
 					{
-						var shouldTurnOff = _worldFlashlight.UpdateFromBattery( FlashlightBattery );
+						var shouldTurnOff = WorldFlashlight.UpdateFromBattery( FlashlightBattery );
 
 						if ( shouldTurnOff )
 							ShowFlashlight( false, false );
 					}
 					else
 					{
-						var viewFlashlightParent = _viewFlashlight.Parent;
+						var viewFlashlightParent = ViewFlashlight.Parent;
 
 						if ( ActiveChild is Weapon weapon && weapon.ViewModelEntity != null )
 						{
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
-								_viewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
-								_viewFlashlight.Rotation = EyeRotation;
-								_viewFlashlight.LocalPosition = Vector3.Zero;
+								ViewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
+								ViewFlashlight.Rotation = EyeRotation;
+								ViewFlashlight.LocalPosition = Vector3.Zero;
 							}
 						}
 						else
 						{
 							if ( viewFlashlightParent != null )
-								_viewFlashlight.SetParent( null );
+								ViewFlashlight.SetParent( null );
 
-							_viewFlashlight.Rotation = EyeRotation;
-							_viewFlashlight.Position = EyePosition + EyeRotation.Forward * 80f;
+							ViewFlashlight.Rotation = EyeRotation;
+							ViewFlashlight.Position = EyePosition + EyeRotation.Forward * 80f;
 						}
 
-						var shouldTurnOff = _viewFlashlight.UpdateFromBattery( FlashlightBattery );
+						var shouldTurnOff = ViewFlashlight.UpdateFromBattery( FlashlightBattery );
 
 						if ( shouldTurnOff )
 							ShowFlashlight( false, false );

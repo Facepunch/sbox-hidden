@@ -19,10 +19,10 @@ namespace Facepunch.Hidden
 		private Angles RotationOffset { get; set; }
 
 		private float SwingInfluence => 0.05f;
-		private float ReturnSpeed => 5.0f;
-		private float MaxOffsetLength => 10.0f;
-		private float BobCycleTime => 7;
-		private Vector3 BobDirection => new Vector3( 0.0f, 1.0f, 0.5f );
+		private float ReturnSpeed => 5f;
+		private float MaxOffsetLength => 10f;
+		private float BobCycleTime => 7f;
+		private Vector3 BobDirection => new Vector3( 0.0f, 0.5f, 0.25f );
 
 		private Vector3 SwingOffset { get; set; }
 		private float LastPitch { get; set; }
