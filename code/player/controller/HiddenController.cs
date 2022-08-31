@@ -85,6 +85,8 @@ namespace Facepunch.Hidden
 			{
 				if ( Input.Released( InputButton.Run ) || player.Stamina <= 5 )
 				{
+					player.TimeSinceLastLeap = 0f;
+
 					BaseVelocity = Vector3.Zero;
 					WishVelocity = Vector3.Zero;
 					Velocity = (Input.Rotation.Forward * LeapVelocity * 2f);
