@@ -106,6 +106,11 @@ namespace Facepunch.Hidden
 			AnimationOwner?.SetAnimParameter( "b_reload", true );
 		}
 
+		public virtual bool ShouldShowLaserDot()
+		{
+			return !IsReloading && TimeSinceDeployed > 1f;
+		}
+
 		public virtual void OnMeleeAttack()
 		{
 			ViewModelEntity?.SetAnimParameter( "melee", true );
@@ -176,20 +181,35 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client owner )
 		{
-			if ( owner.Pawn is Player )
+			if ( HasLaserDot && Owner is Player player )
 			{
-				if ( owner.Pawn.LifeState == LifeState.Alive )
+				if ( ShouldShowLaserDot() )
 				{
-					if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
+					if ( IsServer && !player.LaserDot.IsValid() )
 					{
-						OnChargeAttackFinish();
-						ChargeAttackEndTime = 0f;
+						using ( Prediction.Off() )
+						{
+							player.CreateLaserDot();
+						}
 					}
 				}
 				else
 				{
+					player.DestroyLaserDot();
+				}
+			}
+
+			if ( owner.Pawn.LifeState == LifeState.Alive )
+			{
+				if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
+				{
+					OnChargeAttackFinish();
 					ChargeAttackEndTime = 0f;
 				}
+			}
+			else
+			{
+				ChargeAttackEndTime = 0f;
 			}
 
 			if ( Input.Down( InputButton.Zoom ) )

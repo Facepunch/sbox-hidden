@@ -252,6 +252,11 @@ namespace Facepunch.Hidden
 
 		public override void OnActiveChildChanged( Entity from, Entity to )
 		{
+			if ( from is Weapon && LaserDot.IsValid() )
+			{
+				DestroyLaserDot();
+			}
+
 			if ( to is Weapon && HasFlashlightEntity )
 			{
 				ShowFlashlight( false );
@@ -492,7 +497,7 @@ namespace Facepunch.Hidden
 				var position = EyePosition;
 				var rotation = EyeRotation;
 
-				if ( !LaserDot.IsAuthority )
+				if ( !LaserDot.IsAuthority || weapon.IsReloading )
 				{
 					position = attachment.Value.Position;
 					rotation = attachment.Value.Rotation;

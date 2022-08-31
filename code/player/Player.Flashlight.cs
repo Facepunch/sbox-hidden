@@ -50,7 +50,9 @@ namespace Facepunch.Hidden
 			}
 
 			if ( IsServer && IsFlashlightOn != shouldShow )
+			{
 				ShowFlashlightLocal( To.Single( this ), shouldShow );
+			}
 
 			if ( ActiveChild is not Weapon weapon || !weapon.HasFlashlight )
 				return;
@@ -79,7 +81,6 @@ namespace Facepunch.Hidden
 				{
 					if ( IsServer )
 					{
-						// TODO: This is a weird hack to make sure the rotation is right.
 						WorldFlashlight.SetParent( null );
 						WorldFlashlight.LocalRotation = EyeRotation;
 						WorldFlashlight.SetParent( weapon, "muzzle" );

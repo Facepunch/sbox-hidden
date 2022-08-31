@@ -4,22 +4,34 @@ namespace Facepunch.Hidden
 {
 	public partial class Player
 	{
-		[Net] private LaserDot LaserDot { get; set; }
+		[Net] public LaserDot LaserDot { get; private set; }
 
-		private void CreateLaserDot()
+		public void CreateLaserDot()
 		{
+			if ( !IsServer ) return;
+
 			DestroyLaserDot();
 
 			LaserDot = new LaserDot();
 			LaserDot.Owner = this;
+
+			PlaySound( "laser.on" );
 		}
 
-		private void DestroyLaserDot()
+		public void DestroyLaserDot()
 		{
 			if ( LaserDot != null )
 			{
-				LaserDot.Delete();
-				LaserDot = null;
+				if ( IsServer )
+				{
+					LaserDot.Delete();
+					LaserDot = null;
+				}
+				else
+				{
+					LaserDot.LaserParticles.Destroy( true );
+					LaserDot.DotParticles.Destroy( true );
+				}
 			}
 		}
 
@@ -27,11 +39,6 @@ namespace Facepunch.Hidden
 		{
 			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
 			{
-				if ( IsServer && LaserDot == null )
-				{
-					CreateLaserDot();
-				}
-
 				if ( LaserDot.IsValid() )
 				{
 					var position = IsServer ? EyePosition : Input.Position;
