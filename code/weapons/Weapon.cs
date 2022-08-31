@@ -382,6 +382,17 @@ namespace Facepunch.Hidden
 				if ( !IsValidMeleeTarget( trace.Entity ) )
 					continue;
 
+				if ( string.IsNullOrEmpty( ImpactEffect ) )
+				{
+					trace.Surface.DoBulletImpact( trace );
+				}
+
+				if ( !string.IsNullOrEmpty( ImpactEffect ) )
+				{
+					var impact = Particles.Create( ImpactEffect, trace.EndPosition );
+					impact?.SetForward( 0, trace.Normal );
+				}
+
 				if ( IsServer )
 				{
 					using ( Prediction.Off() )
