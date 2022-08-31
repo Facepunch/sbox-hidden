@@ -12,7 +12,7 @@ namespace Facepunch.Hidden
 		public override AmmoType AmmoType => AmmoType.Shotgun;
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 16;
+		public override int Damage => 20;
 	}
 
 	[Library( "hdn_shotgun" )]
@@ -63,7 +63,7 @@ namespace Facepunch.Hidden
 
 			for ( int i = 0; i < 8; i++ )
 			{
-				ShootBullet( 0.15f, 0.3f, Config.Damage, 3.0f );
+				ShootBullet( 0.3f, 0.7f, Config.Damage, 3.0f );
 			}
 
 			PlayAttackAnimation();
