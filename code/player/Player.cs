@@ -7,6 +7,7 @@ namespace Facepunch.Hidden
 {
 	public partial class Player : Sandbox.Player
 	{
+		[Net, Predicted] public RealTimeUntil StaminaRegenTime { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
 		[Net, Local] public SenseAbility Sense { get; set; }
 		[Net, Local] public ScreamAbility Scream { get; set; }
@@ -23,8 +24,12 @@ namespace Facepunch.Hidden
 		private PhysicsBody PickupEntityBody;
 		private Particles SenseParticles;
 		private Particles StealthParticles;
+		private TimeUntil NextLonelyCheck;
+		private bool IsLonely;
 		private Sound? TiredSoundLoop;
 		private float TiredSoundVolume;
+		private Sound? HeartbeatLoop;
+		private float HeartbeatVolume;
 		private float WalkBob = 0;
 		private float Lean = 0;
 		private float FOV = 0;
@@ -77,6 +82,18 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		[ClientRpc]
+		public virtual void OnClientKilled()
+		{
+			TiredSoundLoop?.Stop();
+			TiredSoundLoop = null;
+
+			HeartbeatLoop?.Stop();
+			HeartbeatLoop = null;
+
+			IsLonely = false;
+		}
+
 		public override void Respawn()
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
@@ -105,6 +122,8 @@ namespace Facepunch.Hidden
 			Inventory.DeleteContents();
 
 			Team?.OnPlayerKilled( this );
+
+			OnClientKilled();
 		}
 
 		public override void Simulate( Client client )
@@ -237,7 +256,8 @@ namespace Facepunch.Hidden
 
 		public override float FootstepVolume()
 		{
-			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * 1f;
+			var scale = Team is HiddenTeam ? 0.5f : 1f;
+			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * scale;
 		}
 
 		public override void PostCameraSetup( ref CameraSetup setup )
@@ -435,7 +455,7 @@ namespace Facepunch.Hidden
 		{
 			if ( ActiveChild is Weapon weapon && LaserDot.IsValid() && LifeState == LifeState.Alive )
 			{
-				var attachment = weapon.EffectEntity.GetAttachment( "lazer" );
+				var attachment = weapon.EffectEntity.GetAttachment( "laser" );
 				if ( !attachment.HasValue ) return;
 
 				var position = EyePosition;
@@ -495,7 +515,7 @@ namespace Facepunch.Hidden
 			{
 				if ( !TiredSoundLoop.HasValue )
 				{
-					TiredSoundLoop = Sound.FromEntity( "sprint.tired", this );
+					TiredSoundLoop = Sound.FromEntity( Team is HiddenTeam ? "sprint.tired.hidden" : "sprint.tired", this );
 				}
 
 				TiredSoundVolume = TiredSoundVolume.LerpTo( 1f, Time.Delta * 3f );
@@ -506,8 +526,48 @@ namespace Facepunch.Hidden
 				TiredSoundVolume = TiredSoundVolume.LerpTo( 0f, Time.Delta * 2f );
 				TiredSoundLoop.Value.SetVolume( TiredSoundVolume );
 
-				if ( TiredSoundVolume <= 0f )
+				if ( TiredSoundVolume.AlmostEqual( 0f ) )
+				{
+					TiredSoundLoop.Value.Stop();
 					TiredSoundLoop = null;
+				}
+			}
+
+			if ( Team is IrisTeam && NextLonelyCheck )
+			{
+				var otherPlayersNearby = FindInSphere( Position, 4096f )
+					.OfType<Player>()
+					.Where( p => p.Team is IrisTeam && p != this )
+					.Count();
+
+				NextLonelyCheck = 1f;
+				IsLonely = otherPlayersNearby == 0;
+			}
+			else
+			{
+				IsLonely = false;
+			}
+
+			if ( IsLonely )
+			{
+				if ( !HeartbeatLoop.HasValue )
+				{
+					HeartbeatLoop = Sound.FromEntity( "heartbeat.loop", this );
+				}
+
+				HeartbeatVolume = HeartbeatVolume.LerpTo( 1f, Time.Delta * 3f );
+				HeartbeatLoop.Value.SetVolume( HeartbeatVolume );
+			}
+			else if ( HeartbeatLoop.HasValue )
+			{
+				HeartbeatVolume = HeartbeatVolume.LerpTo( 0f, Time.Delta * 2f );
+				HeartbeatLoop.Value.SetVolume( HeartbeatVolume );
+
+				if ( HeartbeatVolume.AlmostEqual( 0f ) )
+				{
+					HeartbeatLoop.Value.Stop();
+					HeartbeatLoop = null;
+				}
 			}
 		}
 
@@ -518,6 +578,7 @@ namespace Facepunch.Hidden
 
 			StealthParticles?.Destroy( true );
 			TiredSoundLoop?.Stop();
+			HeartbeatLoop?.Stop();
 
 			if ( IsServer )
 			{

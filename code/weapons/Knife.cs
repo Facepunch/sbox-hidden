@@ -33,7 +33,6 @@ namespace Facepunch.Hidden
 		{
 			base.Spawn();
 			SetModel( "models/knife/w_knife.vmdl" );
-			EnableDrawing = false;
 		}
 
 		public override void AttackSecondary()
@@ -53,6 +52,12 @@ namespace Facepunch.Hidden
 			ShootEffects();
 			PlaySound( "rust_boneknife.attack" );
 			MeleeStrike( Config.Damage * 3f, 1.5f );
+		}
+
+		[Event.Frame]
+		protected virtual void OnFrame()
+		{
+			EnableDrawing = false;
 		}
 	}
 }

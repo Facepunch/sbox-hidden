@@ -34,9 +34,14 @@ namespace Facepunch.Hidden
 				}
 
 				if ( Input.Down( InputButton.Run ) && Velocity.Length >= SprintSpeed * 0.8f )
+				{
+					player.StaminaRegenTime = 1f;
 					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
-				else
+				}
+				else if ( player.StaminaRegenTime )
+				{
 					player.Stamina = MathF.Min( player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
+				}
 
 				SprintSpeed = MaxWalkSpeed + (((MaxSprintSpeed - MaxWalkSpeed) / 100f) * player.Stamina) + 40f;
 				WalkSpeed = MaxWalkSpeed;

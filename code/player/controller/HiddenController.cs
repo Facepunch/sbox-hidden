@@ -10,11 +10,11 @@ namespace Facepunch.Hidden
 		public override float SprintSpeed { get; set; } = 380f;
 
 		public float LeapVelocity { get; set; } = 300f;
-		public float LeapStaminaLoss { get; set; } = 40f;
+		public float LeapStaminaLoss { get; set; } = 25f;
 
 		public override void AddJumpVelocity()
 		{
-			if ( Pawn is Player player )
+			if ( Pawn is Player player && player.Stamina > 20f )
 			{
 				var minLeapVelocity = (LeapVelocity * 0.2f);
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
@@ -22,6 +22,7 @@ namespace Facepunch.Hidden
 
 				Velocity += (Pawn.EyeRotation.Forward * actualLeapVelocity);
 
+				player.StaminaRegenTime = 1f;
 				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
 			}
 
@@ -58,7 +59,7 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			if ( Pawn is Player player )
+			if ( Pawn is Player player && player.StaminaRegenTime )
 			{
 				player.Stamina = MathF.Min( player.Stamina + (10f * Time.Delta), 100f );
 			}
