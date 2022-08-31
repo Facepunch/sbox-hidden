@@ -31,8 +31,8 @@ namespace Facepunch.Hidden
 		private Sound? BodyDragSound;
 		private Sound? TiredSoundLoop;
 		private float TiredSoundVolume;
-		private Sound? HeartbeatLoop;
-		private float HeartbeatVolume;
+		private Sound? LonelyLoopSound;
+		private float LonelySoundVolume;
 		private float WalkBob = 0;
 		private float Lean = 0;
 		private float FOV = 0;
@@ -103,15 +103,14 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		public virtual void OnClientKilled()
 		{
-			TiredSoundLoop?.Stop();
-			TiredSoundLoop = null;
+			KillAllSoundLoops();
+			IsLonely = false;
+		}
 
-			HeartbeatLoop?.Stop();
-			HeartbeatLoop = null;
-
-			BodyDragSound?.Stop();
-			BodyDragSound = null;
-
+		[ClientRpc]
+		public virtual void ClientRespawn()
+		{
+			KillAllSoundLoops();
 			IsLonely = false;
 		}
 
@@ -130,6 +129,8 @@ namespace Facepunch.Hidden
 			Stamina = 100f;
 
 			InputHints.UpdateOnClient( To.Single( this ) );
+
+			ClientRespawn();
 
 			base.Respawn();
 		}
@@ -286,8 +287,11 @@ namespace Facepunch.Hidden
 
 			trace.Surface.DoFootstep( this, trace, foot, volume );
 
-			var sound = PlaySound( "add.walking" );
-			sound.SetVolume( volume * 0.3f );
+			if ( Team is IrisTeam )
+			{
+				var sound = PlaySound( "add.walking" );
+				sound.SetVolume( volume * 0.3f );
+			}
 		}
 
 		public override float FootstepVolume()
@@ -575,17 +579,21 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Team is IrisTeam )
+			if ( LifeState == LifeState.Alive )
 			{
 				if ( NextLonelyCheck )
 				{
-					var otherPlayersNearby = FindInSphere( Position, 4096f )
+					var otherPlayersNearby = FindInSphere( Position, 1500f )
 						.OfType<Player>()
-						.Where( p => p.Team is IrisTeam && p != this )
-						.Count();
+						.Where( p => p != this );
+
+					if ( Team is IrisTeam )
+					{
+						otherPlayersNearby = otherPlayersNearby.Where( p => p.Team == Team );
+					}
 
 					NextLonelyCheck = 1f;
-					IsLonely = otherPlayersNearby == 0;
+					IsLonely = !otherPlayersNearby.Any();
 				}
 			}
 			else
@@ -595,23 +603,23 @@ namespace Facepunch.Hidden
 
 			if ( IsLonely )
 			{
-				if ( !HeartbeatLoop.HasValue )
+				if ( !LonelyLoopSound.HasValue )
 				{
-					HeartbeatLoop = Sound.FromEntity( "heartbeat.loop", this );
+					LonelyLoopSound = Sound.FromEntity( Team is HiddenTeam ? "hidden.whispers" : "heartbeat.loop", this );
 				}
 
-				HeartbeatVolume = HeartbeatVolume.LerpTo( 1f, Time.Delta * 3f );
-				HeartbeatLoop.Value.SetVolume( HeartbeatVolume );
+				LonelySoundVolume = LonelySoundVolume.LerpTo( 1f, Time.Delta * 3f );
+				LonelyLoopSound.Value.SetVolume( LonelySoundVolume );
 			}
-			else if ( HeartbeatLoop.HasValue )
+			else if ( LonelyLoopSound.HasValue )
 			{
-				HeartbeatVolume = HeartbeatVolume.LerpTo( 0f, Time.Delta * 2f );
-				HeartbeatLoop.Value.SetVolume( HeartbeatVolume );
+				LonelySoundVolume = LonelySoundVolume.LerpTo( 0f, Time.Delta * 2f );
+				LonelyLoopSound.Value.SetVolume( LonelySoundVolume );
 
-				if ( HeartbeatVolume.AlmostEqual( 0f ) )
+				if ( LonelySoundVolume.AlmostEqual( 0f ) )
 				{
-					HeartbeatLoop.Value.Stop();
-					HeartbeatLoop = null;
+					LonelyLoopSound.Value.Stop();
+					LonelyLoopSound = null;
 				}
 			}
 
@@ -629,15 +637,26 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		protected virtual void KillAllSoundLoops()
+		{
+			TiredSoundLoop?.Stop();
+			TiredSoundLoop = null;
+
+			LonelyLoopSound?.Stop();
+			LonelyLoopSound = null;
+
+			BodyDragSound?.Stop();
+			BodyDragSound = null;
+		}
+
 		protected override void OnDestroy()
 		{
 			ShowSenseParticles( false );
 			RemoveRagdollEntity();
 
 			StealthParticles?.Destroy( true );
-			TiredSoundLoop?.Stop();
-			HeartbeatLoop?.Stop();
-			BodyDragSound?.Stop();
+
+			KillAllSoundLoops();
 
 			if ( IsServer )
 			{

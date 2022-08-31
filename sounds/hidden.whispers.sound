@@ -3,17 +3,17 @@
 	data = 
 	{
 		UI = false
-		Volume = 0.15
+		Volume = 0.1
 		VolumeRandom = 0
 		Pitch = 1
 		PitchRandom = 0
-		Decibels = 20
+		Decibels = 25
 		Sounds = 
 		[
-			resource:"sounds/heartbeat.loop.vsnd",
+			resource:"sounds/hidden.whispers.vsnd",
 		]
 		SelectionMode = "Random"
-		MaximumDistance = 122.77009
-		MinimumDistance = 6.138505
+		MaximumDistance = 173.82826
+		MinimumDistance = 8.691413
 	}
 }
