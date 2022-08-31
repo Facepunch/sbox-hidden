@@ -4,7 +4,7 @@ namespace Facepunch.Hidden
 {
 	public partial class ScreamAbility : BaseAbility
 	{
-		public override float Cooldown => 10;
+		public override float Cooldown => 4;
 		public override string Name => "Scream";
 
 		private string[] ScreamSounds = new string[]
