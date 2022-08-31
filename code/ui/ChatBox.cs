@@ -91,8 +91,19 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		private bool CanTalkInChat()
+		{
+			if ( !Local.Pawn.IsValid() || Local.Pawn.LifeState == LifeState.Dead )
+				return false;
+
+			return true;
+		}
+
 		private void Open()
 		{
+			if ( !CanTalkInChat() )
+				return;
+
 			AddClass( "open" );
 			Input.Focus();
 		}
@@ -109,6 +120,9 @@ namespace Facepunch.Hidden
 
 			var msg = Input.Text.Trim();
 			Input.Text = "";
+
+			if ( !CanTalkInChat() )
+				return;
 
 			if ( string.IsNullOrWhiteSpace( msg ) )
 				return;

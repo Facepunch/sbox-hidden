@@ -28,6 +28,9 @@ namespace Facepunch.Hidden
 		[ConVar.Server( "hdn_friendly_fire", Help = "Whether or not friendly fire is enabled." )]
 		public static bool FriendlyFire { get; set; } = true;
 
+		[ConVar.Server( "hdn_scale_hidden_damage", Help = "Scale the damage taken by the Hidden." )]
+		public static float ScaleHiddenDamage { get; set; } = 0.5f;
+
 		[ConVar.Replicated( "hdn_sense", Help = "Whether or not The Hidden can use their Sense ability." )]
 		public static bool CanUseSense { get; set; } = true;
 
@@ -128,6 +131,9 @@ namespace Facepunch.Hidden
 			if ( !source.Pawn.IsValid() || !dest.Pawn.IsValid() )
 				return false;
 
+			if ( source.Pawn.LifeState == LifeState.Dead )
+				return false;
+
 			// Don't play our own voice back to us.
 			if ( source == dest )
 				return false;
@@ -137,7 +143,7 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client cl )
 		{
-			if ( Input.Down( InputButton.Voice ) )
+			if ( cl.Pawn.IsValid() && Input.Down( InputButton.Voice ) && cl.Pawn.LifeState == LifeState.Alive )
 			{
 				// Show a voice list entry if we're holding down the voice button.
 				VoiceList.Current?.OnVoicePlayed( cl.PlayerId, 0.5f );

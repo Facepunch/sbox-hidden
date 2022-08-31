@@ -48,6 +48,14 @@
         "ConVarName": "hdn_charge_attack",
         "DisplayName": "Charge Attack",
         "DefaultValue": "true"
+      },
+      "hdn_scale_hidden_damage": {
+        "DisplayType": "Float",
+        "Choices": [],
+        "ConVarName": "hdn_scale_hidden_damage",
+        "DisplayName": "Scale Hidden Damage",
+        "DefaultValue": "0.5",
+        "Maximum": 1
       }
     },
     "Physics": {

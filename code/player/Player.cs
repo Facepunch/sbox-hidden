@@ -8,6 +8,7 @@ namespace Facepunch.Hidden
 	public partial class Player : Sandbox.Player
 	{
 		[Net, Predicted] public TimeUntil StaminaRegenTime { get; set; }
+		[Net, Predicted] public TimeSince TimeSinceLastLeap { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
 		[Net] public SenseAbility Sense { get; set; }
 		[Net] public ScreamAbility Scream { get; set; }
@@ -181,8 +182,10 @@ namespace Facepunch.Hidden
 			{
 				using ( Prediction.Off() )
 				{
-					TickPickupRagdollOrProp();
-					SimulateLaserDot( client );
+					if ( Team is HiddenTeam )
+						TickPickupRagdollOrProp();
+					else
+						SimulateLaserDot( client );
 				}
 			}
 
@@ -442,6 +445,11 @@ namespace Facepunch.Hidden
 				info.Damage *= 2.0f;
 			}
 
+			if ( Team is HiddenTeam )
+			{
+				info.Damage *= Game.ScaleHiddenDamage;
+			}
+
 			if ( info.Attacker is Player attacker && attacker != this )
 			{
 				if ( !Game.FriendlyFire && attacker.Team == Team )
@@ -657,11 +665,7 @@ namespace Facepunch.Hidden
 			StealthParticles?.Destroy( true );
 
 			KillAllSoundLoops();
-
-			if ( IsServer )
-			{
-				DestroyLaserDot();
-			}
+			DestroyLaserDot();
 
 			base.OnDestroy();
 		}

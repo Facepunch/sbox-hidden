@@ -12,7 +12,7 @@ namespace Facepunch.Hidden
 		public override string Icon => "ui/weapons/knife.png";
 		public override WeaponType Type => WeaponType.Hitscan;
 		public override int Ammo => 0;
-		public override int Damage => 35;
+		public override int Damage => 40;
 	}
 
 	[Library( "hdn_knife" )]

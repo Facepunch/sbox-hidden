@@ -120,7 +120,7 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
 			}
 
-			if ( player.CameraMode is SpectateCamera camera )
+			if ( player.CameraMode is SpectateCamera && !isHiddenTeam )
 			{
 				ImmersionPostProcessing.Saturate.Amount = 0f;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.05f;

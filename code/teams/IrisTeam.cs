@@ -16,21 +16,21 @@ namespace Facepunch.Hidden
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
-			player.Inventory.Add( new Pistol(), true );
+			player.Inventory.Add( new Pistol() { Slot = 2 }, true );
 
 			if ( player.Deployment == DeploymentType.IRIS_ASSAULT )
 			{
-				player.Inventory.Add( new SMG(), true );
+				player.Inventory.Add( new SMG() { Slot = 1 }, true );
 				player.GiveAmmo( AmmoType.SMG, 90 );
 			}
 			else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
 			{
-				player.Inventory.Add( new Rifle(), true );
+				player.Inventory.Add( new Rifle() { Slot = 1 }, true );
 				player.GiveAmmo( AmmoType.Rifle, 50 );
 			}
 			else
 			{
-				player.Inventory.Add( new Shotgun(), true );
+				player.Inventory.Add( new Shotgun() { Slot = 1 }, true );
 				player.GiveAmmo( AmmoType.Shotgun, 24 );
 			}
 		}

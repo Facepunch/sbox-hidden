@@ -7,30 +7,59 @@ namespace Facepunch.Hidden
 	{
 		[Net, Predicted] public bool IsFrozen { get; set; }
 
-		public override float SprintSpeed { get; set; } = 380f;
+		public override bool EnableSprinting => false;
+		public override float WalkSpeed { get; set; } = 380f;
 
 		public float LeapVelocity { get; set; } = 300f;
 		public float LeapStaminaLoss { get; set; } = 25f;
 
 		private float FallVelocity;
 
-		public override void AddJumpVelocity()
+		public virtual void CheckLeapButton()
 		{
+			if ( Swimming )
+			{
+				ClearGroundEntity();
+				Velocity = Velocity.WithZ( 100f );
+				return;
+			}
+
+			if ( GroundEntity == null )
+				return;
+
+			ClearGroundEntity();
+
+			var flGroundFactor = 1f;
+			var flMul = 268.3281572999747f * 1.2f;
+			var startZ = Velocity.z;
+
+			Velocity = Velocity.WithZ( startZ + flMul * flGroundFactor );
+			Velocity -= new Vector3( 0f, 0f, Gravity * 0.5f ) * Time.Delta;
+
 			if ( Pawn is Player player && player.Stamina > 20f )
 			{
 				var minLeapVelocity = (LeapVelocity * 0.2f);
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
-				var actualLeapVelocity = minLeapVelocity + ( extraLeapVelocity / 100f) * player.Stamina;
+				var actualLeapVelocity = minLeapVelocity + (extraLeapVelocity / 100f) * player.Stamina;
 
-				Velocity += (Pawn.EyeRotation.Forward * actualLeapVelocity);
+				Velocity += (Input.Rotation.Forward * actualLeapVelocity);
 
 				player.PlaySound( "hidden.leap" );
 
+				player.TimeSinceLastLeap = 0f;
 				player.StaminaRegenTime = 1f;
 				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
 			}
 
-			base.AddJumpVelocity();
+			AddEvent( "jump" );
+		}
+
+		public override void HandleJumping()
+		{
+			if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
+				CheckJumpButton();
+			else if ( Input.Pressed( InputButton.Run ) )
+				CheckLeapButton();
 		}
 
 		public override float GetWishSpeed()
@@ -50,9 +79,11 @@ namespace Facepunch.Hidden
 
 		public override void Simulate()
 		{
+			if ( Pawn is not Player player ) return;
+
 			if ( IsFrozen )
 			{
-				if ( Input.Pressed( InputButton.Jump ) )
+				if ( Input.Released( InputButton.Run ) || player.Stamina <= 5 )
 				{
 					BaseVelocity = Vector3.Zero;
 					WishVelocity = Vector3.Zero;
@@ -60,10 +91,12 @@ namespace Facepunch.Hidden
 					IsFrozen = false;
 				}
 
+				player.Stamina = MathF.Max( player.Stamina - (5f * Time.Delta), 0f );
+
 				return;
 			}
 
-			if ( Pawn is Player player && player.StaminaRegenTime )
+			if ( player.StaminaRegenTime )
 			{
 				player.Stamina = MathF.Min( player.Stamina + (10f * Time.Delta), 100f );
 			}

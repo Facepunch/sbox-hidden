@@ -125,7 +125,7 @@ namespace Facepunch.Hidden
 					}
 				}
 
-				NextLightFlicker = Sandbox.Time.Now + Rand.Float( 2f, 5f );
+				NextLightFlicker = Time.Now + Rand.Float( 2f, 5f );
 			}
 		}
 
@@ -147,9 +147,12 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Input.Pressed( InputButton.Use ) && !player.PickupEntity.IsValid() && player.TimeSinceDroppedEntity > 0.5f )
+			if ( Input.Down( InputButton.Run ) && !player.PickupEntity.IsValid() && player.TimeSinceDroppedEntity > 0.5f )
 			{
 				if ( player.Controller is not HiddenController controller )
+					return;
+
+				if ( player.TimeSinceLastLeap > 3f )
 					return;
 
 				if ( controller.IsFrozen )

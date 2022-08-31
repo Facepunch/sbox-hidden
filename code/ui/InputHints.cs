@@ -8,6 +8,7 @@ namespace Facepunch.Hidden
 		public static InputHints Current { get; private set; }
 
 		public InputHint UseHint { get; private set; }
+		public InputHint RunHint { get; private set; }
 		public Panel Container { get; private set; }
 
 		[ClientRpc]
@@ -29,6 +30,7 @@ namespace Facepunch.Hidden
 		{
 			Container.DeleteChildren( true );
 
+			RunHint = null;
 			UseHint = null;
 
 			if ( Local.Pawn is Player player )
@@ -40,14 +42,16 @@ namespace Facepunch.Hidden
 				else if ( player.Team is HiddenTeam )
 				{
 					AddHint( InputButton.PrimaryAttack, "Slice" );
-					AddHint( InputButton.SecondaryAttack, "Charge Stab" );
+					AddHint( InputButton.SecondaryAttack, "Charge Instagib" );
 					UseHint = AddHint( InputButton.Use, "Grab, Throw, or Attach" );
-					AddHint( InputButton.Jump, "Leap" );
+					RunHint = AddHint( InputButton.Run, "Leap" );
+					AddHint( InputButton.Jump, "Jump" );
 				}
 				else
 				{
 					AddHint( InputButton.PrimaryAttack, "Fire" );
 					AddHint( InputButton.Reload, "Reload" );
+					RunHint = AddHint( InputButton.Run, "Sprint" );
 					AddHint( InputButton.Jump, "Jump" );
 				}
 			}
@@ -78,11 +82,16 @@ namespace Facepunch.Hidden
 				if ( !controller.GroundEntity.IsValid() )
 				{
 					if ( controller.IsFrozen )
-						UseHint.SetContent( "Leap from Wall" );
+						RunHint.SetContent( "Leap from Wall" );
 					else
-						UseHint.SetContent( "Attach to Wall" );
+						RunHint.SetContent( "Cling to Wall" );
 				}
-				else if ( player.PickupEntity.IsValid() )
+				else
+				{
+					RunHint.SetContent( "Leap" );
+				}
+				
+				if ( player.PickupEntity.IsValid() )
 				{
 					if ( player.PickupEntity is PlayerCorpse )
 						UseHint.SetContent( "Attach Corpse to World" );

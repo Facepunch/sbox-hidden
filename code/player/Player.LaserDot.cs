@@ -20,7 +20,7 @@ namespace Facepunch.Hidden
 
 		public void DestroyLaserDot()
 		{
-			if ( LaserDot != null )
+			if ( LaserDot.IsValid() )
 			{
 				if ( IsServer )
 				{

@@ -6,6 +6,7 @@ namespace Facepunch.Hidden
 	[Library]
 	public class CustomWalkController : BasePlayerController
 	{
+		public virtual bool EnableSprinting => true;
 		public virtual float SprintSpeed { get; set; } = 320.0f;
 		public virtual float WalkSpeed { get; set; } = 150.0f;
 		public float Acceleration { get; set; } = 10.0f;
@@ -100,10 +101,7 @@ namespace Facepunch.Hidden
 				BaseVelocity = BaseVelocity.WithZ( 0 );
 			}
 
-			if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
-			{
-				CheckJumpButton();
-			}
+			HandleJumping();
 
 			var startOnGround = GroundEntity != null;
 
@@ -172,8 +170,10 @@ namespace Facepunch.Hidden
 			var ws = Duck.GetWishSpeed();
 			if ( ws >= 0 ) return ws;
 
-			if ( Input.Down( InputButton.Run ) )
+			if ( EnableSprinting && Input.Down( InputButton.Run ) )
+			{
 				return SprintSpeed;
+			}
 
 			return WalkSpeed;
 		}
@@ -308,35 +308,6 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private void CheckJumpButton()
-		{
-			if ( Swimming )
-			{
-				ClearGroundEntity();
-				Velocity = Velocity.WithZ( 100 );
-
-				return;
-			}
-
-			if ( GroundEntity == null )
-				return;
-
-			ClearGroundEntity();
-
-			var flGroundFactor = 1.0f;
-			var flMul = 268.3281572999747f * 1.2f;
-			var startZ = Velocity.z;
-
-			if ( Duck.IsActive )
-				flMul *= 0.8f;
-
-			Velocity = Velocity.WithZ( startZ + flMul * flGroundFactor );
-			Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
-
-			AddJumpVelocity();
-			AddEvent( "jump" );
-		}
-
 		public virtual void AirMove()
 		{
 			var wishdir = WishVelocity.Normal;
@@ -418,55 +389,6 @@ namespace Facepunch.Hidden
 			Velocity = mover.Velocity;
 		}
 
-		private void CategorizePosition( bool stayOnGround )
-		{
-			SurfaceFriction = 1.0f;
-
-			var point = Position - Vector3.Up * 2;
-			var bumpOrigin = Position;
-			var isMovingUpFast = Velocity.z > MaxNonJumpVelocity;
-			var moveToEndPos = false;
-
-			if ( GroundEntity != null )
-			{
-				moveToEndPos = true;
-				point.z -= StepSize;
-			}
-			else if ( stayOnGround )
-			{
-				moveToEndPos = true;
-				point.z -= StepSize;
-			}
-
-			if ( isMovingUpFast || Swimming )
-			{
-				ClearGroundEntity();
-				return;
-			}
-
-			var pm = TraceBBox( bumpOrigin, point, 4.0f );
-
-			if ( pm.Entity == null || Vector3.GetAngle( Vector3.Up, pm.Normal ) > GroundAngle )
-			{
-				ClearGroundEntity();
-				moveToEndPos = false;
-
-				if ( Velocity.z > 0 )
-					SurfaceFriction = 0.25f;
-			}
-			else
-			{
-				UpdateGroundEntity( pm );
-			}
-
-			if ( moveToEndPos && !pm.StartedSolid && pm.Fraction > 0.0f && pm.Fraction < 1.0f )
-			{
-				Position = pm.EndPosition;
-			}
-
-			OnPostCategorizePosition( stayOnGround, pm );
-		}
-
 		/// <summary>
 		/// Check for a new ground entity.
 		/// </summary>
@@ -529,6 +451,93 @@ namespace Facepunch.Hidden
 
 		public virtual void OnPreTickMove() { }
 		public virtual void AddJumpVelocity() { }
+
+		public virtual void HandleJumping()
+		{
+			if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
+			{
+				CheckJumpButton();
+			}
+		}
+
 		public virtual void OnPostCategorizePosition( bool stayOnGround, TraceResult trace ) { }
+
+		protected void CheckJumpButton()
+		{
+			if ( Swimming )
+			{
+				ClearGroundEntity();
+				Velocity = Velocity.WithZ( 100f );
+
+				return;
+			}
+
+			if ( GroundEntity == null )
+				return;
+
+			ClearGroundEntity();
+
+			var flGroundFactor = 1f;
+			var flMul = 268.3281572999747f * 1.2f;
+			var startZ = Velocity.z;
+
+			if ( Duck.IsActive )
+				flMul *= 0.8f;
+
+			Velocity = Velocity.WithZ( startZ + flMul * flGroundFactor );
+			Velocity -= new Vector3( 0f, 0f, Gravity * 0.5f ) * Time.Delta;
+
+			AddJumpVelocity();
+			AddEvent( "jump" );
+		}
+
+		private void CategorizePosition( bool stayOnGround )
+		{
+			SurfaceFriction = 1.0f;
+
+			var point = Position - Vector3.Up * 2;
+			var bumpOrigin = Position;
+			var isMovingUpFast = Velocity.z > MaxNonJumpVelocity;
+			var moveToEndPos = false;
+
+			if ( GroundEntity != null )
+			{
+				moveToEndPos = true;
+				point.z -= StepSize;
+			}
+			else if ( stayOnGround )
+			{
+				moveToEndPos = true;
+				point.z -= StepSize;
+			}
+
+			if ( isMovingUpFast || Swimming )
+			{
+				ClearGroundEntity();
+				return;
+			}
+
+			var pm = TraceBBox( bumpOrigin, point, 4.0f );
+
+			if ( pm.Entity == null || Vector3.GetAngle( Vector3.Up, pm.Normal ) > GroundAngle )
+			{
+				ClearGroundEntity();
+				moveToEndPos = false;
+
+				if ( Velocity.z > 0 )
+					SurfaceFriction = 0.25f;
+			}
+			else
+			{
+				UpdateGroundEntity( pm );
+			}
+
+			if ( moveToEndPos && !pm.StartedSolid && pm.Fraction > 0.0f && pm.Fraction < 1.0f )
+			{
+				Position = pm.EndPosition;
+			}
+
+			OnPostCategorizePosition( stayOnGround, pm );
+		}
 	}
 }
