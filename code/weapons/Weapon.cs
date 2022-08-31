@@ -374,7 +374,7 @@ namespace Facepunch.Hidden
 			var forward = Owner.EyeRotation.Forward;
 			forward = forward.Normal;
 
-			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, 10f ) )
+			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, 20f ) )
 			{
 				if ( !trace.Entity.IsValid() )
 					continue;
