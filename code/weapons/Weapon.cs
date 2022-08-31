@@ -423,10 +423,10 @@ namespace Facepunch.Hidden
 
 			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * BulletRange, bulletSize ) )
 			{
-				if ( string.IsNullOrEmpty( ImpactEffect ) )
-				{
-					trace.Surface.DoBulletImpact( trace );
-				}
+				// Move into the normal by the bullet radius to give us a better chance of making a decal
+				var impactTrace = trace;
+				impactTrace.EndPosition -= trace.Normal * (bulletSize * 0.5f);
+				trace.Surface.DoBulletImpact( impactTrace );
 
 				var fullEndPos = trace.EndPosition + trace.Direction * bulletSize;
 
