@@ -29,6 +29,12 @@ namespace Facepunch.Hidden
 		private float LastYaw { get; set; }
 		private float BobAnim { get; set; }
 
+		float TargetRoll = 0f;
+
+		Vector3 TargetPos = 0f;
+
+		float MyRoll = 0f;
+
 		public ViewModel() : base()
 		{
 			AimConfig = new ViewModelAimConfig
@@ -44,8 +50,22 @@ namespace Facepunch.Hidden
 			AddCameraEffects( ref camSetup );
 
 			camSetup.ViewModel.FieldOfView = 75f;
+			if ( Owner is not Player player )
+			return;
+			
+			if ( player.Controller is IrisController ctrl )
+			{
+			
+				TargetPos = TargetPos.LerpTo( Vector3.Up * (ctrl.Duck.IsActive ? -2f : 0f), 2f * Time.Delta );
+				Position += TargetPos;
+
+				TargetRoll = ctrl.Duck.IsActive ? -35f : 0f;
+
+			}
 		}
 
+
+		
 		private void AddCameraEffects( ref CameraSetup camSetup )
 		{
 			if ( Owner is not Player player )
@@ -69,6 +89,9 @@ namespace Facepunch.Hidden
 			var angles = Rotation.Angles();
 			angles += RotationOffset;
 			Rotation = angles.ToRotation();
+
+			MyRoll = MyRoll.LerpTo( TargetRoll, Time.Delta * 5f );
+			Rotation *= Rotation.From( 0, 0, MyRoll );
 
 			if ( !IsAiming )
 			{
