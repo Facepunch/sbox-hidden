@@ -9,7 +9,7 @@ namespace Facepunch.Hidden
 
 		private Flashlight WorldFlashlight;
 		private Flashlight ViewFlashlight;
-
+		private Particles FlashEffect;
 		public bool HasFlashlightEntity
 		{
 			get
@@ -37,6 +37,10 @@ namespace Facepunch.Hidden
 		public void ToggleFlashlight()
 		{
 			ShowFlashlight( !IsFlashlightOn );
+			if ( IsServer )
+			{
+				FlashEffect.SetPosition( 3, new Vector3( IsFlashlightOn ? 1 : 0, 1, 0 ) );
+			}
 		}
 
 		public void ShowFlashlight( bool shouldShow, bool playSounds = true )
@@ -61,6 +65,12 @@ namespace Facepunch.Hidden
 			{
 				if ( !HasFlashlightEntity )
 				{
+					if ( FlashEffect == null && IsServer)
+					{
+						FlashEffect = Particles.Create( "particles/flashlight/flashlight.vpcf", weapon, "laser" );
+						FlashEffect.SetPosition( 2, new Color( 0.9f, 0.87f, 0.6f ) );
+					}
+					
 					if ( IsServer )
 					{
 						WorldFlashlight = new Flashlight();
@@ -130,13 +140,12 @@ namespace Facepunch.Hidden
 			if ( IsFlashlightOn )
 			{
 				FlashlightBattery = MathF.Max( FlashlightBattery - 10f * Time.Delta, 0f );
-
 				using ( Prediction.Off() )
 				{
 					if ( IsServer )
 					{
 						var shouldTurnOff = WorldFlashlight.UpdateFromBattery( FlashlightBattery );
-
+						FlashEffect.SetPosition( 3, new Vector3( shouldTurnOff ? 0 : 1, 1, 0 ) );
 						if ( shouldTurnOff )
 							ShowFlashlight( false, false );
 					}
