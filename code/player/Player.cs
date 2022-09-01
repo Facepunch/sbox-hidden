@@ -653,12 +653,12 @@ namespace Facepunch.Hidden
 					AnimatedLegs.Transform = Transform;
 					AnimatedLegs.Position += AnimatedLegs.Rotation.Forward * -10f;
 
-					AnimatedLegs.Update( Time.Delta );
+					AnimatedLegs.Update( RealTime.Delta );
 
 					foreach ( var clothing in LegsClothing )
 					{
 						clothing.SceneObject.Flags.CastShadows = false;
-						clothing.SceneObject.Update( Time.Delta );
+						clothing.SceneObject.Update( RealTime.Delta );
 
 						UpdateAnimatedLegBones( clothing.SceneObject );
 					}
