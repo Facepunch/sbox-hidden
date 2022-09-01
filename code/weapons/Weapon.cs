@@ -141,6 +141,13 @@ namespace Facepunch.Hidden
 			TimeSinceDeployed = 0f;
 		}
 
+		public override void ActiveEnd( Entity owner, bool dropped )
+		{
+			base.ActiveEnd( owner, dropped );
+
+			IsReloading = false;
+		}
+
 		public override void Spawn()
 		{
 			base.Spawn();
