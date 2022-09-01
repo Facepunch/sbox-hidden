@@ -1,31 +1,29 @@
 ﻿using Sandbox;
-using System;
 
 namespace Facepunch.Hidden
 {
-	[Library]
 	public class CustomWalkController : BasePlayerController
 	{
 		public virtual bool EnableSprinting => true;
-		public virtual float SprintSpeed { get; set; } = 320.0f;
-		public virtual float WalkSpeed { get; set; } = 150.0f;
-		public float Acceleration { get; set; } = 10.0f;
-		public float AirAcceleration { get; set; } = 50.0f;
-		public float FallSoundZ { get; set; } = -30.0f;
-		public float GroundFriction { get; set; } = 4.0f;
-		public float StopSpeed { get; set; } = 100.0f;
-		public float Size { get; set; } = 20.0f;
+		public virtual float SprintSpeed { get; set; } = 320f;
+		public virtual float WalkSpeed { get; set; } = 150f;
+		public float Acceleration { get; set; } = 10f;
+		public float AirAcceleration { get; set; } = 50f;
+		public float FallSoundZ { get; set; } = -30f;
+		public float GroundFriction { get; set; } = 4f;
+		public float StopSpeed { get; set; } = 100f;
+		public float Size { get; set; } = 20f;
 		public float DistEpsilon { get; set; } = 0.03125f;
-		public float GroundAngle { get; set; } = 46.0f;
-		public float Bounce { get; set; } = 0.0f;
-		public float MoveFriction { get; set; } = 1.0f;
-		public float StepSize { get; set; } = 18.0f;
-		public float MaxNonJumpVelocity { get; set; } = 140.0f;
-		public float BodyGirth { get; set; } = 32.0f;
-		public float BodyHeight { get; set; } = 72.0f;
-		public float EyeHeight { get; set; } = 64.0f;
-		public float Gravity { get; set; } = 800.0f;
-		public float AirControl { get; set; } = 30.0f;
+		public float GroundAngle { get; set; } = 46f;
+		public float Bounce { get; set; } = 0f;
+		public float MoveFriction { get; set; } = 1f;
+		public float StepSize { get; set; } = 18f;
+		public float MaxNonJumpVelocity { get; set; } = 140f;
+		public float BodyGirth { get; set; } = 32f;
+		public float BodyHeight { get; set; } = 72f;
+		public float EyeHeight { get; set; } = 64f;
+		public float Gravity { get; set; } = 800f;
+		public float AirControl { get; set; } = 30f;
 		public bool Swimming { get; set; } = false;
 		public bool AutoJump { get; set; } = false;
 
@@ -174,7 +172,8 @@ namespace Facepunch.Hidden
 			{
 				return SprintSpeed;
 			}
-			if ( Input.Down( InputButton.Walk ) ) return WalkSpeed/2;
+			if ( Input.Down( InputButton.Walk ) )
+				return WalkSpeed * 0.5f;
 			
 			return WalkSpeed;
 		}

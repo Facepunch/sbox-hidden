@@ -12,6 +12,85 @@ namespace Facepunch.Hidden
 
 		private Radar RadarHud;
 
+		public virtual void DressPlayer( Player player )
+		{
+			Rand.SetSeed( player.UniqueRandomSeed );
+
+			player.SetMaterialGroup( Rand.Int( 3 ) );
+
+			var beard = Rand.FromArray( new[]
+			{
+				"models/citizen_clothes/hair/scruffy_beard/models/scruffy_beard_black.vmdl",
+				"models/citizen_clothes/hair/scruffy_beard/models/scruffy_beard_brown.vmdl",
+				"models/citizen_clothes/hair/scruffy_beard/models/scruffy_beard_grey.vmdl",
+				"models/citizen_clothes/hair/stubble/model/stubble.vmdl",
+				"models/citizen_clothes/hair/moustache/models/moustache_brown.vmdl",
+				"models/citizen_clothes/hair/moustache/models/moustache_grey.vmdl",
+				string.Empty
+			} );
+
+			var femaleFeatures = Rand.FromArray( new[]
+			{
+				"models/citizen_clothes/hair/eyebrows_drawn/models/eyebrows_drawn.vmdl",
+				"models/citizen_clothes/hair/eyelashes/models/eyelashes.vmdl",
+				string.Empty,
+			} );
+
+			var faceFeatures = Rand.FromArray( new[]
+			{
+				"models/citizen_clothes/makeup/face_tattoos/models/face_tattoos.vmdl",
+				"models/citizen_clothes/makeup/freckles/model/freckles.vmdl",
+				string.Empty
+			} );
+
+			var outfit = Rand.Int( 3 );
+
+			if ( outfit == 0 )
+			{
+				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
+				player.AttachClothing( beard );
+				player.AttachClothing( faceFeatures );
+			}
+			else if ( outfit == 1 )
+			{
+				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/tactical_gloves.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/balaclava/models/balaclava.vmdl" );
+			}
+			else if ( outfit == 2 )
+			{
+				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/army_gloves.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest_army.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet_army.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/makeup/eyeliner/models/eyeliner.vmdl" );
+				player.AttachClothing( femaleFeatures );
+				player.AttachClothing( faceFeatures );
+			}
+			else if ( outfit == 3 )
+			{
+				player.AttachClothing( "models/citizen_clothes/trousers/cargopants/models/cargo_pants.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shirt/army_shirt/model/army_shirt.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/gloves/tactical_gloves/models/tactical_gloves.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/shoes/boots/models/army_boots.vmdl" );
+				player.AttachClothing( "models/citizen_clothes/hat/tactical_helmet/models/tactical_helmet.vmdl" );
+				player.AttachClothing( femaleFeatures );
+				player.AttachClothing( faceFeatures );
+			}
+		}
+
 		public override void SupplyLoadout( Player player )
 		{
 			player.ClearAmmo();
@@ -34,6 +113,7 @@ namespace Facepunch.Hidden
 				player.GiveAmmo( AmmoType.Shotgun, 24 );
 			}
 		}
+
 		public override void OnStart( Player player )
 		{
 			player.ClearAmmo();
@@ -47,7 +127,8 @@ namespace Facepunch.Hidden
 			player.SetBodyGroup( "Legs", 1 );
 
 			player.RemoveClothing();
-			player.Dress(player);
+
+			DressPlayer( player );
 
 			//player.ClearMaterialOverride();
 

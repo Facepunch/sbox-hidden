@@ -28,6 +28,7 @@ namespace Facepunch.Hidden
 
 			player.RemoveClothing();
 
+			player.SetMaterialGroup( "default" );
 			player.SetModel( "models/citizen/citizen.vmdl" );
 
 			player.SetBodyGroup( "Hands", 0 );

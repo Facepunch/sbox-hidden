@@ -205,9 +205,8 @@ namespace Facepunch.Hidden
 		{
 			var pawn = new Player();
 			client.Pawn = pawn;
+			pawn.UniqueRandomSeed = Rand.Int( 0, 999999 );
 			pawn.Respawn();
-
-			pawn.outfit = Rand.Int( 0, 3 );
 
 			base.ClientJoined( client );
 		}

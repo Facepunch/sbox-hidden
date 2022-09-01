@@ -2,7 +2,6 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-
 namespace Facepunch.Hidden
 {
 	public partial class ChatEntry : Panel
@@ -11,7 +10,7 @@ namespace Facepunch.Hidden
 		public Label Message { get; internal set; }
 		public Image Avatar { get; internal set; }
 
-		public RealTimeSince TimeSinceBorn = 0;
+		private RealTimeSince TimeSinceBorn { get; set; } = 0f;
 
 		public ChatEntry()
 		{

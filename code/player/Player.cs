@@ -15,6 +15,7 @@ namespace Facepunch.Hidden
 		[Net] public DeploymentType Deployment { get; set; }
 		[Net] public TimeSince TimeSinceDroppedEntity { get; set; }
 		[Net] public ModelEntity PickupEntity { get; set; }
+		[Net] public int UniqueRandomSeed { get; set; }
 		[Net] public Color RandomColor { get; set; }
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }

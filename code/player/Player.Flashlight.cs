@@ -10,6 +10,7 @@ namespace Facepunch.Hidden
 		private Flashlight WorldFlashlight;
 		private Flashlight ViewFlashlight;
 		private Particles FlashEffect;
+
 		public bool HasFlashlightEntity
 		{
 			get
@@ -37,6 +38,7 @@ namespace Facepunch.Hidden
 		public void ToggleFlashlight()
 		{
 			ShowFlashlight( !IsFlashlightOn );
+
 			if ( IsServer )
 			{
 				FlashEffect.SetPosition( 3, new Vector3( IsFlashlightOn ? 1 : 0, 1, 0 ) );
@@ -140,12 +142,14 @@ namespace Facepunch.Hidden
 			if ( IsFlashlightOn )
 			{
 				FlashlightBattery = MathF.Max( FlashlightBattery - 10f * Time.Delta, 0f );
+
 				using ( Prediction.Off() )
 				{
 					if ( IsServer )
 					{
 						var shouldTurnOff = WorldFlashlight.UpdateFromBattery( FlashlightBattery );
 						FlashEffect.SetPosition( 3, new Vector3( shouldTurnOff ? 0 : 1, 1, 0 ) );
+
 						if ( shouldTurnOff )
 							ShowFlashlight( false, false );
 					}

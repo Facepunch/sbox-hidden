@@ -371,10 +371,10 @@ namespace Facepunch.Hidden
 
 		public virtual void MeleeStrike( float damage, float force )
 		{
-			var forward = Owner.EyeRotation.Forward;
-			forward = forward.Normal;
+			var traceSize = 20f;
+			var forward = Owner.EyeRotation.Forward.Normal;
 
-			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, 20f ) )
+			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, traceSize ) )
 			{
 				if ( !trace.Entity.IsValid() )
 					continue;
@@ -382,10 +382,9 @@ namespace Facepunch.Hidden
 				if ( !IsValidMeleeTarget( trace.Entity ) )
 					continue;
 
-				if ( string.IsNullOrEmpty( ImpactEffect ) )
-				{
-					trace.Surface.DoBulletImpact( trace );
-				}
+				var impactTrace = trace;
+				impactTrace.EndPosition -= trace.Normal * (traceSize * 0.5f);
+				trace.Surface.DoBulletImpact( impactTrace );
 
 				if ( !string.IsNullOrEmpty( ImpactEffect ) )
 				{
@@ -423,7 +422,6 @@ namespace Facepunch.Hidden
 
 			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * BulletRange, bulletSize ) )
 			{
-				// Move into the normal by the bullet radius to give us a better chance of making a decal
 				var impactTrace = trace;
 				impactTrace.EndPosition -= trace.Normal * (bulletSize * 0.5f);
 				trace.Surface.DoBulletImpact( impactTrace );
