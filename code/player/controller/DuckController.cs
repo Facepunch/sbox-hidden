@@ -29,7 +29,17 @@ namespace Facepunch.Hidden
 			if ( IsActive )
 			{
 				Controller.SetTag( "ducked" );
-				Controller.EyeLocalPosition *= 0.5f;
+
+				var positionScale = 0.5f;
+				var lookDownDot = Controller.EyeRotation.Forward.Dot( Vector3.Down );
+
+				if ( lookDownDot > 0.5f )
+				{
+					var f = lookDownDot - 0.5f;
+					positionScale += f.Remap( 0f, 0.5f, 0f, 0.1f );
+				}
+
+				Controller.EyeLocalPosition *= positionScale;
 			}
 		}
 

@@ -20,7 +20,36 @@ namespace Facepunch.Hidden
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
+
+		private class LegsClothingObject
+		{
+			public SceneModel SceneObject { get; set; }
+			public Clothing Asset { get; set; }
+		}
+
+		private List<LegsClothingObject> LegsClothing { get; set; } = new();
+
+		public SceneModel AnimatedLegs { get; private set; }
+
 		public bool IsSenseActive { get; set; }
+
+		private HashSet<string> LegBonesToKeep = new()
+		{
+			"leg_upper_R_twist",
+			"leg_upper_R",
+			"leg_upper_L",
+			"leg_upper_L_twist",
+			"leg_lower_L",
+			"leg_lower_R",
+			"ankle_L",
+			"ankle_R",
+			"ball_L",
+			"ball_R",
+			"leg_knee_helper_L",
+			"leg_knee_helper_R",
+			"leg_lower_R_twist",
+			"leg_lower_L_twist"
+		};
 
 		private Rotation LastCameraRotation = Rotation.Identity;
 		private TimeSince TimeSinceLastFootstep;
@@ -35,9 +64,9 @@ namespace Facepunch.Hidden
 		private float TiredSoundVolume;
 		private Sound? LonelyLoopSound;
 		private float LonelySoundVolume;
-		private float WalkBob = 0;
-		private float Lean = 0;
-		private float FOV = 0;
+		private float WalkBob = 0f;
+		private float Lean = 0f;
+		private float FOV = 0f;
 
 		[ConCmd.Server]
 		public static void PlayVoiceCmd( string name )
@@ -71,7 +100,7 @@ namespace Facepunch.Hidden
 		{
 			Projectiles = new( this );
 			Inventory = new Inventory( this );
-			Animator = new StandardPlayerAnimator();
+			Animator = new AnimatorWithLegs();
 			//Transmit = TransmitType.Always;
 			Ammo = new List<int>();
 		}
@@ -135,6 +164,24 @@ namespace Facepunch.Hidden
 			ClientRespawn();
 
 			base.Respawn();
+		}
+
+		public override void OnNewModel( Model model )
+		{
+			if ( IsLocalPawn )
+			{
+				if ( AnimatedLegs.IsValid() )
+				{
+					AnimatedLegs.Delete();
+					AnimatedLegs = null;
+				}
+
+				AnimatedLegs = new( Map.Scene, model, Transform );
+				AnimatedLegs.SetBodyGroup( "Head", 1 );
+				AnimatedLegs.SetBodyGroup( "Chest", 1 );
+			}
+
+			base.OnNewModel( model );
 		}
 
 		public override void OnKilled()
@@ -407,7 +454,7 @@ namespace Facepunch.Hidden
 
 		private void AddCameraEffects( CameraMode camera )
 		{
-			var speed = Velocity.Length.LerpInverse( 0, 320 );
+			var speed = Velocity.Length.LerpInverse( 0f, 320f );
 			var forwardspeed = Velocity.Normal.Dot( camera.Rotation.Forward );
 
 			var left = camera.Rotation.Left;
@@ -415,21 +462,21 @@ namespace Facepunch.Hidden
 
 			if ( GroundEntity != null )
 			{
-				WalkBob += Time.Delta * 25.0f * speed;
+				WalkBob += Time.Delta * 25f * speed;
 			}
 
-			camera.Position += up * MathF.Sin( WalkBob ) * speed * 2;
-			camera.Position += left * MathF.Sin( WalkBob * 0.6f ) * speed * 1;
+			camera.Position += up * MathF.Sin( WalkBob ) * speed * 2f;
+			camera.Position += left * MathF.Sin( WalkBob * 0.6f ) * speed * 1f;
 
-			Lean = Lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15.0f );
+			Lean = Lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15f );
 
 			var appliedLean = Lean;
 			appliedLean += MathF.Sin( WalkBob ) * speed * 0.3f;
 			camera.Rotation *= Rotation.From( 0, 0, appliedLean );
 
-			speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
+			speed = (speed - 0.7f).Clamp( 0f, 1f ) * 3f;
 
-			FOV = FOV.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 4.0f );
+			FOV = FOV.LerpTo( speed * 20f * MathF.Abs( forwardspeed ), Time.Delta * 4f );
 
 			camera.FieldOfView += FOV;
 		}
@@ -443,7 +490,7 @@ namespace Facepunch.Hidden
 
 			if ( info.HitboxIndex == 0 )
 			{
-				info.Damage *= 2.0f;
+				info.Damage *= 2f;
 			}
 
 			if ( Team is HiddenTeam )
@@ -502,6 +549,55 @@ namespace Facepunch.Hidden
 			DamageIndicator.Current?.OnHit( position );
 		}
 
+		public override void OnChildAdded( Entity child )
+		{
+			base.OnChildAdded( child );
+
+			if ( AnimatedLegs.IsValid() && child is ModelEntity model && child is not Weapon )
+			{
+				if ( model.Model == null ) return;
+
+				var assets = ResourceLibrary.GetAll<Clothing>();
+				var asset = assets.FirstOrDefault( a => !string.IsNullOrEmpty( a.Model ) && a.Model.ToLower() == model.Model.Name.ToLower() );
+
+				if ( asset != null )
+				{
+					if ( asset.Category == Sandbox.Clothing.ClothingCategory.Bottoms
+						|| asset.Category == Sandbox.Clothing.ClothingCategory.Footwear
+						|| asset.Category == Sandbox.Clothing.ClothingCategory.Tops )
+					{
+						var clothing = new SceneModel( Map.Scene, model.Model, AnimatedLegs.Transform );
+						AnimatedLegs.AddChild( "clothing", clothing );
+
+						LegsClothing.Add( new()
+						{
+							SceneObject = clothing,
+							Asset = asset
+						} );
+					}
+				}
+			}
+		}
+
+		public override void OnChildRemoved( Entity child )
+		{
+			base.OnChildRemoved( child );
+
+			if ( AnimatedLegs.IsValid() && child is ModelEntity model && child is not Weapon )
+			{
+				if ( model.Model == null ) return;
+
+				var indexOf = LegsClothing.FindIndex( 0, c => c.Asset.Model.ToLower() == model.Model.Name.ToLower() );
+
+				if ( indexOf >= 0 )
+				{
+					var clothing = LegsClothing[indexOf];
+					LegsClothing.RemoveAt( indexOf );
+					clothing.SceneObject.Delete();
+				}
+			}
+		}
+
 		[Event.Frame]
 		protected virtual void OnFrame()
 		{
@@ -538,6 +634,58 @@ namespace Facepunch.Hidden
 				if ( LaserDot.IsAuthority )
 				{
 					LaserDot.Position = end;
+				}
+			}
+
+			if ( AnimatedLegs.IsValid() )
+			{
+				AnimatedLegs.RenderingEnabled = (Team is IrisTeam);
+
+				if ( AnimatedLegs.RenderingEnabled )
+				{
+					var shouldHideLegs = LegsClothing.Any( c => c.Asset.HideBody.HasFlag( Sandbox.Clothing.BodyGroups.Legs ) );
+
+					AnimatedLegs.SetBodyGroup( "Head", 1 );
+					AnimatedLegs.SetBodyGroup( "Hands", 1 );
+					AnimatedLegs.SetBodyGroup( "Legs", shouldHideLegs ? 1 : 0 );
+
+					AnimatedLegs.Flags.CastShadows = false;
+					AnimatedLegs.Transform = Transform;
+					AnimatedLegs.Position += AnimatedLegs.Rotation.Forward * -10f;
+
+					AnimatedLegs.Update( Time.Delta );
+
+					foreach ( var clothing in LegsClothing )
+					{
+						clothing.SceneObject.Flags.CastShadows = false;
+						clothing.SceneObject.Update( Time.Delta );
+
+						UpdateAnimatedLegBones( clothing.SceneObject );
+					}
+
+					UpdateAnimatedLegBones( AnimatedLegs );
+				}
+			}
+		}
+
+		protected void UpdateAnimatedLegBones( SceneModel model )
+		{
+			for ( var i = 0; i < model.Model.BoneCount; i++ )
+			{
+				var boneName = model.Model.GetBoneName( i );
+
+				if ( !LegBonesToKeep.Contains( boneName ) )
+				{
+					var moveBackBy = 25f;
+
+					if ( boneName == "spine_1" ) moveBackBy = 15f;
+					if ( boneName == "spine_0" ) moveBackBy = 10f;
+					if ( boneName == "pelvis" ) moveBackBy = 5f;
+
+					var transform = model.GetBoneWorldTransform( i );
+					transform.Position += model.Rotation.Backward * moveBackBy;
+					transform.Position += model.Rotation.Up * 15f;
+					model.SetBoneWorldTransform( i, transform );
 				}
 			}
 		}
