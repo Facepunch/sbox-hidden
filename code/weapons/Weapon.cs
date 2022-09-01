@@ -70,10 +70,18 @@ namespace Facepunch.Hidden
 		public float ChargeAttackEndTime { get; private set; }
 		public AnimatedEntity AnimationOwner => Owner as AnimatedEntity;
 
+		private Queue<Angles> RecoilQueue { get; set; } = new();
+
 		public int AvailableAmmo()
 		{
 			if ( Owner is not Player owner ) return 0;
 			return owner.AmmoCount( Config.AmmoType );
+		}
+
+		public void AddRecoil( Angles angles )
+		{
+			if ( Host.IsServer ) return;
+			RecoilQueue.Enqueue( angles );
 		}
 
 		public float GetDamageFalloff( float distance, float damage )
@@ -508,6 +516,15 @@ namespace Facepunch.Hidden
 			}
 
 			return AvailableAmmo() > 0;
+		}
+
+		public override void BuildInput( InputBuilder input )
+		{
+			if ( RecoilQueue.Count > 0 )
+			{
+				var recoil = RecoilQueue.Dequeue();
+				input.ViewAngles += recoil;
+			}
 		}
 
 		public override IEnumerable<TraceResult> TraceBullet( Vector3 start, Vector3 end, float radius = 2.0f )

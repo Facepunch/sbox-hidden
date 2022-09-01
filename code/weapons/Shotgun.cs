@@ -67,6 +67,7 @@ namespace Facepunch.Hidden
 			}
 
 			PlayAttackAnimation();
+			AddRecoil( new Angles( Rand.Float( -2f, -3f ), 0, 0 ) );
 		}
 
 		public override void OnReloadFinish()

@@ -111,6 +111,7 @@ namespace Facepunch.Hidden
 					PlaySound( $"ar2_shoot" );
 					ShootBullet( 0.015f, 1.5f, Config.Damage, 8.0f );
 					PlayAttackAnimation();
+					AddRecoil( new Angles( Rand.Float( -0.3f, -0.6f ), 0, 0 ) );
 
 					LastBulletTime = 0f;
 				}
