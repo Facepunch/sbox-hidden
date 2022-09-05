@@ -817,6 +817,8 @@ namespace Facepunch.Hidden
 			KillAllSoundLoops();
 			DestroyLaserDot();
 
+			FlashEffect?.Destroy( true );
+
 			base.OnDestroy();
 		}
 	}
