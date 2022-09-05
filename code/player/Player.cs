@@ -678,7 +678,7 @@ namespace Facepunch.Hidden
 
 			if ( AnimatedLegs.IsValid() )
 			{
-				AnimatedLegs.RenderingEnabled = (Team is IrisTeam);
+				AnimatedLegs.RenderingEnabled = (Team is IrisTeam && LifeState == LifeState.Alive)
 
 				if ( AnimatedLegs.RenderingEnabled )
 				{
