@@ -4,5 +4,7 @@
 	{
 		Text = "He\'s on me!"
 		Sound = resource:"sounds/vo/fort/hesonme/fort.hesonme.sound"
+		ProximitySound = null
+		ProximityDistance = 1024
 	}
 }

@@ -7,5 +7,7 @@ namespace Facepunch.Hidden
 	{
 		[Property] public string Text { get; set; }
 		[Property] public SoundEvent Sound { get; set; }
+		[Property] public SoundEvent ProximitySound { get; set; }
+		[Property] public float ProximityDistance { get; set; } = 1024f;
 	}
 }

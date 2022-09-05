@@ -2,7 +2,9 @@
 {
 	data = 
 	{
-		Text = null
-		Sound = null
+		Text = "Where are you..."
+		Sound = resource:"sounds/vo/fort/whereareyou/where.are.you.sound"
+		ProximitySound = null
+		ProximityDistance = 1024
 	}
 }

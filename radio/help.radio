@@ -4,5 +4,7 @@
 	{
 		Text = "Help!"
 		Sound = resource:"sounds/vo/fort/help/fort.help.sound"
+		ProximitySound = null
+		ProximityDistance = 1024
 	}
 }

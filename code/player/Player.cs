@@ -75,15 +75,20 @@ namespace Facepunch.Hidden
 			{
 				var playerId = player.Client.PlayerId.ToString();
 				var resource = ResourceLibrary.GetAll<RadioCommandResource>().FirstOrDefault( c => c.ResourceId == resourceId );
-
 				if ( resource == null ) return;
 
 				var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
 
 				ChatBox.AddChatFromServer( player, $"(RADIO) {resource.Text}", radioColor, radioColor );
 
-				Sound.FromScreen( To.Multiple( Game.Instance.GetTeamPlayers<IrisTeam>().Select( p => p.Client ) ), resource.Sound.ResourceName );
-				Sound.FromWorld( To.Single( Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault() ), resource.Sound.ResourceName, player.Position );
+				var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
+				var playersCloseBy = All.OfType<Player>().Where( p => p != player && p.Position.Distance( player.Position ) <= resource.ProximityDistance );
+				var inRadioRange = irisPlayers.Except( playersCloseBy );
+
+				Sound.FromScreen( To.Multiple( inRadioRange.Select( p => p.Client ) ), resource.Sound.ResourceName );
+
+				if ( resource.ProximitySound == null ) return;
+				Sound.FromWorld( To.Multiple( playersCloseBy.Select( p => p.Client ) ), resource.ProximitySound.ResourceName, player.Position );
 			}
 		}
 

@@ -4,5 +4,7 @@
 	{
 		Text = "Subject spotted!"
 		Sound = resource:"sounds/vo/fort/subjectspotted/fort.subject.spotted.sound"
+		ProximitySound = null
+		ProximityDistance = 1024
 	}
 }
