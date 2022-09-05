@@ -47,9 +47,15 @@ namespace Facepunch.Hidden
 
 			OnCreateProjectile( projectile );
 
-			var muzzle = GetAttachment( MuzzleAttachment );
-			var position = muzzle.Value.Position;
 			var forward = player.EyeRotation.Forward;
+			var position = player.EyePosition + forward * 100f;
+			var muzzle = GetMuzzlePosition();
+
+			if ( muzzle.HasValue )
+			{
+				position = muzzle.Value;
+			}
+
 			var endPosition = player.EyePosition + forward * BulletRange;
 			var trace = Trace.Ray( player.EyePosition, endPosition )
 				.Ignore( player )
@@ -61,7 +67,26 @@ namespace Facepunch.Hidden
 			direction = direction.Normal;
 
 			var velocity = (direction * Speed) + (player.Velocity * InheritVelocity);
+			velocity = AdjustProjectileVelocity( velocity );
 			projectile.Initialize( position, velocity, ProjectileRadius, (a, b) => OnProjectileHit( (T)a, b ) );
+
+			OnProjectileFired( projectile );
+		}
+
+		protected virtual Vector3 AdjustProjectileVelocity( Vector3 velocity )
+		{
+			return velocity;
+		}
+
+		protected virtual Vector3? GetMuzzlePosition()
+		{
+			var muzzle = GetAttachment( MuzzleAttachment );
+			return muzzle.HasValue ? muzzle.Value.Position : null;
+		}
+
+		protected virtual void OnProjectileFired( T projectile )
+		{
+
 		}
 
 		protected virtual float ModifyDamage( Entity victim, float damage )

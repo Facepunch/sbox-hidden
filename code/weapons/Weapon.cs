@@ -483,6 +483,9 @@ namespace Facepunch.Hidden
 
 		public bool TakeAmmo( int amount )
 		{
+			if ( Config.AmmoType == AmmoType.None )
+				return false;
+
 			if ( AmmoClip < amount )
 				return false;
 

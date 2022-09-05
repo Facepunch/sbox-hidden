@@ -97,12 +97,16 @@ namespace Facepunch.Hidden
 			{
 				try
 				{
-					await Task.DelaySeconds( 1 );
+					await Task.DelaySeconds( 1f );
 					OnSecond();
 				}
 				catch ( TaskCanceledException )
 				{
 					break;
+				}
+				catch ( Exception e )
+				{
+					Log.Error( e.Message );
 				}
 			}
 		}

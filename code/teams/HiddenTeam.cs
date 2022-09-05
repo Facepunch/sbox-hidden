@@ -1,9 +1,10 @@
 ﻿using Sandbox;
 using System;
+using System.Linq;
 
 namespace Facepunch.Hidden
 {
-    class HiddenTeam : BaseTeam
+    public class HiddenTeam : BaseTeam
 	{
 		public override Color Color => Color.Parse( "#8a4a4a" ).Value;
 		public override bool HideNameplate => true;
@@ -16,9 +17,12 @@ namespace Facepunch.Hidden
 
 		public override void SupplyLoadout( Player player )
 		{
+			var pipeBombs = Math.Min( (Game.Instance.GetTeamPlayers<IrisTeam>().Count() / 3f).CeilToInt(), 3 );
+
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
 			player.Inventory.Add( new Knife(), true );
+			player.Inventory.Add( new PipeBomb() { Slot = 2, AmmoClip = pipeBombs } );
 		}
 
 		public override void OnStart( Player player )

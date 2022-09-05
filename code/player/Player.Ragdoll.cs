@@ -6,7 +6,7 @@ namespace Facepunch.Hidden
 	{
 		public PlayerCorpse Ragdoll { get; set; }
 
-		private void BecomeRagdollOnServer( Vector3 force, int forceBone )
+		private void BecomeRagdollOnServer( DamageInfo info )
 		{
 			var ragdoll = new PlayerCorpse
 			{
@@ -15,8 +15,14 @@ namespace Facepunch.Hidden
 			};
 
 			ragdoll.CopyFrom( this );
-			ragdoll.ApplyForceToBone( force, forceBone );
+			ragdoll.ApplyForceToBone( info.Force, GetHitboxBone( LastDamageInfo.HitboxIndex ) );
 			ragdoll.Player = this;
+
+			if ( info.Flags.HasFlag( DamageFlags.Blast ) )
+			{
+				ragdoll.NumberOfFeedsLeft = 0;
+				ragdoll.SetMaterialGroup( 5 );
+			}
 
 			Ragdoll = ragdoll;
 		}

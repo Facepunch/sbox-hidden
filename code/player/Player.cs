@@ -193,7 +193,7 @@ namespace Facepunch.Hidden
 			ShowSenseParticles( false );
 			DrawPlayer( false );
 
-			BecomeRagdollOnServer( LastDamageInfo.Force, GetHitboxBone( LastDamageInfo.HitboxIndex ) );
+			BecomeRagdollOnServer( LastDamageInfo );
 
 			PickupEntityBody = null;
 			PickupEntity = null;

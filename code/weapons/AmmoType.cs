@@ -2,6 +2,7 @@
 {
 	public enum AmmoType
 	{
+		None,
 		Pistol,
 		SMG,
 		Rifle,
