@@ -47,17 +47,17 @@ namespace Facepunch.Hidden
 
 			caller.IsSenseActive = true;
 
-			players.ForEach( ( player ) =>
+			foreach ( var player in players )
 			{
 				player.ShowSenseParticles( true );
-			} );
+			}
 
 			await Task.Delay( TimeSpan.FromSeconds( Cooldown * 0.5f ) );
 
-			players.ForEach( ( player ) =>
+			foreach ( var player in players )
 			{
 				player.ShowSenseParticles( false );
-			} );
+			}
 
 			caller.IsSenseActive = false;
 		}

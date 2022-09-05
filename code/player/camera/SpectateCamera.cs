@@ -48,13 +48,14 @@ namespace Facepunch.Hidden
 				if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
 				{
 					var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
+					var count = players.Count();
 
-					if ( players != null && players.Count > 0 )
+					if ( players != null && count > 0 )
 					{
-						if ( ++TargetIdx >= players.Count )
+						if ( ++TargetIdx >= count )
 							TargetIdx = 0;
 
-						TargetPlayer = players[TargetIdx];
+						TargetPlayer = players.ElementAt( TargetIdx );
 					}
 				}
 

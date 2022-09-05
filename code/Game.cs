@@ -70,20 +70,14 @@ namespace Facepunch.Hidden
 			return Teams[index - 1];
 		}
 
-		public List<Player> GetTeamPlayers<T>(bool isAlive = false) where T : BaseTeam
+		public IEnumerable<Player> GetTeamPlayers<T>( bool isAlive = false ) where T : BaseTeam
 		{
-			var output = new List<Player>();
+			var output = Client.All
+				.Where( c => c.Pawn is Player player && player.Team is T )
+				.Select( c => c.Pawn as Player );
 
-			foreach ( var client in Client.All )
-			{
-				if ( client.Pawn is Player player && player.Team is T )
-				{
-					if ( !isAlive || player.LifeState == LifeState.Alive )
-					{
-						output.Add( player );
-					}
-				}
-			}
+			if ( isAlive )
+				output = output.Where( p => p.LifeState == LifeState.Alive );
 
 			return output;
 		}
