@@ -69,7 +69,7 @@ namespace Facepunch.Hidden
 			PlaySound( $"smg1_shoot" );
 			ShootBullet( 0.01f, 1.5f, Config.Damage, 8.0f );
 			PlayAttackAnimation();
-			AddRecoil( new Angles( Rand.Float( -0.75f, -1f ), 0, 0 ) );
+			AddRecoil( new Angles( Rand.Float( -0.75f, -1f ), 0f, 0f ) );
 		}
 	}
 }

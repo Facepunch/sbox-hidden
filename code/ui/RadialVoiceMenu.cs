@@ -11,11 +11,12 @@ namespace Facepunch.Hidden
 
 		public override void Populate()
 		{
-			AddRadioCommand( "Subject spotted!", "subject_spotted" );
-			AddRadioCommand( "He's on me!", "on_me" );
-			AddRadioCommand( "Help!", "help" );
-			AddRadioCommand( "Where are you...", "where_are_you" );
-			AddRadioCommand( "Man down!", "man_down" );
+			var commands = ResourceLibrary.GetAll<RadioCommandResource>();
+
+			foreach ( var command in commands )
+			{
+				AddRadioCommand( command.Text, command.ResourceId );
+			}
 
 			base.Populate();
 		}
@@ -25,9 +26,9 @@ namespace Facepunch.Hidden
 			return Local.Pawn is Player player && player.Team is IrisTeam;
 		}
 
-		private void AddRadioCommand( string name, string command, string icon = null )
+		private void AddRadioCommand( string name, int resourceId, string icon = null )
 		{
-			AddAction( name, "Play through radio", string.IsNullOrEmpty( icon ) ? "ui/icons/icon-ability-2.png" : icon, () => Player.PlayVoiceCmd( command ) );
+			AddAction( name, "Play through radio", string.IsNullOrEmpty( icon ) ? "ui/icons/icon-ability-2.png" : icon, () => Player.PlayVoiceCmd( resourceId ) );
 		}
 	}
 }

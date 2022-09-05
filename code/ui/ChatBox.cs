@@ -12,6 +12,20 @@ namespace Facepunch.Hidden
 		public TextEntry Input { get; protected set; }
 		public Panel Canvas { get; protected set; }
 
+		[ClientRpc]
+		public static void AddChatFromServer( Player player, string message, Color color, Color messageColor )
+		{
+			if ( player.IsValid() )
+			{
+				Current?.AddEntry( player.Client.Name, message, color, messageColor );
+
+				if ( !Global.IsListenServer )
+				{
+					Log.Info( $"{player.Client.Name}: {message}" );
+				}
+			}
+		}
+
 		[ConCmd.Client( "hdn_chat_add", CanBeCalledFromServer = true )]
 		public static void AddChatEntry( string playerId, string message )
 		{
@@ -72,7 +86,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public void AddEntry( string name, string message, Color? color = null )
+		public void AddEntry( string name, string message, Color? color = null, Color? messageColor = null )
 		{
 			var e = Canvas.AddChild<ChatEntry>();
 
@@ -90,6 +104,12 @@ namespace Facepunch.Hidden
 			{
 				e.Message.Style.FontColor = color;
 			}
+
+			if ( messageColor.HasValue )
+			{
+				e.Message.Style.FontColor = messageColor;
+			}
+
 			Canvas.TryScrollToBottom();
 		}
 

@@ -69,25 +69,21 @@ namespace Facepunch.Hidden
 		private float FOV = 0f;
 
 		[ConCmd.Server]
-		public static void PlayVoiceCmd( string name )
+		public static void PlayVoiceCmd( int resourceId )
 		{
-			if ( ConsoleSystem.Caller is Player player )
+			if ( ConsoleSystem.Caller.Pawn is Player player )
 			{
 				var playerId = player.Client.PlayerId.ToString();
+				var resource = ResourceLibrary.GetAll<RadioCommandResource>().FirstOrDefault( c => c.ResourceId == resourceId );
 
-				if ( name == "man_down" )
-					ChatBox.AddChatEntry( playerId, "Man down!" );
-				else if ( name == "subject_spotted" )
-					ChatBox.AddChatEntry( playerId, "Subject spotted!" );
-				else if ( name == "help" )
-					ChatBox.AddChatEntry( playerId, "Help!" );
-				else if ( name == "where_are_you" )
-					ChatBox.AddChatEntry( playerId, "Where are you..." );
-				else if ( name == "on_me" )
-					ChatBox.AddChatEntry( playerId, "On me!" );
+				if ( resource == null ) return;
 
-				Sound.FromScreen( To.Multiple( Game.Instance.GetTeamPlayers<IrisTeam>().Select( p => p.Client ) ), name );
-				Sound.FromWorld( To.Single( Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault() ), name, player.Position );
+				var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
+
+				ChatBox.AddChatFromServer( player, $"(RADIO) {resource.Text}", radioColor, radioColor );
+
+				Sound.FromScreen( To.Multiple( Game.Instance.GetTeamPlayers<IrisTeam>().Select( p => p.Client ) ), resource.Sound.ResourceName );
+				Sound.FromWorld( To.Single( Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault() ), resource.Sound.ResourceName, player.Position );
 			}
 		}
 
