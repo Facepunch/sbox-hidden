@@ -228,20 +228,6 @@ namespace Facepunch.Hidden
 			}
 
 			LightFlickers?.OnTick();
-
-			if ( IsClient )
-			{
-				foreach ( var client in Client.All )
-				{
-					if ( client.Pawn is not Player player ) return;
-
-					if ( player.TeamIndex != player.LastTeamIndex )
-					{
-						player.Team = GetTeamByIndex( player.TeamIndex );
-						player.LastTeamIndex = player.TeamIndex;
-					}
-				};
-			}
 		}
 
 		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )

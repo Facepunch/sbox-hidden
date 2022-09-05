@@ -186,8 +186,6 @@ namespace Facepunch.Hidden
 
 		public override void OnLeave( Player player )
 		{
-			Log.Info( $"{player.Client.Name} left the Military team." );
-
 			if ( player.IsLocalPawn )
 			{
 				if ( RadarHud != null )

@@ -5,8 +5,7 @@ namespace Facepunch.Hidden
 {
 	partial class Player
 	{
-		[Net] public int TeamIndex { get; set; }
-		public int LastTeamIndex { get; set; }
+		[Net, Change( nameof( OnTeamIndexChanged ) )] public int TeamIndex { get; set; }
 
 		private BaseTeam CurrentTeam;
 
@@ -26,10 +25,15 @@ namespace Facepunch.Hidden
 					if ( IsServer )
 					{
 						TeamIndex = CurrentTeam.Index;
-						Client.SetInt("team", TeamIndex);
+						Client.SetInt( "team", TeamIndex );
 					}
 				}
 			}
+		}
+
+		private void OnTeamIndexChanged( int teamIndex )
+		{
+			Team = Game.Instance.GetTeamByIndex( teamIndex );
 		}
 	}
 }

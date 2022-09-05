@@ -31,7 +31,7 @@ namespace Facepunch.Hidden
 		{
 			var client = Client.All.FirstOrDefault( c => c.PlayerId == long.Parse( playerId ) );
 
-			if ( client.IsValid() && client.Pawn is Player player )
+			if ( client.IsValid() && client.Pawn is Player player && player.Team is not null )
 			{
 				Current?.AddEntry( client.Name, message, player.Team.Color );
 
