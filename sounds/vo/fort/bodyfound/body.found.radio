@@ -2,7 +2,7 @@
 {
 	data = 
 	{
-		Text = "Found a dead body."
+		Text = "I found a dead body!"
 		Sound = resource:"sounds/vo/fort/bodyfound/body.found.sound"
 		ProximitySound = resource:"sounds/vo/fort/nonwalkie/bodyfound/body.found.non.sound"
 		ProximityDistance = 1024

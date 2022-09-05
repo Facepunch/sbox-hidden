@@ -2,7 +2,7 @@
 {
 	data = 
 	{
-		Text = "I\'m all alone here"
+		Text = "I\'m all alone here!"
 		Sound = resource:"sounds/vo/fort/alone/alone.sound"
 		ProximitySound = resource:"sounds/vo/fort/nonwalkie/alone/alone.non.sound"
 		ProximityDistance = 1024

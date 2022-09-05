@@ -55,6 +55,8 @@ namespace Facepunch.Hidden
 		private TimeSince TimeSinceLastFootstep;
 		private DamageInfo LastDamageInfo;
 		private PhysicsBody PickupEntityBody;
+		private RealTimeUntil NextSearchDeadBodies { get; set; }
+		private TimeSince TimeSinceLastAlone { get; set; }
 		private Particles SenseParticles;
 		private Particles StealthParticles;
 		private TimeUntil NextLonelyCheck;
@@ -68,27 +70,15 @@ namespace Facepunch.Hidden
 		private float Lean = 0f;
 		private float FOV = 0f;
 
-		[ConCmd.Server]
+		[ConCmd.Server( "hdn_radio" )]
 		public static void PlayVoiceCmd( int resourceId )
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player player )
 			{
-				var playerId = player.Client.PlayerId.ToString();
 				var resource = ResourceLibrary.GetAll<RadioCommandResource>().FirstOrDefault( c => c.ResourceId == resourceId );
 				if ( resource == null ) return;
 
-				var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
-
-				ChatBox.AddChatFromServer( player, $"*beep* {resource.Text}", radioColor, radioColor );
-
-				var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
-				var playersCloseBy = All.OfType<Player>().Where( p => p != player && p.Position.Distance( player.Position ) <= resource.ProximityDistance );
-				var inRadioRange = irisPlayers.Except( playersCloseBy );
-
-				Sound.FromScreen( To.Multiple( inRadioRange.Select( p => p.Client ) ), resource.Sound.ResourceName );
-
-				if ( resource.ProximitySound == null ) return;
-				Sound.FromWorld( To.Multiple( playersCloseBy.Select( p => p.Client ) ), resource.ProximitySound.ResourceName, player.Position );
+				player.PlayRadioCommand( resource );
 			}
 		}
 
@@ -109,6 +99,24 @@ namespace Facepunch.Hidden
 		public bool IsSpectator
 		{
 			get => (CameraMode is SpectateCamera);
+		}
+
+		public void PlayRadioCommand( RadioCommandResource resource )
+		{
+			Assert.NotNull( resource );
+
+			var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
+
+			ChatBox.AddChatFromServer( this, $"*beep* {resource.Text}", radioColor, radioColor );
+
+			var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
+			var playersCloseBy = All.OfType<Player>().Where( p => p != this && p.Position.Distance( Position ) <= resource.ProximityDistance );
+			var inRadioRange = irisPlayers.Except( playersCloseBy );
+
+			Sound.FromScreen( To.Multiple( inRadioRange.Select( p => p.Client ) ), resource.Sound.ResourceName );
+
+			if ( resource.ProximitySound == null ) return;
+			Sound.FromWorld( To.Multiple( playersCloseBy.Select( p => p.Client ) ), resource.ProximitySound.ResourceName, Position );
 		}
 
 		public void MakeSpectator( Vector3 position = default )
@@ -599,6 +607,36 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		[Event.Tick.Server]
+		protected virtual void ServerTick()
+		{
+			if ( !NextSearchDeadBodies || LifeState == LifeState.Dead || Team is not IrisTeam )
+				return;
+
+			var bodiesNearby = FindInSphere( Position, 3000f )
+				.OfType<PlayerCorpse>()
+				.Where( r => !r.HasBeenFound );
+
+			foreach ( var body in bodiesNearby )
+			{
+				var trace = Trace.Ray( EyePosition, body.Position )
+					.WorldOnly()
+					.Run();
+
+				if ( trace.Fraction >= 0.9f )
+				{
+					using ( Prediction.Off() )
+					{
+						var resource = RadioCommandResource.FindByName( "body.found" );
+						PlayRadioCommand( resource );
+						body.HasBeenFound = true;
+					}
+				}
+			}
+
+			NextSearchDeadBodies = 1f;
+		}
+
 		[Event.Frame]
 		protected virtual void OnFrame()
 		{
@@ -764,6 +802,13 @@ namespace Facepunch.Hidden
 				if ( !LonelyLoopSound.HasValue )
 				{
 					LonelyLoopSound = Sound.FromEntity( Team is HiddenTeam ? "hidden.whispers" : "heartbeat.loop", this );
+
+					if ( TimeSinceLastAlone > 20f && Rand.Float() >= 0.5f )
+					{
+						var resource = RadioCommandResource.FindByName( "alone" );
+						PlayVoiceCmd( resource.ResourceId );
+						TimeSinceLastAlone = 0f;
+					}
 				}
 
 				LonelySoundVolume = LonelySoundVolume.LerpTo( 1f, Time.Delta * 3f );

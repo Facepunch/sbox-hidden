@@ -1,10 +1,12 @@
 ﻿using Sandbox;
+using System.Linq;
 
 namespace Facepunch.Hidden
 {
 	public class PlayerCorpse : ModelEntity
 	{
 		public int NumberOfFeedsLeft { get; set; } = 4;
+		public bool HasBeenFound { get; set; }
 		public Player Player { get; set; }
 
 		public PlayerCorpse()
@@ -36,6 +38,23 @@ namespace Facepunch.Hidden
 					var clothing = new ModelEntity();
 					clothing.SetModel( model );
 					clothing.SetParent( this, true );
+				}
+			}
+
+			foreach ( var finder in All.OfType<Player>() )
+			{
+				if ( finder.Team is IrisTeam && finder.LifeState == LifeState.Alive
+					&& finder.Position.Distance( Position ) <= 3000f )
+				{
+					var trace = Trace.Ray( finder.EyePosition, Position )
+						.WorldOnly()
+						.Run();
+
+					if ( trace.Fraction >= 0.8f )
+					{
+						HasBeenFound = true;
+						break;
+					}
 				}
 			}
 		}
