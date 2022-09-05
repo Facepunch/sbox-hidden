@@ -79,7 +79,7 @@ namespace Facepunch.Hidden
 
 				var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
 
-				ChatBox.AddChatFromServer( player, $"(RADIO) {resource.Text}", radioColor, radioColor );
+				ChatBox.AddChatFromServer( player, $"*beep* {resource.Text}", radioColor, radioColor );
 
 				var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
 				var playersCloseBy = All.OfType<Player>().Where( p => p != player && p.Position.Distance( player.Position ) <= resource.ProximityDistance );
