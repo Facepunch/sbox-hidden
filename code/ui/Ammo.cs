@@ -32,10 +32,9 @@ namespace Facepunch.Hidden
 			SetClass( "active", isValid );
 			SetClass("low-ammo", weapon != null && weapon.AmmoClip < 3);
 
-			Icon.Style.SetBackgroundImage( weapon.Config.Icon );
-
 			if ( !isValid ) return;
 
+			Icon.Style.SetBackgroundImage( weapon.Config.Icon );
 			Weapon.Text = $"{weapon.AmmoClip}";
 
 			if ( !weapon.UnlimitedAmmo )

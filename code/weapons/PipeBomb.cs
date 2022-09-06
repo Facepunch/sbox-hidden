@@ -25,6 +25,7 @@ namespace Facepunch.Hidden
 		public override DamageFlags DamageType => DamageFlags.Blast;
 		public override float ProjectileStartRange => 100f;
 		public override float ProjectileLifeTime => 3f;
+		public override float ThrowAnimationTime => 0.5f;
 		public override string HitSound => null;
 		public override bool HasLaserDot => false;
 		public override bool HasFlashlight => false;
@@ -40,6 +41,13 @@ namespace Facepunch.Hidden
 
 		protected override void OnCreateProjectile( BouncingProjectile projectile )
 		{
+			var attachment = ViewModelEntity?.GetAttachment( "grenade", true );
+
+			if ( attachment.HasValue )
+			{
+				projectile.Rotation = attachment.Value.Rotation;
+			}
+
 			projectile.BounceSoundMinimumVelocity = 40f;
 			projectile.Bounciness = 0.7f;
 			projectile.BounceSound = "pipebomb.bounce";
