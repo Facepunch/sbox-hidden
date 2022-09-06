@@ -23,6 +23,7 @@ namespace Facepunch.Hidden
 		public override string ProjectileModel => "models/grenade/w_grenade.vmdl";
 		public override string ThrowSound => "pipebomb.throw";
 		public override DamageFlags DamageType => DamageFlags.Blast;
+		public override float ProjectileStartRange => 100f;
 		public override float ProjectileLifeTime => 3f;
 		public override string HitSound => null;
 		public override bool HasLaserDot => false;
@@ -44,6 +45,7 @@ namespace Facepunch.Hidden
 			projectile.BounceSound = "pipebomb.bounce";
 			projectile.FaceDirection = false;
 			projectile.FromWeapon = this;
+			projectile.Scale = 0.5f;
 
 			Sound.FromEntity( "pipebomb.tickloop", projectile );
 

@@ -17,7 +17,12 @@ namespace Facepunch.Hidden
 		public override int ClipSize => 0;
 		public override float ReloadTime => 2.3f;
 		public override float ProjectileLifeTime => 4f;
+
+		public virtual float ThrowAnimationTime => 0.8f;
 		public virtual string ThrowSound => null;
+
+		[Net, Predicted] private TimeUntil NextThrowTime { get; set; }
+		[Net, Predicted] private bool HasBeenThrown { get; set; }
 
 		public override void Spawn()
 		{
@@ -25,8 +30,21 @@ namespace Facepunch.Hidden
 			SetModel( "models/weapons/w_held_item.vmdl" );
 		}
 
+		public override void ActiveEnd( Entity owner, bool dropped )
+		{
+			if ( HasBeenThrown )
+			{
+				HasBeenThrown = false;
+				AmmoClip++;
+			}
+
+			base.ActiveEnd( owner, dropped );
+		}
+
 		public override void AttackPrimary()
 		{
+			if ( HasBeenThrown ) return;
+
 			if ( !TakeAmmo( 1 ) ) return;
 
 			if ( !string.IsNullOrEmpty( ThrowSound ) )
@@ -36,7 +54,26 @@ namespace Facepunch.Hidden
 			ShootEffects();
 			OnThrown();
 
-			base.AttackPrimary();
+			NextThrowTime = ThrowAnimationTime;
+			HasBeenThrown = true;
+		}
+
+		public override void Simulate( Client owner )
+		{
+			if ( Prediction.FirstTime && HasBeenThrown && NextThrowTime )
+			{
+				if ( AmmoClip > 0 )
+				{
+					ViewModelEntity?.SetAnimParameter( "deploy", true );
+				}
+
+				Rand.SetSeed( Time.Tick );
+				FireProjectile();
+
+				HasBeenThrown = false;
+			}
+
+			base.Simulate( owner );
 		}
 
 		public override void CreateViewModel()
