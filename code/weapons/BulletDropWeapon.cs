@@ -9,6 +9,7 @@ namespace Facepunch.Hidden
 		public virtual string ProjectileModel => "";
 		public virtual float ProjectileRadius => 10f;
 		public virtual float ProjectileLifeTime => 10f;
+		public virtual float ProjectileStartRange => 100f;
 		public virtual string TrailEffect => null;
 		public virtual string HitSound => null;
 		public virtual float InheritVelocity => 0f;
@@ -48,7 +49,7 @@ namespace Facepunch.Hidden
 			OnCreateProjectile( projectile );
 
 			var forward = player.EyeRotation.Forward;
-			var position = player.EyePosition + forward * 100f;
+			var position = player.EyePosition + forward * ProjectileStartRange;
 			var muzzle = GetMuzzlePosition();
 
 			if ( muzzle.HasValue )
@@ -56,8 +57,19 @@ namespace Facepunch.Hidden
 				position = muzzle.Value;
 			}
 
+			var trace = Trace.Ray( player.EyePosition, position )
+				.Ignore( player )
+				.Ignore( this )
+				.Run();
+
+			if ( trace.Hit )
+			{
+				position = trace.EndPosition - trace.Direction * 16f;
+			}
+
 			var endPosition = player.EyePosition + forward * BulletRange;
-			var trace = Trace.Ray( player.EyePosition, endPosition )
+
+			trace = Trace.Ray( player.EyePosition, endPosition )
 				.Ignore( player )
 				.Ignore( this )
 				.Run();
