@@ -5,7 +5,7 @@ namespace Facepunch.Hidden
 	public abstract partial class Throwable<T> : BulletDropWeapon<T> where T : BulletDropProjectile, new()
 	{
 		public override string ImpactEffect => null;
-		public override string ViewModelPath => "models/weapons/v_held_item.vmdl";
+		public override string ViewModelPath => "models/grenade/fp_grenade.vmdl";
 		public override int ViewModelMaterialGroup => 1;
 		public override string MuzzleFlashEffect => null;
 		public override float PrimaryRate => 1f;

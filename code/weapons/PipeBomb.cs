@@ -20,7 +20,7 @@ namespace Facepunch.Hidden
 	{
 		public override WeaponConfig Config => new PipeBombConfig();
 		//public override string TrailEffect => "particles/weapons/fireball/fireball_trail.vpcf";
-		public override string ProjectileModel => "models/rust_props/small_junk/can.vmdl";
+		public override string ProjectileModel => "models/grenade/w_grenade.vmdl";
 		public override string ThrowSound => "pipebomb.throw";
 		public override DamageFlags DamageType => DamageFlags.Blast;
 		public override float ProjectileLifeTime => 3f;
