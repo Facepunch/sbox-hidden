@@ -78,8 +78,11 @@ namespace Facepunch.Hidden
 
 		public override void CreateViewModel()
 		{
-			base.CreateViewModel();
-			ViewModelEntity?.SetAnimParameter( "deploy", true );
+			if ( AmmoClip > 0 )
+			{
+				base.CreateViewModel();
+				ViewModelEntity?.SetAnimParameter( "deploy", true );
+			}
 		}
 
 		public override void SimulateAnimator( PawnAnimator anim )

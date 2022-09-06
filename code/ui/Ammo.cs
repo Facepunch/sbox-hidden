@@ -10,7 +10,6 @@ namespace Facepunch.Hidden
 		public Panel TextContainer;
 		public Label Weapon;
 		public Label Inventory;
-
 		public Panel Icon;
 
 		public Ammo()
@@ -32,6 +31,8 @@ namespace Facepunch.Hidden
 
 			SetClass( "active", isValid );
 			SetClass("low-ammo", weapon != null && weapon.AmmoClip < 3);
+
+			Icon.Style.SetBackgroundImage( weapon.Config.Icon );
 
 			if ( !isValid ) return;
 

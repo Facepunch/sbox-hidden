@@ -150,6 +150,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		public virtual void ClientRespawn()
 		{
+			TimeSinceLastAlone = 0f;
 			KillAllSoundLoops();
 			IsLonely = false;
 		}
