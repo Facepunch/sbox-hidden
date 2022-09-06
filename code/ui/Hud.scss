@@ -63,9 +63,8 @@ Ammo {
 	align-items: center;
 	font-family: Lexend;
 	height: 80px;
-	padding-left: 40px;
-	padding-right: 60px;
 	position: absolute;
+	padding-left: 10px;
 	right: 64px;
 	width: 248px;
 
@@ -74,16 +73,17 @@ Ammo {
 	}
 
 	.icon {
-		width: 32px;
-		height: 32px;
+		width: 64px;
+		height: 64px;
 		background-image: url( /ui/hidden/ammo-icon.png );
 		background-size: 100%;
 		position: absolute;
 		opacity: 0.5;
-		right: 36px;
+		right: 16px;
 	}
 
 	.textContainer {
+		margin-left: 30px;
 		align-items: center;
 		flex-grow: 1;
 	}
@@ -106,7 +106,6 @@ Ammo {
 	&.active {
 		display: flex;
 	}
-
 
 	&.low-ammo {
 		.weapon {
