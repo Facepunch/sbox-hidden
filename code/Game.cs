@@ -199,6 +199,28 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		public override void MoveToSpawnpoint( Entity pawn )
+		{
+			if ( pawn is not Player player )
+			{
+				base.MoveToSpawnpoint( pawn );
+				return;
+			}
+
+			var spawnpoint = All.OfType<TeamSpawnpoint>()
+				.OrderBy( x => Guid.NewGuid() )
+				.Where( x => IsValidSpawnpoint( player, x ) )
+				.FirstOrDefault();
+
+			if ( spawnpoint == null )
+			{
+				base.MoveToSpawnpoint( pawn );
+				return;
+			}
+
+			pawn.Transform = spawnpoint.Transform;
+		}
+
 		public override void ClientJoined( Client client )
 		{
 			var pawn = new Player();
@@ -232,6 +254,17 @@ namespace Facepunch.Hidden
 		{
 			oldRound?.Finish();
 			newRound?.Start();
+		}
+
+		private bool IsValidSpawnpoint( Player player, TeamSpawnpoint spawnpoint )
+		{
+			if ( player.Team is HiddenTeam )
+				return spawnpoint.Team == TeamSpawnpoint.TeamType.Hidden;
+
+			if ( player.Team is IrisTeam )
+				return spawnpoint.Team == TeamSpawnpoint.TeamType.IRIS;
+
+			return false;
 		}
 
 		private void CheckMinimumPlayers()

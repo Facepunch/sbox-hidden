@@ -775,6 +775,27 @@ namespace Facepunch.Hidden
 				}
 			}
 
+			if ( IsLocalPawn )
+			{
+				DoLonelyLogic();
+			}
+
+			if ( PickupEntity.IsValid() && PickupEntity is PlayerCorpse )
+			{
+				if ( !BodyDragSound.HasValue )
+				{
+					BodyDragSound = Sound.FromEntity( "body.drag", PickupEntity );
+				}
+			}
+			else if ( BodyDragSound.HasValue )
+			{
+				BodyDragSound.Value.Stop();
+				BodyDragSound = null;
+			}
+		}
+
+		protected virtual void DoLonelyLogic()
+		{
 			if ( LifeState == LifeState.Alive )
 			{
 				if ( NextLonelyCheck )
@@ -824,19 +845,6 @@ namespace Facepunch.Hidden
 					LonelyLoopSound.Value.Stop();
 					LonelyLoopSound = null;
 				}
-			}
-
-			if ( PickupEntity.IsValid() && PickupEntity is PlayerCorpse )
-			{
-				if ( !BodyDragSound.HasValue )
-				{
-					BodyDragSound = Sound.FromEntity( "body.drag", PickupEntity );
-				}
-			}
-			else if ( BodyDragSound.HasValue )
-			{
-				BodyDragSound.Value.Stop();
-				BodyDragSound = null;
 			}
 		}
 
