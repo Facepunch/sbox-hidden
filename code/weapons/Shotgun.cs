@@ -27,7 +27,7 @@ namespace Facepunch.Hidden
 		public override int HoldType => 3;
 		public override float DamageFalloffStart => 0f;
 		public override float DamageFalloffEnd => 1024f;
-		public override float ReloadTime => 0.5f;
+		public override float ReloadTime => 2f;
 		public override bool HasLaserDot => true;
 		public override bool HasFlashlight => true;
 

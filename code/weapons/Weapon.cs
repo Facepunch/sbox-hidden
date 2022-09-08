@@ -22,14 +22,13 @@ namespace Facepunch.Hidden
 		public virtual string ImpactEffect => null;
 		public virtual int ClipSize => 16;
 		public virtual float AutoReloadDelay => 1.5f;
-		public virtual float ReloadTime => 3.0f;
+		public virtual float ReloadTime => 3f;
 		public virtual bool IsMelee => false;
 		public virtual float DamageFalloffStart => 0f;
 		public virtual float DamageFalloffEnd => 0f;
 		public virtual float BulletRange => 20000f;
 		public virtual bool AutoReload => true;
 		public virtual string TracerEffect => null;
-		public virtual bool ReloadAnimation => true;
 		public virtual bool UnlimitedAmmo => false;
 		public virtual bool CanMeleeAttack => false;
 		public virtual bool IsPassive => false;
@@ -187,9 +186,7 @@ namespace Facepunch.Hidden
 
 			IsReloading = true;
 
-			if ( ReloadAnimation )
-				PlayReloadAnimation();
-
+			PlayReloadAnimation();
 			PlayReloadSound();
 			DoClientReload();
 		}
@@ -367,10 +364,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		public virtual void DoClientReload()
 		{
-			if ( ReloadAnimation )
-			{
-				ViewModelEntity?.SetAnimParameter( "reload", true );
-			}
+			ViewModelEntity?.SetAnimParameter( "reload", true );
 		}
 
 		public override void AttackPrimary()
