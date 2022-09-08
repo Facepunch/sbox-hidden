@@ -9,7 +9,7 @@ namespace Facepunch.Hidden
 {
 	public class Nameplates : Panel
 	{
-		private readonly Dictionary<Player, Nameplate> _activeNameplates = new();
+		private readonly Dictionary<Player, Nameplate> ActiveNameplates = new();
 
 		public float MaxDrawDistance = 400;
 		public int MaxNameplates = 10;
@@ -26,7 +26,7 @@ namespace Facepunch.Hidden
 			var deleteList = new List<Player>();
 			var count = 0;
 
-			deleteList.AddRange( _activeNameplates.Keys );
+			deleteList.AddRange( ActiveNameplates.Keys );
 
 			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, CurrentView.Position ) );
 
@@ -46,8 +46,8 @@ namespace Facepunch.Hidden
 
 			foreach ( var player in deleteList )
 			{
-				_activeNameplates[player].Delete();
-				_activeNameplates.Remove( player );
+				ActiveNameplates[player].Delete();
+				ActiveNameplates.Remove( player );
 			}
 		}
 
@@ -99,10 +99,10 @@ namespace Facepunch.Hidden
 
 			objectSize = objectSize.Clamp( 0.05f, 1.0f );
 
-			if ( !_activeNameplates.TryGetValue( player, out var tag ) )
+			if ( !ActiveNameplates.TryGetValue( player, out var tag ) )
 			{
 				tag = CreateNameplate( player );
-				_activeNameplates[player] = tag;
+				ActiveNameplates[player] = tag;
 			}
 
 			var screenPos = labelPos.ToScreen();

@@ -2,7 +2,7 @@
 
 namespace Facepunch.Hidden
 {
-	partial class Player
+	public partial class Player
 	{
 		public PlayerCorpse Ragdoll { get; set; }
 

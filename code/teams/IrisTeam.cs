@@ -178,13 +178,6 @@ namespace Facepunch.Hidden
 			} );
 		}
 
-		public override void OnPlayerKilled( Player player )
-		{
-			var playerglow = player.Components.GetOrCreate<Glow>();
-			playerglow.Active = false;
-			playerglow.Color = Color.White;
-		}
-
 		public override void OnLeave( Player player )
 		{
 			if ( player.IsLocalPawn )

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	partial class Player
+	public partial class Player
 	{
-		List<ModelEntity> Clothing = new();
+		private List<ModelEntity> Clothing { get; set; } = new();
 
 		public ModelEntity AttachClothing( string modelName )
 		{
