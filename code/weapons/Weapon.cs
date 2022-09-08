@@ -115,7 +115,7 @@ namespace Facepunch.Hidden
 
 		public virtual bool ShouldShowLaserDot()
 		{
-			return !IsReloading && TimeSinceDeployed > 1f;
+			return !IsReloading && TimeSinceDeployed > 1f && TimeSinceReload > 1f;
 		}
 
 		public virtual void OnMeleeAttack()
