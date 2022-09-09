@@ -40,6 +40,8 @@ namespace Facepunch.Hidden
 		[ConVar.Server( "hdn_voice_radius", Help = "How far away players can hear eachother talk." )]
 		public static int VoiceRadius { get; set; } = 2048;
 
+		private RealTimeUntil NextSecondTime { get; set; }
+
 		public Game()
 		{
 			Teams = new();
@@ -56,7 +58,7 @@ namespace Facepunch.Hidden
 			AddTeam( HiddenTeam );
 			AddTeam( IrisTeam );
 
-			_ = StartSecondTimer();
+			NextSecondTime = 0f;
 		}
 
 		public void AddTeam( BaseTeam team )
@@ -89,26 +91,6 @@ namespace Facepunch.Hidden
 			Round?.Finish();
 			Round = round;
 			Round?.Start();
-		}
-
-		public async Task StartSecondTimer()
-		{
-			while ( true )
-			{
-				try
-				{
-					await Task.DelaySeconds( 1f );
-					OnSecond();
-				}
-				catch ( TaskCanceledException )
-				{
-					break;
-				}
-				catch ( Exception e )
-				{
-					Log.Error( e.Message );
-				}
-			}
 		}
 
 		public override void DoPlayerNoclip( Client client )
@@ -245,6 +227,12 @@ namespace Facepunch.Hidden
 			for ( var i = 0; i < Teams.Count; i++ )
 			{
 				Teams[i].OnTick();
+			}
+
+			if ( NextSecondTime )
+			{
+				OnSecond();
+				NextSecondTime = 1f;
 			}
 
 			LightFlickers?.OnTick();
