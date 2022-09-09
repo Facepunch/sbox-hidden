@@ -11,7 +11,7 @@ namespace Facepunch.Hidden
 
 		public override void Populate()
 		{
-			var commands = ResourceLibrary.GetAll<RadioCommandResource>();
+			var commands = ResourceLibrary.GetAll<RadioCommandResource>().ToList();
 
 			foreach ( var command in commands )
 			{
