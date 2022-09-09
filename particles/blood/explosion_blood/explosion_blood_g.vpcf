@@ -217,9 +217,6 @@
 	m_Operators = 
 	[
 		{
-			_class = "C_OP_Decay"
-		},
-		{
 			_class = "C_OP_SetFloat"
 			m_InputValue = 
 			{
@@ -302,7 +299,7 @@
 			}
 		},
 		{
-			_class = "C_OP_FadeOutSimple"
+			_class = "C_OP_EndCapTimedDecay"
 		},
 	]
 	m_Renderers = 

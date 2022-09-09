@@ -786,6 +786,14 @@
 			m_bDisableOperator = true
 		},
 	]
+	m_Constraints = 
+	[
+		{
+			_class = "C_OP_WorldTraceConstraint"
+			m_bKillonContact = true
+			m_CollisionGroupName = "DEBRIS"
+		},
+	]
 	m_Renderers = 
 	[
 		{
@@ -980,6 +988,12 @@
 			_class = "C_OP_RenderTrails"
 			m_flMinLength = 30.0
 			m_hTexture = resource:"materials/particles/water/splash.vtex"
+		},
+	]
+	m_Children = 
+	[
+		{
+			m_ChildRef = resource:"particles/blood/explosion_blood/explosion_blood_h.vpcf"
 		},
 	]
 }

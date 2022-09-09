@@ -381,6 +381,7 @@
 	[
 		{
 			_class = "C_OP_Decay"
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_InterpolateRadius"
@@ -390,6 +391,10 @@
 		},
 		{
 			_class = "C_OP_FadeOutSimple"
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_EndCapTimedDecay"
 		},
 	]
 	m_Renderers = 
