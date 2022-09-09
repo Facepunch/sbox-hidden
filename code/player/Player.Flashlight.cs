@@ -41,7 +41,7 @@ namespace Facepunch.Hidden
 
 			if ( IsServer )
 			{
-				FlashEffect.SetPosition( 3, new Vector3( IsFlashlightOn ? 1 : 0, 1, 0 ) );
+				FlashEffect?.SetPosition( 3, new Vector3( IsFlashlightOn ? 1 : 0, 1, 0 ) );
 			}
 		}
 
@@ -133,10 +133,17 @@ namespace Facepunch.Hidden
 
 		private void TickFlashlight()
 		{
-			if ( Input.Released(InputButton.Flashlight) )
+			if ( ActiveChild is not Weapon weapon ) return;
+
+			if ( weapon.HasFlashlight )
 			{
-				using ( Prediction.Off() )
-					ToggleFlashlight();
+				if ( Input.Released( InputButton.Flashlight ) )
+				{
+					using ( Prediction.Off() )
+					{
+						ToggleFlashlight();
+					}
+				}
 			}
 
 			if ( IsFlashlightOn )
@@ -157,7 +164,7 @@ namespace Facepunch.Hidden
 					{
 						var viewFlashlightParent = ViewFlashlight.Parent;
 
-						if ( ActiveChild is Weapon weapon && weapon.ViewModelEntity != null )
+						if ( weapon.ViewModelEntity != null )
 						{
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
