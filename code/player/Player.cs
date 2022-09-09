@@ -218,12 +218,12 @@ namespace Facepunch.Hidden
 					pool.SetPosition( 0, trace.EndPosition );
 				}
 
-				CreateBloodExplosion( 16, 800f );
+				CreateBloodExplosion( 8, 800f );
 			}
 			else
 			{
 				BecomeRagdollOnServer( LastDamageInfo );
-				CreateBloodExplosion( 8, 300f );
+				CreateBloodExplosion( 4, 300f );
 			}
 
 			PickupEntityBody = null;
