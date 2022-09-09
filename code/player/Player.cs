@@ -55,6 +55,7 @@ namespace Facepunch.Hidden
 		private TimeSince TimeSinceLastFootstep;
 		private DamageInfo LastDamageInfo;
 		private PhysicsBody PickupEntityBody;
+		private int PickupEntityBone;
 		private RealTimeUntil NextSearchDeadBodies { get; set; }
 		private TimeSince TimeSinceLastAlone { get; set; }
 		private Particles SenseParticles;
@@ -106,10 +107,10 @@ namespace Facepunch.Hidden
 			Assert.NotNull( resource );
 
 			var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
-
-			ChatBox.AddChatFromServer( this, $"*beep* {resource.Text}", radioColor, radioColor );
-
 			var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
+
+			ChatBox.AddChatFromServer( To.Multiple( irisPlayers.Select( p => p.Client ) ), this, $"*beep* {resource.Text}", radioColor, radioColor );
+
 			var playersCloseBy = All.OfType<Player>().Where( p => p != this && p.Position.Distance( Position ) <= resource.ProximityDistance );
 			var inRadioRange = irisPlayers.Except( playersCloseBy );
 
@@ -202,7 +203,28 @@ namespace Facepunch.Hidden
 			ShowSenseParticles( false );
 			DrawPlayer( false );
 
-			BecomeRagdollOnServer( LastDamageInfo );
+			if ( LastDamageInfo.Flags.HasFlag( DamageFlags.Blast ) || LastDamageInfo.Damage >= 100f )
+			{
+				var gib = Particles.Create( "particles/blood/gib.vpcf", this );
+				gib.SetPosition( 0, WorldSpaceBounds.Center );
+
+				var trace = Trace.Ray( WorldSpaceBounds.Center, WorldSpaceBounds.Center + Vector3.Down * 300f )
+					.WorldOnly()
+					.Run();
+
+				if ( trace.Hit )
+				{
+					var pool = Particles.Create( "particles/blood/blood_puddle.vpcf", this );
+					pool.SetPosition( 0, trace.EndPosition );
+				}
+
+				CreateBloodExplosion( 16, 800f );
+			}
+			else
+			{
+				BecomeRagdollOnServer( LastDamageInfo );
+				CreateBloodExplosion( 8, 300f );
+			}
 
 			PickupEntityBody = null;
 			PickupEntity = null;
@@ -264,6 +286,42 @@ namespace Facepunch.Hidden
 		protected override void UseFail()
 		{
 			// Do nothing. By default this plays a sound that we don't want.
+		}
+
+		public void CreateBloodExplosion( int decalCount, float maxDistance = 800f )
+		{
+			var explosion = Particles.Create( "particles/blood/explosion_blood/explosion_blood.vpcf", this );
+			explosion.SetPosition( 0, WorldSpaceBounds.Center );
+
+			var decal = ResourceLibrary.Get<DecalDefinition>( "decals/blood_splatter.decal" );
+
+			for ( var i = 0; i < decalCount; i++ )
+			{
+				var trace = Trace.Ray( LastDamageInfo.Position, LastDamageInfo.Position + Vector3.Random * maxDistance )
+					.Ignore( this )
+					.Ignore( ActiveChild )
+					.Run();
+
+				if ( trace.Hit )
+				{
+					Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+				}
+			}
+		}
+
+		public void CreateBloodShotDecal( DamageInfo info, float maxDistance )
+		{
+			var decal = ResourceLibrary.Get<DecalDefinition>( "decals/blood_splatter.decal" );
+
+			var trace = Trace.Ray( info.Position, info.Position + info.Force * maxDistance )
+				.Ignore( this )
+				.Ignore( ActiveChild )
+				.Run();
+
+			if ( trace.Hit )
+			{
+				Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+			}
 		}
 
 		public void DrawPlayer( bool shouldDraw )
@@ -418,6 +476,7 @@ namespace Facepunch.Hidden
 				{
 					if ( trace.Body.Mass < 100f )
 					{
+						PickupEntityBone = trace.Bone;
 						PickupEntityBody = trace.Body;
 						PickupEntity = model;
 						PickupEntity.Tags.Add( "held" );
@@ -446,6 +505,17 @@ namespace Facepunch.Hidden
 							PickupEntity.Tags.Add( "stuck" );
 
 							PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PickupEntityBody, 8f );
+
+							trace = Trace.Ray( PickupEntityBody.Position, PickupEntityBody.Position + Vector3.Down * 600f )
+								.WorldOnly()
+								.Run();
+
+							if ( trace.Hit )
+							{
+								var pool = Particles.Create( "particles/blood/blood_puddle.vpcf" );
+								pool.SetPosition( 0, trace.EndPosition );
+								pool.SetForward( 0, Vector3.Up );
+							}
 						}
 						else
 						{
@@ -521,6 +591,11 @@ namespace Facepunch.Hidden
 				var hitboxGroup = GetHitboxGroup( info.HitboxIndex );
 				attacker.ShowHitMarker( To.Single( attacker ), hitboxGroup );
 			}
+
+			if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
+				CreateBloodShotDecal( info, 2000f );
+			else if ( info.Flags.HasFlag( DamageFlags.Blunt ) )
+				CreateBloodShotDecal( info, 500f );
 
 			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.Flags );
 
@@ -680,6 +755,11 @@ namespace Facepunch.Hidden
 			if ( AnimatedLegs.IsValid() )
 			{
 				AnimatedLegs.RenderingEnabled = (Team is IrisTeam && LifeState == LifeState.Alive);
+
+				foreach ( var clothing in LegsClothing )
+				{
+					clothing.SceneObject.RenderingEnabled = AnimatedLegs.RenderingEnabled;
+				}
 
 				if ( AnimatedLegs.RenderingEnabled )
 				{
