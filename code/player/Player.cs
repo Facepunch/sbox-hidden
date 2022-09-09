@@ -38,6 +38,8 @@ namespace Facepunch.Hidden
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
 
+		private Particles HealthBloodDrip { get; set; }
+
 		private class LegsClothingObject
 		{
 			public SceneModel SceneObject { get; set; }
@@ -160,6 +162,9 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		public virtual void OnClientKilled()
 		{
+			HealthBloodDrip?.Destroy( true );
+			HealthBloodDrip = null;
+
 			KillAllSoundLoops();
 			IsLonely = false;
 		}
@@ -168,6 +173,10 @@ namespace Facepunch.Hidden
 		public virtual void ClientRespawn()
 		{
 			TimeSinceLastAlone = 0f;
+
+			HealthBloodDrip?.Destroy( true );
+			HealthBloodDrip = null;
+
 			KillAllSoundLoops();
 			IsLonely = false;
 		}
@@ -528,15 +537,17 @@ namespace Facepunch.Hidden
 
 							if ( trace.Hit )
 							{
+								/*
 								var pool = Particles.Create( "particles/blood/blood_puddle.vpcf" );
 								pool.SetPosition( 0, trace.EndPosition );
 								pool.SetForward( 0, Vector3.Up );
 								AddBloodParticle( pool );
+								*/
 							}
 
 							var drip = Particles.Create( "particles/blood/blood_drip.vpcf", PickupEntity );
 							drip.SetEntity( 0, PickupEntity );
-							drip.SetPosition( 2, new Vector3( 100f ) );
+							drip.SetPosition( 2, new Vector3( 60f ) );
 							AddBloodParticle( drip );
 						}
 						else
@@ -850,6 +861,22 @@ namespace Facepunch.Hidden
 				StealthParticles?.Destroy( true );
 			}
 
+			if ( Team is IrisTeam && LifeState == LifeState.Alive && Health <= 90f )
+			{
+				if ( HealthBloodDrip == null )
+				{
+					HealthBloodDrip = Particles.Create( "particles/blood/blood_drip.vpcf", this );
+					HealthBloodDrip.SetEntity( 0, this );
+				}
+
+				HealthBloodDrip.SetPosition( 2, new Vector3( 100f - Health ) );
+			}
+			else
+			{
+				HealthBloodDrip?.Destroy( true );
+				HealthBloodDrip = null;
+			}
+
 			if ( SenseParticles != null )
 			{
 				var color = Color.Lerp( Color.Red, Color.Green, (1f / 100f) * Health );
@@ -969,6 +996,7 @@ namespace Facepunch.Hidden
 			RemoveRagdollEntity();
 
 			StealthParticles?.Destroy( true );
+			HealthBloodDrip?.Destroy( true );
 
 			KillAllSoundLoops();
 			DestroyLaserDot();
