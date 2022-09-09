@@ -1081,7 +1081,7 @@
 			m_Gravity = [ 0.0, 0.0, -800.0 ]
 		},
 		{
-			_class = "C_OP_FadeAndKill"
+			_class = "C_OP_EndCapTimedDecay"
 		},
 	]
 	m_Constraints = 
