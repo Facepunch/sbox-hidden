@@ -214,7 +214,18 @@ namespace Facepunch.Hidden
 
 				AnimatedLegs = new( Map.Scene, model, Transform );
 				AnimatedLegs.SetBodyGroup( "Head", 1 );
-				AnimatedLegs.SetBodyGroup( "Chest", 1 );
+
+				foreach ( var clothing in LegsClothing )
+				{
+					clothing.SceneObject.Delete();
+				}
+
+				LegsClothing.Clear();
+
+				foreach ( var child in Children )
+				{
+					AddClothingToLegs( child );
+				}
 			}
 
 			base.OnNewModel( model );
@@ -467,6 +478,32 @@ namespace Facepunch.Hidden
 			}
 		}
 
+		private void AddClothingToLegs( Entity child )
+		{
+			if ( !AnimatedLegs.IsValid() || child is not ModelEntity model || child is Weapon )
+				return;
+
+			if ( model.Model == null ) return;
+
+			var assets = ResourceLibrary.GetAll<Clothing>();
+			var asset = assets.FirstOrDefault( a => !string.IsNullOrEmpty( a.Model ) && a.Model.ToLower() == model.Model.Name.ToLower() );
+			if ( asset == null ) return;
+
+			if ( asset.Category == Sandbox.Clothing.ClothingCategory.Bottoms
+				|| asset.Category == Sandbox.Clothing.ClothingCategory.Footwear
+				|| asset.Category == Sandbox.Clothing.ClothingCategory.Tops )
+			{
+				var clothing = new SceneModel( Map.Scene, model.Model, AnimatedLegs.Transform );
+				AnimatedLegs.AddChild( "clothing", clothing );
+
+				LegsClothing.Add( new()
+				{
+					SceneObject = clothing,
+					Asset = asset
+				} );
+			}
+		}
+
 		private void TickPickupRagdollOrProp()
 		{
 			if ( PickupEntity.IsValid() && PickupEntity.Position.Distance( Position ) > 300f )
@@ -670,31 +707,7 @@ namespace Facepunch.Hidden
 		public override void OnChildAdded( Entity child )
 		{
 			base.OnChildAdded( child );
-
-			if ( AnimatedLegs.IsValid() && child is ModelEntity model && child is not Weapon )
-			{
-				if ( model.Model == null ) return;
-
-				var assets = ResourceLibrary.GetAll<Clothing>();
-				var asset = assets.FirstOrDefault( a => !string.IsNullOrEmpty( a.Model ) && a.Model.ToLower() == model.Model.Name.ToLower() );
-
-				if ( asset != null )
-				{
-					if ( asset.Category == Sandbox.Clothing.ClothingCategory.Bottoms
-						|| asset.Category == Sandbox.Clothing.ClothingCategory.Footwear
-						|| asset.Category == Sandbox.Clothing.ClothingCategory.Tops )
-					{
-						var clothing = new SceneModel( Map.Scene, model.Model, AnimatedLegs.Transform );
-						AnimatedLegs.AddChild( "clothing", clothing );
-
-						LegsClothing.Add( new()
-						{
-							SceneObject = clothing,
-							Asset = asset
-						} );
-					}
-				}
-			}
+			AddClothingToLegs( child );
 		}
 
 		public override void OnChildRemoved( Entity child )
