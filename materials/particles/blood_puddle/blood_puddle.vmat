@@ -1,0 +1,45 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "projected_decals.vfx"
+
+	//---- Decal ----
+	F_ALPHA_MODE 1 // Cutoff
+	F_TRIPLANAR_MAPPING 1
+
+	//---- Normal ----
+	F_NORMAL_MAP 1
+
+	//---- Specular ----
+	F_SPECULAR 1
+	F_SPECULAR_CUBE_MAP 1 // In-game Cube Map
+
+	//---- Alpha ----
+	g_flAlphaCutoffSoftness "0.100"
+
+	//---- Ambient Occlusion ----
+	TextureAmbientOcclusion "materials/default/default_ao.tga"
+
+	//---- Color ----
+	TextureColor "materials/particles/blood_puddle/blood_puddle_color.png"
+
+	//---- Fog ----
+	g_bFogEnabled "1"
+
+	//---- Lighting ----
+	g_flDirectionalLightmapMinZ "0.050"
+	g_flDirectionalLightmapStrength "1.000"
+
+	//---- Metalness ----
+	TextureMetalness "materials/particles/blood_puddle/blood_puddle_metal.png"
+
+	//---- Normal ----
+	TextureNormal "materials/particles/blood_puddle/blood_puddle_normal.png"
+
+	//---- Roughness ----
+	TextureRoughness "materials/particles/blood_puddle/blood_puddle_rough.png"
+
+	//---- Translucent ----
+	TextureTranslucency "materials/particles/blood_puddle/blood_puddle_trans.png"
+}
