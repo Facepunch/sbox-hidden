@@ -1,0 +1,25 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	data = 
+	{
+		Decals = 
+		[
+			{
+				Material = resource:"materials/decals/blood1.vmat"
+				Width = "64.00,80.00,1"
+				Height = "64.00,80.00,1"
+				KeepAspect = true
+				Depth = "8.00,0.00,0"
+				Rotation = "0.00,180.00,1"
+			},
+			{
+				Material = resource:"materials/decals/blood-impact2.vmat"
+				Width = "64.00,80.00,1"
+				Height = "64.00,80.00,1"
+				KeepAspect = true
+				Depth = "8.00,0.00,0"
+				Rotation = "0.00,180.00,1"
+			},
+		]
+	}
+}
