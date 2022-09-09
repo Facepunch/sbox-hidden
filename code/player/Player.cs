@@ -7,6 +7,23 @@ namespace Facepunch.Hidden
 {
 	public partial class Player : Sandbox.Player
 	{
+		private static List<Particles> AllBloodParticles { get; set; } = new();
+
+		public static void ClearAllBloodParticles()
+		{
+			foreach ( var particles in AllBloodParticles )
+			{
+				particles?.Destroy();
+			}
+
+			AllBloodParticles.Clear();
+		}
+
+		public static void AddBloodParticle( Particles particles )
+		{
+			AllBloodParticles.Add( particles );
+		}
+
 		[Net, Predicted] public TimeUntil StaminaRegenTime { get; set; }
 		[Net, Predicted] public TimeSince TimeSinceLastLeap { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
@@ -55,7 +72,6 @@ namespace Facepunch.Hidden
 		private TimeSince TimeSinceLastFootstep;
 		private DamageInfo LastDamageInfo;
 		private PhysicsBody PickupEntityBody;
-		private int PickupEntityBone;
 		private RealTimeUntil NextSearchDeadBodies { get; set; }
 		private TimeSince TimeSinceLastAlone { get; set; }
 		private Particles SenseParticles;
@@ -216,14 +232,15 @@ namespace Facepunch.Hidden
 				{
 					var pool = Particles.Create( "particles/blood/blood_puddle.vpcf", this );
 					pool.SetPosition( 0, trace.EndPosition );
+					AddBloodParticle( pool );
 				}
 
-				CreateBloodExplosion( 8, 800f );
+				CreateBloodExplosion( 6, 600f );
 			}
 			else
 			{
 				BecomeRagdollOnServer( LastDamageInfo );
-				CreateBloodExplosion( 4, 300f );
+				CreateBloodExplosion( 3, 300f );
 			}
 
 			PickupEntityBody = null;
@@ -476,7 +493,6 @@ namespace Facepunch.Hidden
 				{
 					if ( trace.Body.Mass < 100f )
 					{
-						PickupEntityBone = trace.Bone;
 						PickupEntityBody = trace.Body;
 						PickupEntity = model;
 						PickupEntity.Tags.Add( "held" );
@@ -515,7 +531,13 @@ namespace Facepunch.Hidden
 								var pool = Particles.Create( "particles/blood/blood_puddle.vpcf" );
 								pool.SetPosition( 0, trace.EndPosition );
 								pool.SetForward( 0, Vector3.Up );
+								AddBloodParticle( pool );
 							}
+
+							var drip = Particles.Create( "particles/blood/blood_drip.vpcf", PickupEntity );
+							drip.SetEntity( 0, PickupEntity );
+							drip.SetPosition( 2, new Vector3( 100f ) );
+							AddBloodParticle( drip );
 						}
 						else
 						{
@@ -593,9 +615,9 @@ namespace Facepunch.Hidden
 			}
 
 			if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
-				CreateBloodShotDecal( info, 2000f );
+				CreateBloodShotDecal( info, 1000f );
 			else if ( info.Flags.HasFlag( DamageFlags.Blunt ) )
-				CreateBloodShotDecal( info, 500f );
+				CreateBloodShotDecal( info, 200f );
 
 			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.Flags );
 

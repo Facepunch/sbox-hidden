@@ -83,6 +83,8 @@ namespace Facepunch.Hidden
 		{
 			if ( Host.IsServer )
 			{
+				Player.ClearAllBloodParticles();
+
 				foreach ( var client in Client.All )
 				{
 					if ( client.Pawn is Player player )
