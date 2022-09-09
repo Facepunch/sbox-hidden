@@ -76,6 +76,9 @@ namespace Facepunch.Hidden
 				{
 					if ( Owner is Player owner && owner.Health < 100f )
 					{
+						var impact = Particles.Create( "particles/blood/large_blood/large_blood.vpcf" );
+						impact.SetPosition( 0, info.Position );
+
 						owner.Health = Math.Min( owner.Health + 15f, 100f );
 						Sound.FromEntity( "hidden.feed", owner );
 
