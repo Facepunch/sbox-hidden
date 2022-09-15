@@ -26,7 +26,9 @@
         "Choices": [],
         "ConVarName": "hdn_friendly_fire",
         "DisplayName": "Friendly Fire",
-        "DefaultValue": "false"
+        "DefaultValue": "0.5",
+        "Description": "Whether or not players can shoot other players on the same team.",
+        "Maximum": 1
       },
       "hdn_voice_radius": {
         "DisplayType": "Integer",
@@ -34,6 +36,7 @@
         "ConVarName": "hdn_voice_radius",
         "DisplayName": "Voice Radius",
         "DefaultValue": "3000",
+        "Description": "The maximum range players can hear other players when using voice chat.",
         "Maximum": 8000
       },
       "hdn_sense": {
@@ -41,14 +44,16 @@
         "Choices": [],
         "ConVarName": "hdn_sense",
         "DisplayName": "Sense Ability",
-        "DefaultValue": "true"
+        "DefaultValue": "true",
+        "Description": "Whether or not The Hidden can use their ability to sense other players through walls."
       },
       "hdn_charge_attack": {
         "DisplayType": "Boolean",
         "Choices": [],
         "ConVarName": "hdn_charge_attack",
         "DisplayName": "Charge Attack",
-        "DefaultValue": "true"
+        "DefaultValue": "true",
+        "Description": "Whether or not The Hidden can use their instagib charge attack."
       },
       "hdn_scale_hidden_damage": {
         "DisplayType": "Float",
@@ -56,6 +61,7 @@
         "ConVarName": "hdn_scale_hidden_damage",
         "DisplayName": "Scale Hidden Damage",
         "DefaultValue": "0.5",
+        "Description": "The amount to scale damage that The Hidden takes from other players.",
         "Maximum": 1
       }
     },
@@ -118,6 +124,9 @@
           "r": "Ignore"
         }
       ]
-    }
+    },
+    "GameNetworkType": "Multiplayer",
+    "PerMapRanking": false,
+    "RankType": "None"
   }
 }
