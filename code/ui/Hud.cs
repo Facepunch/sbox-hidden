@@ -1,5 +1,6 @@
 ﻿
 using Sandbox;
+using Sandbox.Effects;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
@@ -10,8 +11,8 @@ namespace Facepunch.Hidden
 	[Library]
 	public partial class Hud : HudEntity<RootPanel>
 	{
-		//private StandardPostProcess HealthPostProcessing { get; set; }
-		//private StandardPostProcess ImmersionPostProcessing { get; set; }
+		private ScreenEffects HealthPostProcessing { get; set; }
+		private ScreenEffects ImmersionPostProcessing { get; set; }
 
 		public Hud()
 		{
@@ -37,17 +38,16 @@ namespace Facepunch.Hidden
 			var centerPanel = RootPanel.Add.Panel( "hud_center" );
 			centerPanel.AddChild<RadialVoiceMenu>();
 
-			//HealthPostProcessing = new();
-			//ImmersionPostProcessing = new();
+			HealthPostProcessing = new();
+			ImmersionPostProcessing = new();
 
-			//PostProcess.Add( ImmersionPostProcessing );
-			//PostProcess.Add( HealthPostProcessing );
+			Map.Camera.AddHook( ImmersionPostProcessing );
+			Map.Camera.AddHook( HealthPostProcessing );
 		}
 
 		private Color OverlayColor { get; set; } = Color.Orange;
 		private float BlurAmount { get; set; } = 0f;
 
-		/*
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
@@ -57,28 +57,29 @@ namespace Facepunch.Hidden
 
 			if ( isHiddenTeam )
 			{
-				ImmersionPostProcessing.ChromaticAberration.Enabled = true;
+				ImmersionPostProcessing.ChromaticAberration.Scale = 1f;
 				ImmersionPostProcessing.ChromaticAberration.Offset = new Vector3( 0.002f, 0f, 0.002f );
 			}
 			else
 			{
-				ImmersionPostProcessing.ChromaticAberration.Enabled = false;
+				ImmersionPostProcessing.ChromaticAberration.Scale = 0f;
 			}
 
-			ImmersionPostProcessing.Sharpen.Enabled = true;
-			ImmersionPostProcessing.Sharpen.Strength = 0.1f;
+			ImmersionPostProcessing.Sharpen = 0.1f;
 
 			if ( isHiddenTeam )
 			{
-				ImmersionPostProcessing.Saturate.Enabled = false;
-				ImmersionPostProcessing.Vignette.Enabled = false;
-				ImmersionPostProcessing.FilmGrain.Enabled = false;
+				ImmersionPostProcessing.Saturation = 1f;
+				ImmersionPostProcessing.Vignette.Intensity = 0f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0f;
 
+				/*
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.1f;
 				ImmersionPostProcessing.LensDistortion.K2 = -0.1f;
 
 				ImmersionPostProcessing.ColorOverlay.Enabled = true;
+				*/
 
 				if ( player.IsSenseActive )
 				{
@@ -91,60 +92,63 @@ namespace Facepunch.Hidden
 					BlurAmount = BlurAmount.LerpTo( 0f, Time.Delta * 4f );
 				}
 
+				/*
 				ImmersionPostProcessing.ColorOverlay.Color = OverlayColor;
 				ImmersionPostProcessing.ColorOverlay.Mode = StandardPostProcess.ColorOverlaySettings.OverlayMode.Multiply;
 				ImmersionPostProcessing.ColorOverlay.Amount = 0.8f;
+				*/
 
+				/*
 				ImmersionPostProcessing.Blur.Enabled = true;
 				ImmersionPostProcessing.Blur.Strength = BlurAmount;
+				*/
 			}
 			else
 			{
+				/*
 				ImmersionPostProcessing.ColorOverlay.Enabled = false;
 				ImmersionPostProcessing.Blur.Enabled = false;
+				*/
 
-				ImmersionPostProcessing.Saturate.Enabled = true;
-				ImmersionPostProcessing.Saturate.Amount = 0.9f;
+				ImmersionPostProcessing.Saturation = 0.9f;
 
+				/*
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
 				ImmersionPostProcessing.LensDistortion.K1 = 0.02f;
 				ImmersionPostProcessing.LensDistortion.K2 = -0.02f;
+				*/
 
-				ImmersionPostProcessing.Vignette.Enabled = true;
-				ImmersionPostProcessing.Vignette.Intensity = 1f;
-				ImmersionPostProcessing.Vignette.Color = Color.Black;
-				ImmersionPostProcessing.Vignette.Smoothness = 2f;
-				ImmersionPostProcessing.Vignette.Roundness = 1.7f;
+				ImmersionPostProcessing.Vignette.Intensity = 0.7f;
+				ImmersionPostProcessing.Vignette.Color = Color.Black.WithAlpha( 0.5f );
+				ImmersionPostProcessing.Vignette.Smoothness = 0.9f;
+				ImmersionPostProcessing.Vignette.Roundness = 0.7f;
 
-				ImmersionPostProcessing.FilmGrain.Enabled = true;
-				ImmersionPostProcessing.FilmGrain.Response = 0.6f;
-				ImmersionPostProcessing.FilmGrain.Intensity = 0.5f;
+				ImmersionPostProcessing.FilmGrain.Response = 0.3f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.05f;
 			}
 
 			if ( player.CameraMode is SpectateCamera && !isHiddenTeam )
 			{
-				ImmersionPostProcessing.Saturate.Amount = 0f;
+				ImmersionPostProcessing.Saturation = 0f;
+				/*
 				ImmersionPostProcessing.LensDistortion.K1 = 0.05f;
 				ImmersionPostProcessing.LensDistortion.K2 = -0.05f;
+				*/
 				ImmersionPostProcessing.FilmGrain.Response = 0.2f;
-				ImmersionPostProcessing.FilmGrain.Intensity = 0.7f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.4f;
 
-				HealthPostProcessing.Saturate.Enabled = false;
-				HealthPostProcessing.Vignette.Enabled = false;
+				HealthPostProcessing.Vignette.Intensity = 0f;
 			}
 			else
 			{
 				var healthScale = (0.4f / 100f) * player.Health;
-				HealthPostProcessing.Saturate.Enabled = true;
-				HealthPostProcessing.Saturate.Amount = 0.6f + healthScale;
+				HealthPostProcessing.Saturation = 0.6f + healthScale;
 
-				HealthPostProcessing.Vignette.Enabled = true;
 				HealthPostProcessing.Vignette.Intensity = 0.8f - healthScale * 2f;
-				HealthPostProcessing.Vignette.Color = Color.Red;
-				HealthPostProcessing.Vignette.Smoothness = 4f;
-				HealthPostProcessing.Vignette.Roundness = 2f;
+				HealthPostProcessing.Vignette.Color = Color.Red.WithAlpha( 0.5f );
+				HealthPostProcessing.Vignette.Smoothness = 2f;
+				HealthPostProcessing.Vignette.Roundness = 1.2f;
 			}
 		}
-		*/
 	}
 }
