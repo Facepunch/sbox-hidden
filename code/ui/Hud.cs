@@ -13,6 +13,7 @@ namespace Facepunch.Hidden
 	{
 		private ScreenEffects HealthPostProcessing { get; set; }
 		private ScreenEffects ImmersionPostProcessing { get; set; }
+		private Panel Overlay { get; set; }
 
 		public Hud()
 		{
@@ -20,6 +21,8 @@ namespace Facepunch.Hidden
 				return;
 
 			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );
+
+			Overlay = RootPanel.Add.Panel( "overlay" );
 
 			var rightPanel = RootPanel.Add.Panel( "hud_right" );
 			rightPanel.AddChild<WeaponList>();
@@ -57,7 +60,7 @@ namespace Facepunch.Hidden
 
 			if ( isHiddenTeam )
 			{
-				ImmersionPostProcessing.ChromaticAberration.Scale = 1f;
+				ImmersionPostProcessing.ChromaticAberration.Scale = 0.75f;
 				ImmersionPostProcessing.ChromaticAberration.Offset = new Vector3( 0.002f, 0f, 0.002f );
 			}
 			else
@@ -65,13 +68,19 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.ChromaticAberration.Scale = 0f;
 			}
 
+			Overlay.SetClass( "hidden", !isHiddenTeam );
+
 			ImmersionPostProcessing.Sharpen = 0.1f;
 
 			if ( isHiddenTeam )
 			{
 				ImmersionPostProcessing.Saturation = 1f;
-				ImmersionPostProcessing.Vignette.Intensity = 0f;
 				ImmersionPostProcessing.FilmGrain.Intensity = 0f;
+
+				ImmersionPostProcessing.Vignette.Intensity = 0.5f;
+				ImmersionPostProcessing.Vignette.Color = Color.Red.Darken( 0.3f ).WithAlpha( 0.9f );
+				ImmersionPostProcessing.Vignette.Smoothness = 0.9f;
+				ImmersionPostProcessing.Vignette.Roundness = 0.5f;
 
 				/*
 				ImmersionPostProcessing.LensDistortion.Enabled = true;
@@ -145,7 +154,7 @@ namespace Facepunch.Hidden
 				HealthPostProcessing.Saturation = 0.6f + healthScale;
 
 				HealthPostProcessing.Vignette.Intensity = 0.8f - healthScale * 2f;
-				HealthPostProcessing.Vignette.Color = Color.Red.WithAlpha( 0.5f );
+				HealthPostProcessing.Vignette.Color = Color.Red.Darken( 0.8f ).WithAlpha( 0.5f );
 				HealthPostProcessing.Vignette.Smoothness = 0.9f;
 				HealthPostProcessing.Vignette.Roundness = 0.5f;
 			}
