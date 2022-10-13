@@ -280,15 +280,8 @@ namespace Facepunch.Hidden
 			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
-			var weapons = Children.OfType<Weapon>().ToList();
-			weapons.Sort( ( a, b ) => a.Slot.CompareTo( b.Slot ) );
-
-			if ( SelectedChildIndex >= 0 && SelectedChildIndex < weapons.Count )
-				ActiveChild = weapons[SelectedChildIndex];
-			else if ( weapons.Count > 0 )
-				ActiveChild = weapons[0];
-			else
-				ActiveChild = null;
+			if ( ActiveChildInput.IsValid() && ActiveChildInput.Owner == this )
+				ActiveChild = ActiveChildInput;
 
 			if ( LifeState != LifeState.Alive )
 			{

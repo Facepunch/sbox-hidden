@@ -226,7 +226,7 @@ namespace Facepunch.Hidden
 
 			if ( CanSelectWeapon( weapon ) && player.ActiveChild != weapon.Weapon )
 			{
-				player.SelectedChildIndex = index;
+				player.ActiveChildInput = weapon.Weapon;
 				RemainOpenUntil = 3f;
 			}
 		}
@@ -278,9 +278,9 @@ namespace Facepunch.Hidden
 				var firstWeapon = Weapons[firstIndex];
 
 				if ( CanSelectWeapon( firstWeapon ) )
-					player.SelectedChildIndex = weaponIndex;
+					player.ActiveChildInput = firstWeapon.Weapon;
 				else
-					player.SelectedChildIndex = 0;
+					player.ActiveChildInput = null;
 			}
 		}
 	}
