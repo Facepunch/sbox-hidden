@@ -146,8 +146,8 @@ namespace Facepunch.Hidden
 
 				HealthPostProcessing.Vignette.Intensity = 0.8f - healthScale * 2f;
 				HealthPostProcessing.Vignette.Color = Color.Red.WithAlpha( 0.5f );
-				HealthPostProcessing.Vignette.Smoothness = 2f;
-				HealthPostProcessing.Vignette.Roundness = 1.2f;
+				HealthPostProcessing.Vignette.Smoothness = 0.9f;
+				HealthPostProcessing.Vignette.Roundness = 0.5f;
 			}
 		}
 	}
