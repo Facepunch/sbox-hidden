@@ -93,14 +93,14 @@ namespace Facepunch.Hidden
 			return $"iv_slot{index + 1}";
         }
 
-		private int SlotPressInput( InputBuilder input )
+		private int SlotPressInput()
 		{
-			if ( input.Pressed( InputButton.Slot1 ) ) return 1;
-			if ( input.Pressed( InputButton.Slot2 ) ) return 2;
-			if ( input.Pressed( InputButton.Slot3 ) ) return 3;
-			if ( input.Pressed( InputButton.Slot4 ) ) return 4;
-			if ( input.Pressed( InputButton.Slot5 ) ) return 5;
-			if ( input.Pressed( InputButton.Slot6 ) ) return 6;
+			if ( Input.Pressed( InputButton.Slot1 ) ) return 1;
+			if ( Input.Pressed( InputButton.Slot2 ) ) return 2;
+			if ( Input.Pressed( InputButton.Slot3 ) ) return 3;
+			if ( Input.Pressed( InputButton.Slot4 ) ) return 4;
+			if ( Input.Pressed( InputButton.Slot5 ) ) return 5;
+			if ( Input.Pressed( InputButton.Slot6 ) ) return 6;
 
 			return -1;
 		}
@@ -115,7 +115,7 @@ namespace Facepunch.Hidden
 			return false;
 		}
 
-		private void PreviousWeapon( Player player, InputBuilder input )
+		private void PreviousWeapon( Player player )
 		{
 			var currentIndex = 0;
 
@@ -150,10 +150,10 @@ namespace Facepunch.Hidden
 				currentIndex = lastIndex;
 			}
 
-			SelectWeapon( player, input, currentIndex );
+			SelectWeapon( player, currentIndex );
 		}
 
-		private void NextWeapon( Player player, InputBuilder input )
+		private void NextWeapon( Player player )
 		{
 			var currentIndex = 0;
 
@@ -187,7 +187,7 @@ namespace Facepunch.Hidden
 			if ( currentIndex > lastIndex )
 				currentIndex = firstIndex;
 
-			SelectWeapon( player, input, currentIndex );
+			SelectWeapon( player, currentIndex );
 		}
 
 		private int GetLastIndex()
@@ -220,44 +220,45 @@ namespace Facepunch.Hidden
 			return 0;
 		}
 
-		private void SelectWeapon( Player player, InputBuilder input, int index )
+		private void SelectWeapon( Player player, int index )
 		{
 			var weapon = Weapons[index];
 
 			if ( CanSelectWeapon( weapon ) && player.ActiveChild != weapon.Weapon )
 			{
-				input.ActiveChild = weapon.Weapon;
+				player.SelectedChildIndex = index;
 				RemainOpenUntil = 3f;
 			}
 		}
 
 		[Event.BuildInput]
-		private void ProcessClientInput( InputBuilder input )
+		private void ProcessClientInput()
 		{
 			if ( Local.Pawn is not Player player )
 				return;
 
-			if ( input.MouseWheel == 1 )
+			if ( Input.MouseWheel == 1 )
 			{
-				NextWeapon( player, input );
-				input.MouseWheel = 0;
+				NextWeapon( player );
+				Input.MouseWheel = 0;
 			}
-			else if ( input.MouseWheel == -1 )
+			else if ( Input.MouseWheel == -1 )
 			{
-				PreviousWeapon( player, input );
-				input.MouseWheel = 0;
+				PreviousWeapon( player );
+				Input.MouseWheel = 0;
 			}
 			else
 			{
-				var pressedInput = SlotPressInput( input );
+				var pressedInput = SlotPressInput();
 
 				if ( pressedInput != -1 )
 				{
-					SelectWeapon( player, input, pressedInput - 1 );
+					SelectWeapon( player, pressedInput - 1 );
 				}
 			}
 
 			WeaponListItem activeWeapon = null;
+			var weaponIndex = 0;
 
 			for ( int i = 0; i < Weapons.Length; i++ )
 			{
@@ -266,6 +267,7 @@ namespace Facepunch.Hidden
 				if ( weapon.IsActive )
 				{
 					activeWeapon = weapon;
+					weaponIndex = i;
 					break;
 				}
 			}
@@ -276,9 +278,9 @@ namespace Facepunch.Hidden
 				var firstWeapon = Weapons[firstIndex];
 
 				if ( CanSelectWeapon( firstWeapon ) )
-					input.ActiveChild = firstWeapon.Weapon;
+					player.SelectedChildIndex = weaponIndex;
 				else
-					Input.ActiveChild = null;
+					player.SelectedChildIndex = 0;
 			}
 		}
 	}

@@ -10,8 +10,8 @@ namespace Facepunch.Hidden
 	[Library]
 	public partial class Hud : HudEntity<RootPanel>
 	{
-		private StandardPostProcess HealthPostProcessing { get; set; }
-		private StandardPostProcess ImmersionPostProcessing { get; set; }
+		//private StandardPostProcess HealthPostProcessing { get; set; }
+		//private StandardPostProcess ImmersionPostProcessing { get; set; }
 
 		public Hud()
 		{
@@ -37,16 +37,17 @@ namespace Facepunch.Hidden
 			var centerPanel = RootPanel.Add.Panel( "hud_center" );
 			centerPanel.AddChild<RadialVoiceMenu>();
 
-			HealthPostProcessing = new();
-			ImmersionPostProcessing = new();
+			//HealthPostProcessing = new();
+			//ImmersionPostProcessing = new();
 
-			PostProcess.Add( ImmersionPostProcessing );
-			PostProcess.Add( HealthPostProcessing );
+			//PostProcess.Add( ImmersionPostProcessing );
+			//PostProcess.Add( HealthPostProcessing );
 		}
 
 		private Color OverlayColor { get; set; } = Color.Orange;
 		private float BlurAmount { get; set; } = 0f;
 
+		/*
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
@@ -144,5 +145,6 @@ namespace Facepunch.Hidden
 				HealthPostProcessing.Vignette.Roundness = 2f;
 			}
 		}
+		*/
 	}
 }

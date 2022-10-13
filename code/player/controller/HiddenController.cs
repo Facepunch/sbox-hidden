@@ -41,8 +41,9 @@ namespace Facepunch.Hidden
 				var minLeapVelocity = (LeapVelocity * 0.2f);
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
 				var actualLeapVelocity = minLeapVelocity + (extraLeapVelocity / 100f) * player.Stamina;
+				var rotation = player.ViewAngles.ToRotation();
 
-				Velocity += (Input.Rotation.Forward * actualLeapVelocity);
+				Velocity += (rotation.Forward * actualLeapVelocity);
 
 				player.PlaySound( "hidden.leap" );
 
@@ -87,9 +88,11 @@ namespace Facepunch.Hidden
 				{
 					player.TimeSinceLastLeap = 0f;
 
+					var rotation = player.ViewAngles.ToRotation();
+
 					BaseVelocity = Vector3.Zero;
 					WishVelocity = Vector3.Zero;
-					Velocity = (Input.Rotation.Forward * LeapVelocity * 2f);
+					Velocity = (rotation.Forward * LeapVelocity * 2f);
 					IsFrozen = false;
 				}
 

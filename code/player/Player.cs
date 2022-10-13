@@ -280,10 +280,15 @@ namespace Facepunch.Hidden
 			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
-			if ( Input.ActiveChild != null )
-			{
-				ActiveChild = Input.ActiveChild;
-			}
+			var weapons = Children.OfType<Weapon>().ToList();
+			weapons.Sort( ( a, b ) => a.Slot.CompareTo( b.Slot ) );
+
+			if ( SelectedChildIndex >= 0 && SelectedChildIndex < weapons.Count )
+				ActiveChild = weapons[SelectedChildIndex];
+			else if ( weapons.Count > 0 )
+				ActiveChild = weapons[0];
+			else
+				ActiveChild = null;
 
 			if ( LifeState != LifeState.Alive )
 			{
@@ -341,7 +346,7 @@ namespace Facepunch.Hidden
 
 				if ( trace.Hit )
 				{
-					Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+					Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ), Color.White );
 				}
 			}
 		}
@@ -357,7 +362,7 @@ namespace Facepunch.Hidden
 
 			if ( trace.Hit )
 			{
-				Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+				Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ), Color.White );
 			}
 		}
 
@@ -512,7 +517,7 @@ namespace Facepunch.Hidden
 				PickupEntity = null;
 			}
 
-			var trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 100f )
+			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 100f )
 				.EntitiesOnly()
 				.WithoutTags( "stuck" )
 				.Ignore( ActiveChild )
@@ -523,7 +528,7 @@ namespace Facepunch.Hidden
 			if ( PickupEntityBody.IsValid() )
 			{
 				var velocity = PickupEntityBody.Velocity;
-				Vector3.SmoothDamp( PickupEntityBody.Position, Input.Position + Input.Rotation.Forward * 100f, ref velocity, 0.2f, Time.Delta * 2f );
+				Vector3.SmoothDamp( PickupEntityBody.Position, EyePosition + EyeRotation.Forward * 100f, ref velocity, 0.2f, Time.Delta * 2f );
 				PickupEntityBody.AngularVelocity = Vector3.Zero;
 				PickupEntityBody.Velocity = velocity.ClampLength( 400f );
 			}
@@ -549,7 +554,7 @@ namespace Facepunch.Hidden
 
 			if ( PickupEntityBody.IsValid() )
 			{
-				trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 80f )
+				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
 					.WorldOnly()
 					.Ignore( ActiveChild )
 					.Ignore( this )
@@ -589,7 +594,7 @@ namespace Facepunch.Hidden
 						}
 						else
 						{
-							PickupEntityBody.ApplyImpulse( Input.Rotation.Forward * 500f * PickupEntityBody.Mass );
+							PickupEntityBody.ApplyImpulse( EyeRotation.Forward * 500f * PickupEntityBody.Mass );
 						}
 
 						PickupEntity.Tags.Remove( "held" );
