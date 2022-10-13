@@ -85,7 +85,12 @@ namespace Facepunch.Hidden
 			UpdateBBox();
 
 			EyeLocalPosition += TraceOffset;
-			EyeRotation = player.ViewAngles.ToRotation();
+
+			// If we're a bot, spin us around 180 degrees.
+			if ( player.Client.IsBot )
+				EyeRotation = player.ViewAngles.WithYaw( player.ViewAngles.yaw + 180f ).ToRotation();
+			else
+				EyeRotation = player.ViewAngles.ToRotation();
 
 			if ( Unstuck.TestAndFix() )
 				return;
