@@ -366,9 +366,9 @@ namespace Facepunch.Hidden
 		}
 
 		[ClientRpc]
-		public void ShowHitMarker( int hitboxGroup )
+		public void ShowHitMarker( bool isHeadshot )
 		{
-			if ( hitboxGroup == 1 )
+			if ( isHeadshot )
 				Sound.FromScreen( "hitmarker.headshot" );
 			else
 				Sound.FromScreen( "hitmarker.hit" );
@@ -636,7 +636,7 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			if ( info.HitboxIndex == 0 )
+			if ( info.Hitbox.HasTag( "head" ) )
 			{
 				info.Damage *= 2f;
 			}
@@ -656,8 +656,7 @@ namespace Facepunch.Hidden
 				Team?.OnTakeDamageFromPlayer( this, attacker, info );
 				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
 
-				var hitboxGroup = GetHitboxGroup( info.HitboxIndex );
-				attacker.ShowHitMarker( To.Single( attacker ), hitboxGroup );
+				attacker.ShowHitMarker( To.Single( attacker ), info.Hitbox.HasTag( "head" ) );
 			}
 
 			if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
