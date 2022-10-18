@@ -16,7 +16,7 @@ namespace Facepunch.Hidden
 			};
 
 			ragdoll.CopyFrom( this );
-			ragdoll.ApplyForceToBone( info.Force, GetHitboxBone( LastDamageInfo.HitboxIndex ) );
+			ragdoll.ApplyForceToBone( info.Force, LastDamageInfo.BoneIndex );
 			ragdoll.Player = this;
 
 			if ( info.Flags.HasFlag( DamageFlags.Blast ) )
