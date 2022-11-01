@@ -163,20 +163,13 @@ namespace Facepunch.Hidden
 			var pawn = Local.Pawn as Player;
 			if ( !pawn.IsValid() ) return;
 
-			var scale = Screen.Height / 1080.0f;
-			var screenSize = Screen.Size / scale;
-			var matrix = Matrix.CreateScale( scale );
+			pawn.RenderHud( Screen.Size );
 
-			using ( Render.Draw2D.MatrixScope( matrix ) )
+			foreach ( var entity in All.OfType<IHudRenderer>() )
 			{
-				pawn.RenderHud( screenSize );
-
-				foreach ( var entity in All.OfType<IHudRenderer>() )
+				if ( entity.IsValid() )
 				{
-					if ( entity.IsValid() )
-					{
-						entity.RenderHud( screenSize );
-					}
+					entity.RenderHud( Screen.Size );
 				}
 			}
 		}

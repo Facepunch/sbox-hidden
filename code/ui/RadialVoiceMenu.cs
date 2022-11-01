@@ -21,7 +21,7 @@ namespace Facepunch.Hidden
 			base.Populate();
 		}
 
-		protected override bool ShouldOpen( InputBuilder builder )
+		protected override bool ShouldOpen()
 		{
 			return Local.Pawn is Player player && player.Team is IrisTeam;
 		}

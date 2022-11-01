@@ -79,11 +79,18 @@ namespace Facepunch.Hidden
 
 		public override void Simulate()
 		{
+			if ( Pawn is not Player player ) return;
+
 			EyeLocalPosition = Vector3.Up * (EyeHeight * Pawn.Scale);
 			UpdateBBox();
 
 			EyeLocalPosition += TraceOffset;
-			EyeRotation = Input.Rotation;
+
+			// If we're a bot, spin us around 180 degrees.
+			if ( player.Client.IsBot )
+				EyeRotation = player.ViewAngles.WithYaw( player.ViewAngles.yaw + 180f ).ToRotation();
+			else
+				EyeRotation = player.ViewAngles.ToRotation();
 
 			if ( Unstuck.TestAndFix() )
 				return;
@@ -113,9 +120,9 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			WishVelocity = new Vector3( Input.Forward, Input.Left, 0 );
+			WishVelocity = new Vector3( player.InputDirection.x, player.InputDirection.y, 0 );
 			var inSpeed = WishVelocity.Length.Clamp( 0, 1 );
-			WishVelocity *= Input.Rotation;
+			WishVelocity *= EyeRotation;
 
 			if ( !Swimming && !IsTouchingLadder )
 			{

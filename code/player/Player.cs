@@ -280,10 +280,8 @@ namespace Facepunch.Hidden
 			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
-			if ( Input.ActiveChild != null )
-			{
-				ActiveChild = Input.ActiveChild;
-			}
+			if ( ActiveChildInput.IsValid() && ActiveChildInput.Owner == this )
+				ActiveChild = ActiveChildInput;
 
 			if ( LifeState != LifeState.Alive )
 			{
@@ -341,7 +339,7 @@ namespace Facepunch.Hidden
 
 				if ( trace.Hit )
 				{
-					Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+					Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ), Color.White );
 				}
 			}
 		}
@@ -357,7 +355,7 @@ namespace Facepunch.Hidden
 
 			if ( trace.Hit )
 			{
-				Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ) );
+				Decal.Place( To.Everyone, decal, null, 0, trace.EndPosition - trace.Direction * 1f, Rotation.LookAt( trace.Normal ), Color.White );
 			}
 		}
 
@@ -368,9 +366,9 @@ namespace Facepunch.Hidden
 		}
 
 		[ClientRpc]
-		public void ShowHitMarker( int hitboxGroup )
+		public void ShowHitMarker( bool isHeadshot )
 		{
-			if ( hitboxGroup == 1 )
+			if ( isHeadshot )
 				Sound.FromScreen( "hitmarker.headshot" );
 			else
 				Sound.FromScreen( "hitmarker.hit" );
@@ -512,7 +510,7 @@ namespace Facepunch.Hidden
 				PickupEntity = null;
 			}
 
-			var trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 100f )
+			var trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 100f )
 				.EntitiesOnly()
 				.WithoutTags( "stuck" )
 				.Ignore( ActiveChild )
@@ -523,7 +521,7 @@ namespace Facepunch.Hidden
 			if ( PickupEntityBody.IsValid() )
 			{
 				var velocity = PickupEntityBody.Velocity;
-				Vector3.SmoothDamp( PickupEntityBody.Position, Input.Position + Input.Rotation.Forward * 100f, ref velocity, 0.2f, Time.Delta * 2f );
+				Vector3.SmoothDamp( PickupEntityBody.Position, EyePosition + EyeRotation.Forward * 100f, ref velocity, 0.2f, Time.Delta * 2f );
 				PickupEntityBody.AngularVelocity = Vector3.Zero;
 				PickupEntityBody.Velocity = velocity.ClampLength( 400f );
 			}
@@ -549,7 +547,7 @@ namespace Facepunch.Hidden
 
 			if ( PickupEntityBody.IsValid() )
 			{
-				trace = Trace.Ray( Input.Position, Input.Position + Input.Rotation.Forward * 80f )
+				trace = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 80f )
 					.WorldOnly()
 					.Ignore( ActiveChild )
 					.Ignore( this )
@@ -589,7 +587,7 @@ namespace Facepunch.Hidden
 						}
 						else
 						{
-							PickupEntityBody.ApplyImpulse( Input.Rotation.Forward * 500f * PickupEntityBody.Mass );
+							PickupEntityBody.ApplyImpulse( EyeRotation.Forward * 500f * PickupEntityBody.Mass );
 						}
 
 						PickupEntity.Tags.Remove( "held" );
@@ -638,7 +636,7 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			if ( info.HitboxIndex == 0 )
+			if ( info.Hitbox.HasTag( "head" ) )
 			{
 				info.Damage *= 2f;
 			}
@@ -658,8 +656,7 @@ namespace Facepunch.Hidden
 				Team?.OnTakeDamageFromPlayer( this, attacker, info );
 				attacker.Team?.OnDealDamageToPlayer( attacker, this, info );
 
-				var hitboxGroup = GetHitboxGroup( info.HitboxIndex );
-				attacker.ShowHitMarker( To.Single( attacker ), hitboxGroup );
+				attacker.ShowHitMarker( To.Single( attacker ), info.Hitbox.HasTag( "head" ) );
 			}
 
 			if ( info.Flags.HasFlag( DamageFlags.Bullet ) )

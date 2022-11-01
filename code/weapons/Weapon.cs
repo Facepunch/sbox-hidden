@@ -515,12 +515,13 @@ namespace Facepunch.Hidden
 			return AvailableAmmo() > 0;
 		}
 
-		public override void BuildInput( InputBuilder input )
+		public override void BuildInput()
 		{
 			if ( RecoilQueue.Count > 0 )
 			{
 				var recoil = RecoilQueue.Dequeue();
-				input.ViewAngles += recoil;
+				var player = Owner as Player;
+				player.ViewAngles += recoil;
 			}
 		}
 

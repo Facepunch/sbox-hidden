@@ -41,8 +41,8 @@ namespace Facepunch.Hidden
 			{
 				if ( LaserDot.IsValid() )
 				{
-					var position = IsServer ? EyePosition : Input.Position;
-					var rotation = IsServer ? EyeRotation : Input.Rotation;
+					var position = IsServer ? EyePosition : CurrentView.Position;
+					var rotation = IsServer ? EyeRotation : CurrentView.Rotation;
 
 					if ( IsServer )
 					{

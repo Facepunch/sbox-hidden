@@ -46,24 +46,24 @@ namespace Facepunch.Hidden
 		}
 
 		[Event.BuildInput]
-		public void BuildInput( InputBuilder builder )
+		public void BuildInput()
 		{
-			var shouldOpen = ShouldOpen( builder );
+			var shouldOpen = ShouldOpen();
 
-			if ( builder.Pressed( Button ) && shouldOpen )
+			if ( Input.Pressed( Button ) && shouldOpen )
 			{
 				VirtualMouse = Screen.Size * 0.5f;
 				IsOpen = true;
 			}
 
-			if ( builder.Released( Button ) || !shouldOpen )
+			if ( Input.Released( Button ) || !shouldOpen )
 			{
 				IsOpen = false;
 			}
 
 			if ( IsOpen )
 			{
-				VirtualMouse += new Vector2( builder.AnalogLook.Direction.y, builder.AnalogLook.Direction.z ) * -500f;
+				VirtualMouse += new Vector2( Input.AnalogLook.Direction.y, Input.AnalogLook.Direction.z ) * -500f;
 
 				var lx = VirtualMouse.x - Box.Left;
 				var ly = VirtualMouse.y - Box.Top;
@@ -90,20 +90,20 @@ namespace Facepunch.Hidden
 				Dot.Style.Left = Length.Pixels( lx * ScaleFromScreen );
 				Dot.Style.Top = Length.Pixels( ly * ScaleFromScreen );
 
-				if ( Hovered != null && builder.Down( InputButton.PrimaryAttack ) )
+				if ( Hovered != null && Input.Down( InputButton.PrimaryAttack ) )
 				{
 					Hovered.OnSelected?.Invoke();
 					LastCloseTime = 0f;
 					IsOpen = false;
 				}
 
-				builder.AnalogLook = Angles.Zero;
+				Input.AnalogLook = Angles.Zero;
 			}
 
 			if ( IsOpen || LastCloseTime < 0.1f )
 			{
-				builder.ClearButton( InputButton.PrimaryAttack );
-				builder.ClearButton( InputButton.SecondaryAttack );
+				Input.ClearButton( InputButton.PrimaryAttack );
+				Input.ClearButton( InputButton.SecondaryAttack );
 			}
 		}
 
@@ -141,7 +141,7 @@ namespace Facepunch.Hidden
 			base.PostTemplateApplied();
 		}
 
-		protected virtual bool ShouldOpen( InputBuilder builder )
+		protected virtual bool ShouldOpen()
 		{
 			return true;
 		}
