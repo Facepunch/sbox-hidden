@@ -29,10 +29,10 @@ namespace Facepunch.Hidden
 			var halfWidth = layoutRect.Width / 2f;
 			var halfHeight = layoutRect.Height / 2f;
 
-			layoutRect.left -= halfWidth;
-			layoutRect.top -= halfHeight;
-			layoutRect.right -= halfWidth;
-			layoutRect.bottom -= halfHeight;
+			layoutRect.Left -= halfWidth;
+			layoutRect.Top -= halfHeight;
+			layoutRect.Right -= halfWidth;
+			layoutRect.Bottom -= halfHeight;
 		}
 
 		protected override void PostTemplateApplied()

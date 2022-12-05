@@ -317,7 +317,7 @@ namespace Facepunch.Hidden
 
 		public virtual void RenderCrosshair( Player player, Vector2 center )
 		{
-			var draw = Render.Draw2D;
+			var draw = Util.Draw;
 			var lastHitMarkerTime = player.TimeSinceLastHit.Relative;
 			var color = Color.Lerp( Color.Red, Color.White, lastHitMarkerTime.LerpInverse( 0.0f, 0.4f ) );
 			var hitEase = Easing.BounceIn( lastHitMarkerTime.LerpInverse( 0.5f, 0.0f ) );
