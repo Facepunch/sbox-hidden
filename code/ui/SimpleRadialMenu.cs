@@ -63,7 +63,7 @@ namespace Facepunch.Hidden
 
 			if ( IsOpen )
 			{
-				VirtualMouse += new Vector2( Input.AnalogLook.Direction.y, Input.AnalogLook.Direction.z ) * -500f;
+				VirtualMouse += new Vector2( Input.AnalogLook.Forward.y, Input.AnalogLook.Forward.z ) * -500f;
 
 				var lx = VirtualMouse.x - Box.Left;
 				var ly = VirtualMouse.y - Box.Top;
@@ -146,7 +146,7 @@ namespace Facepunch.Hidden
 			return true;
 		}
 
-		protected override void FinalLayoutChildren()
+		protected override void FinalLayoutChildren( Vector2 offset )
 		{
 			var radius = Box.Rect.Size.x * 0.5f;
 			var center = Box.Rect.WithoutPosition.Center;
@@ -162,7 +162,7 @@ namespace Facepunch.Hidden
 				item.Style.Top = Length.Pixels( (center.y + y) * ScaleFromScreen );
 			}
 
-			base.FinalLayoutChildren();
+			base.FinalLayoutChildren( offset );
 		}
 
 		private bool IsHidden() => !IsOpen;
