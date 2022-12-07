@@ -50,7 +50,6 @@ namespace Facepunch.Hidden
 			player.AttachClothing( "models/citizen_clothes/trousers/trousers_tracksuit.vmdl" );
 
 			player.Controller = new HiddenController();
-			player.CameraMode = new HiddenFirstPersonCamera();
 
 			player.DrawPlayer( false );
 		}

@@ -231,7 +231,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		[Event.BuildInput]
+		[Event.Client.BuildInput]
 		private void ProcessClientInput()
 		{
 			if ( Local.Pawn is not Player player )

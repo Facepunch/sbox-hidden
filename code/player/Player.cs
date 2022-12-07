@@ -31,12 +31,15 @@ namespace Facepunch.Hidden
 		[Net] public ScreamAbility Scream { get; set; }
 		[Net] public DeploymentType Deployment { get; set; }
 		[Net] public TimeSince TimeSinceDroppedEntity { get; set; }
+		[Net] public Vector3 DeathPosition { get; set; }
+		[Net] public TimeSince TimeSinceDied { get; set; }
 		[Net] public ModelEntity PickupEntity { get; set; }
 		[Net] public int UniqueRandomSeed { get; set; }
 		[Net] public Color RandomColor { get; set; }
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
+		public ICamera CurrentCamera { get; private set; }
 
 		private Particles HealthBloodDrip { get; set; }
 
@@ -110,14 +113,13 @@ namespace Facepunch.Hidden
 		{
 			Projectiles = new( this );
 			Inventory = new Inventory( this );
-			Animator = new AnimatorWithLegs();
 			//Transmit = TransmitType.Always;
 			Ammo = new List<int>();
 		}
 
 		public bool IsSpectator
 		{
-			get => (CameraMode is SpectateCamera);
+			get => CurrentCamera is SpectateCamera;
 		}
 
 		public void PlayRadioCommand( RadioCommandResource resource )
@@ -143,12 +145,8 @@ namespace Facepunch.Hidden
 			EnableAllCollisions = false;
 			EnableDrawing = false;
 			Controller = null;
-			CameraMode = new SpectateCamera
-			{
-				DeathPosition = position,
-				TimeSinceDied = 0,
-				IsHidden = Team is HiddenTeam
-			};
+			DeathPosition = position;
+			TimeSinceDied = 0f;
 		}
 
 		public virtual void RenderHud( Vector2 screenSize )
@@ -277,6 +275,7 @@ namespace Facepunch.Hidden
 		{
 			Projectiles.Simulate();
 
+			SimulateAnimation();
 			SimulateActiveChild( client, ActiveChild );
 			TickFlashlight();
 
@@ -315,7 +314,7 @@ namespace Facepunch.Hidden
 			}
 
 			var controller = GetActiveController();
-			controller?.Simulate( client, this, GetActiveAnimator() );
+			controller?.Simulate( client, this );
 		}
 
 		protected override void UseFail()
@@ -454,28 +453,6 @@ namespace Facepunch.Hidden
 			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * scale;
 		}
 
-		public override void PostCameraSetup( ref CameraSetup setup )
-		{
-			base.PostCameraSetup( ref setup );
-
-			if ( LastCameraRotation == Rotation.Identity )
-				LastCameraRotation = CurrentView.Rotation;
-
-			var angleDiff = Rotation.Difference( LastCameraRotation, CurrentView.Rotation );
-			var angleDiffDegrees = angleDiff.Angle();
-			var allowance = 20.0f;
-
-			if ( angleDiffDegrees > allowance )
-			{
-				LastCameraRotation = Rotation.Lerp( LastCameraRotation, CurrentView.Rotation, 1.0f - (allowance / angleDiffDegrees) );
-			}
-
-			if ( CameraMode is FirstPersonCamera camera )
-			{
-				AddCameraEffects( camera );
-			}
-		}
-
 		private void AddClothingToLegs( Entity child )
 		{
 			if ( !AnimatedLegs.IsValid() || child is not ModelEntity model || child is Weapon )
@@ -600,33 +577,33 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private void AddCameraEffects( CameraMode camera )
+		private void AddCameraEffects()
 		{
 			var speed = Velocity.Length.LerpInverse( 0f, 320f );
-			var forwardspeed = Velocity.Normal.Dot( camera.Rotation.Forward );
+			var forwardspeed = Velocity.Normal.Dot( Camera.Rotation.Forward );
 
-			var left = camera.Rotation.Left;
-			var up = camera.Rotation.Up;
+			var left = Camera.Rotation.Left;
+			var up = Camera.Rotation.Up;
 
 			if ( GroundEntity != null )
 			{
 				WalkBob += Time.Delta * 25f * speed;
 			}
 
-			camera.Position += up * MathF.Sin( WalkBob ) * speed * 2f;
-			camera.Position += left * MathF.Sin( WalkBob * 0.6f ) * speed * 1f;
+			Camera.Position += up * MathF.Sin( WalkBob ) * speed * 2f;
+			Camera.Position += left * MathF.Sin( WalkBob * 0.6f ) * speed * 1f;
 
-			Lean = Lean.LerpTo( Velocity.Dot( camera.Rotation.Right ) * 0.01f, Time.Delta * 15f );
+			Lean = Lean.LerpTo( Velocity.Dot( Camera.Rotation.Right ) * 0.01f, Time.Delta * 15f );
 
 			var appliedLean = Lean;
 			appliedLean += MathF.Sin( WalkBob ) * speed * 0.3f;
-			camera.Rotation *= Rotation.From( 0, 0, appliedLean );
+			Camera.Rotation *= Rotation.From( 0, 0, appliedLean );
 
 			speed = (speed - 0.7f).Clamp( 0f, 1f ) * 3f;
 
 			FOV = FOV.LerpTo( speed * 20f * MathF.Abs( forwardspeed ), Time.Delta * 4f );
 
-			camera.FieldOfView += FOV;
+			Camera.FieldOfView += FOV;
 		}
 
 		public override void TakeDamage( DamageInfo info )
@@ -707,6 +684,49 @@ namespace Facepunch.Hidden
 			AddClothingToLegs( child );
 		}
 
+		public override void FrameSimulate( Client cl )
+		{
+			if ( LifeState == LifeState.Alive )
+			{
+				if ( CurrentCamera is not FirstPersonCamera )
+				{
+					CurrentCamera?.Deactivated();
+					CurrentCamera = new FirstPersonCamera();
+					CurrentCamera.Activated();
+				}
+
+				if ( LastCameraRotation == Rotation.Identity )
+					LastCameraRotation = Camera.Rotation;
+
+				var angleDiff = Rotation.Difference( LastCameraRotation, Camera.Rotation );
+				var angleDiffDegrees = angleDiff.Angle();
+				var allowance = 20.0f;
+
+				if ( angleDiffDegrees > allowance )
+				{
+					LastCameraRotation = Rotation.Lerp( LastCameraRotation, Camera.Rotation, 1.0f - (allowance / angleDiffDegrees) );
+				}
+
+				AddCameraEffects();
+			}
+			else
+			{
+				if ( CurrentCamera is not SpectateCamera )
+				{
+					CurrentCamera?.Deactivated();
+					CurrentCamera = new SpectateCamera();
+					CurrentCamera.Activated();
+				}
+
+				var spectateCamera = CurrentCamera as SpectateCamera;
+				spectateCamera.DeathPosition = DeathPosition;
+				spectateCamera.TimeSinceDied = TimeSinceDied;
+				spectateCamera.IsHidden = Team is HiddenTeam;
+			}
+
+			CurrentCamera?.Update();
+		}
+
 		public override void OnChildRemoved( Entity child )
 		{
 			base.OnChildRemoved( child );
@@ -756,7 +776,7 @@ namespace Facepunch.Hidden
 			NextSearchDeadBodies = 1f;
 		}
 
-		[Event.Frame]
+		[Event.Client.Frame]
 		protected virtual void OnFrame()
 		{
 			if ( ActiveChild is Weapon weapon && LaserDot.IsValid() && LifeState == LifeState.Alive )
@@ -764,10 +784,10 @@ namespace Facepunch.Hidden
 				var attachment = weapon.EffectEntity.GetAttachment( "laser" );
 				if ( !attachment.HasValue ) return;
 
-				var position = EyePosition;
-				var rotation = EyeRotation;
+				var position = Camera.Position;
+				var rotation = Camera.Rotation;
 
-				if ( !LaserDot.IsAuthority || weapon.IsReloading )
+				if ( !LaserDot.IsAuthority )
 				{
 					position = attachment.Value.Position;
 					rotation = attachment.Value.Rotation;

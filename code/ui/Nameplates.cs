@@ -28,7 +28,7 @@ namespace Facepunch.Hidden
 
 			deleteList.AddRange( ActiveNameplates.Keys );
 
-			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, CurrentView.Position ) );
+			var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
 
 			foreach ( var v in players )
 			{
@@ -71,7 +71,7 @@ namespace Facepunch.Hidden
 
 			var labelPos = player.EyePosition + player.Rotation.Up * 10f;
 
-			float dist = labelPos.Distance( CurrentView.Position );
+			float dist = labelPos.Distance( Camera.Position );
 
 			if ( dist > MaxDrawDistance )
 				return false;
@@ -81,9 +81,9 @@ namespace Facepunch.Hidden
 			// If we're not spectating only show nameplates of players we can see.
 			if ( !localPlayer.IsSpectator )
 			{
-				var lookDir = (labelPos - CurrentView.Position).Normal;
+				var lookDir = (labelPos - Camera.Position).Normal;
 
-				if ( CurrentView.Rotation.Forward.Dot( lookDir ) < 0.5 )
+				if ( Camera.Rotation.Forward.Dot( lookDir ) < 0.5 )
 					return false;
 
 				var trace = Trace.Ray( localPlayer.EyePosition, player.EyePosition)
@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 			}
 
 			var alpha = dist.LerpInverse( MaxDrawDistance, MaxDrawDistance * 0.1f, true );
-			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (CurrentView.FieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
+			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (Camera.FieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
 
 			objectSize = objectSize.Clamp( 0.05f, 1.0f );
 

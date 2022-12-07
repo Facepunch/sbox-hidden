@@ -1,40 +1,31 @@
-﻿
-namespace Sandbox
+﻿using Sandbox;
+using System.Linq;
+
+namespace Facepunch.Hidden
 {
-	public class HiddenFirstPersonCamera : CameraMode
+	public partial class FirstPersonCamera : ICamera
 	{
-		private Vector3 LastPosition { get; set; }
-
-		public override void Activated()
+		public void Activated()
 		{
-			var pawn = Local.Pawn;
-			if ( pawn == null ) return;
 
-			Position = pawn.EyePosition;
-			Rotation = pawn.EyeRotation;
-
-			LastPosition = Position;
 		}
 
-		public override void Update()
+		public void Deactivated()
 		{
-			var pawn = Local.Pawn;
-			if ( pawn == null ) return;
 
-			var eyePos = pawn.EyePosition;
-			if ( eyePos.Distance( LastPosition ) < 300 )
-			{
-				Position = Vector3.Lerp( eyePos.WithZ( LastPosition.z ), eyePos, 20f * Time.Delta );
-			}
-			else
-			{
-				Position = eyePos;
-			}
+		}
 
-			Rotation = pawn.EyeRotation;
+		public void Update()
+		{
+			if ( Local.Pawn is not Player player )
+				return;
 
-			Viewer = pawn;
-			LastPosition = Position;
+			Camera.Rotation = player.ViewAngles.ToRotation();
+			Camera.Position = player.EyePosition;
+			Camera.FieldOfView = Local.UserPreference.FieldOfView;
+			Camera.FirstPersonViewer = player;
+			Camera.ZNear = 1f;
+			Camera.ZFar = 5000f;
 		}
 	}
 }

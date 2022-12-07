@@ -29,7 +29,7 @@ namespace Facepunch.Hidden
 		[ConCmd.Client( "hdn_chat_add", CanBeCalledFromServer = true )]
 		public static void AddChatEntry( string playerId, string message )
 		{
-			var client = Client.All.FirstOrDefault( c => c.PlayerId == long.Parse( playerId ) );
+			var client = Client.All.FirstOrDefault( c => c.SteamId == long.Parse( playerId ) );
 
 			if ( client.IsValid() && client.Pawn is Player player && player.Team is not null )
 			{
@@ -57,7 +57,7 @@ namespace Facepunch.Hidden
 				return;
 
 			Log.Info( $"{ConsoleSystem.Caller}: {message}" );
-			AddChatEntry( To.Everyone, ConsoleSystem.Caller.PlayerId.ToString(), message );
+			AddChatEntry( To.Everyone, ConsoleSystem.Caller.SteamId.ToString(), message );
 		}
 
 		public ChatBox()

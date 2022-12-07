@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Facepunch.Hidden
 {
-	public partial class SpectateCamera : CameraMode
+	public class SpectateCamera : ICamera
 	{
-		[Net] public TimeSince TimeSinceDied { get; set; }
-		[Net] public Vector3 DeathPosition { get; set; }
-		[Net] public bool IsHidden { get; set; }
+		public TimeSince TimeSinceDied { get; set; }
+		public Vector3 DeathPosition { get; set; }
+		public bool IsHidden { get; set; }
 
 		public Player TargetPlayer { get; set; }
 		public CCTVCamera CCTVEntity { get; set; }
@@ -18,27 +18,20 @@ namespace Facepunch.Hidden
 		private Vector3 FocusPoint;
 		private int TargetIdx;
 
-		public override void Activated()
+		public void Activated()
 		{
-			base.Activated();
-
-			FocusPoint = CurrentView.Position - GetViewOffset();
-			FieldOfView = 70f;
-			CCTVEntities = Entity.All.OfType<CCTVCamera>().ToList();
-
 			StaticLoopSound = Sound.FromScreen( "cctv.static" );
-
+			CCTVEntities = Entity.All.OfType<CCTVCamera>().ToList();
+			FocusPoint = Camera.Position - GetViewOffset();
 			InputHints.UpdateOnClient();
 		}
 
-		public override void Deactivated()
+		public void Deactivated()
 		{
 			StaticLoopSound.Stop();
-
-			base.Deactivated();
 		}
 
-		public override void Update()
+		public void Update()
 		{
 			if ( Local.Pawn is not Player player )
 				return;
@@ -77,17 +70,17 @@ namespace Facepunch.Hidden
 
 			if ( !IsHidden && CCTVEntity.IsValid() )
 			{
-				Position = CCTVEntity.Position;
-				Rotation = CCTVEntity.Rotation;
+				Camera.Position = CCTVEntity.Position;
+				Camera.Rotation = CCTVEntity.Rotation;
 			}
 			else
 			{
-				Position = FocusPoint + GetViewOffset();
-				Rotation = player.EyeRotation;
+				Camera.Position = FocusPoint + GetViewOffset();
+				Camera.Rotation = player.EyeRotation;
 			}
 
-			FieldOfView = FieldOfView.LerpTo( 50, Time.Delta * 3f );
-			Viewer = null;
+			Camera.FieldOfView = Camera.FieldOfView.LerpTo( 50f, Time.Delta * 3f );
+			Camera.FirstPersonViewer = null;
 		}
 
 		private Vector3 GetSpectatePoint()

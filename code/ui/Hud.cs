@@ -2,9 +2,6 @@
 using Sandbox;
 using Sandbox.Effects;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System;
-using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
 {
@@ -43,9 +40,6 @@ namespace Facepunch.Hidden
 
 			HealthPostProcessing = new();
 			ImmersionPostProcessing = new();
-
-			Map.Camera.AddHook( ImmersionPostProcessing );
-			Map.Camera.AddHook( HealthPostProcessing );
 		}
 
 		private Color OverlayColor { get; set; } = Color.Orange;
@@ -54,7 +48,11 @@ namespace Facepunch.Hidden
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not Player player )
+				return;
+
+			Camera.Current?.AddHook( ImmersionPostProcessing );
+			Camera.Current?.AddHook( HealthPostProcessing );
 
 			var isHiddenTeam = player.Team is HiddenTeam;
 
@@ -136,7 +134,7 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.FilmGrain.Intensity = 0.05f;
 			}
 
-			if ( player.CameraMode is SpectateCamera && !isHiddenTeam )
+			if ( player.CurrentCamera is SpectateCamera && !isHiddenTeam )
 			{
 				ImmersionPostProcessing.Saturation = 0f;
 				/*

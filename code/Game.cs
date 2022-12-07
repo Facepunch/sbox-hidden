@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
 {
-	partial class Game : Sandbox.Game
+	partial class Game : GameManager
 	{
 		public LightFlickers LightFlickers { get; set; }
 		public HiddenTeam HiddenTeam { get; set; }
@@ -98,11 +97,6 @@ namespace Facepunch.Hidden
 			// Do nothing. The player can't noclip in this mode.
 		}
 
-		public override void DoPlayerSuicide( Client client )
-		{
-			// Do nothing. The player can't suicide in this mode.
-		}
-
 		public override bool CanHearPlayerVoice( Client source, Client dest )
 		{
 			if ( !source.IsValid() || !dest.IsValid() )
@@ -111,7 +105,8 @@ namespace Facepunch.Hidden
 			if ( !source.Pawn.IsValid() || !dest.Pawn.IsValid() )
 				return false;
 
-			if ( source.Pawn.LifeState == LifeState.Dead )
+			var sourcePawn = source.Pawn as Entity;
+			if ( sourcePawn.LifeState == LifeState.Dead )
 				return false;
 
 			// Don't play our own voice back to us.
@@ -123,10 +118,12 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client cl )
 		{
-			if ( cl.Pawn.IsValid() && Input.Down( InputButton.Voice ) && cl.Pawn.LifeState == LifeState.Alive )
+			var player = cl.Pawn as Player;
+
+			if ( player.IsValid() && Input.Down( InputButton.Voice ) && player.LifeState == LifeState.Alive )
 			{
 				// Show a voice list entry if we're holding down the voice button.
-				VoiceList.Current?.OnVoicePlayed( cl.PlayerId, 0.5f );
+				VoiceList.Current?.OnVoicePlayed( cl.SteamId, 0.5f );
 			}
 
 			base.Simulate( cl );

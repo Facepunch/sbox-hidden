@@ -67,12 +67,16 @@ namespace Facepunch.Hidden
 			OriginalMaxs = maxs;
 
 			if ( IsActive )
-				maxs = maxs.WithZ( 36 );
+			{
+				maxs = maxs.WithZ( 36f );
+			}
 		}
 
 		public float GetWishSpeed()
 		{
-			if ( !IsActive ) return -1f;
+			if ( !IsActive )
+				return -1f;
+
 			return 64f;
 		}
 	}

@@ -41,7 +41,7 @@ namespace Facepunch.Hidden
 		public virtual float MeleeRate => 1f;
 		public virtual float ChargeAttackDuration => 2f;
 		public virtual DamageFlags DamageType => DamageFlags.Bullet;
-		public virtual int HoldType => 1;
+		public virtual AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.Pistol;
 		public virtual int ViewModelMaterialGroup => 0;
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
@@ -70,6 +70,8 @@ namespace Facepunch.Hidden
 		public AnimatedEntity AnimationOwner => Owner as AnimatedEntity;
 
 		private Queue<Angles> RecoilQueue { get; set; } = new();
+
+		public Player Player => Owner as Player;
 
 		public int AvailableAmmo()
 		{
@@ -211,7 +213,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( owner.Pawn.LifeState == LifeState.Alive )
+			if ( Player.LifeState == LifeState.Alive )
 			{
 				if ( ChargeAttackEndTime > 0f && Time.Now >= ChargeAttackEndTime )
 				{
@@ -245,10 +247,9 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void SimulateAnimator( PawnAnimator anim )
+		public virtual void SimulateAnimator( AnimationHelperWithLegs anim )
 		{
-			anim.SetAnimParameter( "holdtype", HoldType );
-			anim.SetAnimParameter( "aim_body_weight", 1.0f );
+			anim.HoldType = HoldType;
 		}
 
 		public override bool CanPrimaryAttack()
@@ -381,9 +382,9 @@ namespace Facepunch.Hidden
 		public virtual void MeleeStrike( float damage, float force )
 		{
 			var traceSize = 20f;
-			var forward = Owner.EyeRotation.Forward.Normal;
+			var forward = Player.EyeRotation.Forward.Normal;
 
-			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * MeleeRange, traceSize ) )
+			foreach ( var trace in TraceBullet( Player.EyePosition, Player.EyePosition + forward * MeleeRange, traceSize ) )
 			{
 				if ( !trace.Entity.IsValid() )
 					continue;
@@ -425,11 +426,11 @@ namespace Facepunch.Hidden
 
 		public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
 		{
-			var forward = Owner.EyeRotation.Forward;
+			var forward = Player.EyeRotation.Forward;
 			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
 			forward = forward.Normal;
 
-			foreach ( var trace in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * BulletRange, bulletSize ) )
+			foreach ( var trace in TraceBullet( Player.EyePosition, Player.EyePosition + forward * BulletRange, bulletSize ) )
 			{
 				var impactTrace = trace;
 				impactTrace.EndPosition -= trace.Normal * (bulletSize * 0.5f);

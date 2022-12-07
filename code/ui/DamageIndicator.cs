@@ -37,7 +37,7 @@ namespace Facepunch.Hidden
 			{
 				base.Tick();
 
-				var wpos = CurrentView.Rotation.Inverse * (Position.WithZ( 0 ) - CurrentView.Position.WithZ( 0 )).Normal;
+				var wpos = Camera.Rotation.Inverse * (Position.WithZ( 0 ) - Camera.Position.WithZ( 0 )).Normal;
 				wpos = wpos.WithZ( 0 ).Normal;
 
 				var angle = MathF.Atan2( wpos.y, -1.0f * wpos.x );

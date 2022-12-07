@@ -24,7 +24,7 @@ namespace Facepunch.Hidden
 		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 1f;
 		public override int ClipSize => 8;
-		public override int HoldType => 3;
+		public override AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.Shotgun;
 		public override float DamageFalloffStart => 0f;
 		public override float DamageFalloffEnd => 1024f;
 		public override float ReloadTime => .5f;

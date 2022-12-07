@@ -35,7 +35,7 @@ namespace Facepunch.Hidden
 
 			if ( Local.Pawn is Player player )
 			{
-				if ( player.CameraMode is SpectateCamera )
+				if ( player.CurrentCamera is SpectateCamera )
 				{
 					AddHint( InputButton.PrimaryAttack, "Next" );
 				}

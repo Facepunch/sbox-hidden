@@ -24,7 +24,7 @@ namespace Facepunch.Hidden
 		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 0f;
 		public override bool IsMelee => true;
-		public override int HoldType => 0;
+		public override AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.None;
 		public override float MeleeRange => 80f;
 		public override bool HasLaserDot => false;
 		public override bool HasFlashlight => false;
@@ -99,7 +99,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		[Event.Frame]
+		[Event.Client.Frame]
 		protected virtual void OnFrame()
 		{
 			EnableDrawing = false;

@@ -29,11 +29,8 @@ namespace Facepunch.Hidden
 		private float LastYaw { get; set; }
 		private float BobAnim { get; set; }
 
-		float TargetRoll = 0f;
-
-		Vector3 TargetPos = 0f;
-
-		float MyRoll = 0f;
+		private float TargetRoll { get; set; }
+		private float CurrentRoll { get; set; }
 
 		public ViewModel() : base()
 		{
@@ -43,35 +40,31 @@ namespace Facepunch.Hidden
 			};
 		}
 
-		public override void PostCameraSetup( ref CameraSetup camSetup )
+		public override void PlaceViewmodel()
 		{
-			base.PostCameraSetup( ref camSetup );
+			if ( Global.IsRunningInVR )
+				return;
 
-			AddCameraEffects( ref camSetup );
-
-			camSetup.ViewModel.FieldOfView = 75f;
-			if ( Owner is not Player player )
-			return;
-			
-			if ( player.Controller is IrisController ctrl )
-			{
-			
-				TargetPos = TargetPos.LerpTo( Vector3.Up * (ctrl.Duck.IsActive ? -2f : 0f), 2f * Time.Delta );
-				Position += TargetPos;
-
-				TargetRoll = ctrl.Duck.IsActive ? -35f : 0f;
-
-			}
-		}
-
-
-		
-		private void AddCameraEffects( ref CameraSetup camSetup )
-		{
 			if ( Owner is not Player player )
 				return;
 
-			Rotation = Local.Pawn.EyeRotation;
+			Camera.Main.SetViewModelCamera( 90f, 0.1f, 50f );
+
+			Position = Camera.Position;
+			Rotation = Camera.Rotation;
+
+			if ( player.Controller is IrisController controller )
+			{
+				TargetRoll = controller.Duck.IsActive ? -35f : 0f;
+			}
+
+			AddCameraEffects();
+		}
+
+		private void AddCameraEffects()
+		{
+			if ( Owner is not Player player )
+				return;
 
 			if ( IsAiming )
 			{
@@ -90,8 +83,8 @@ namespace Facepunch.Hidden
 			angles += RotationOffset;
 			Rotation = angles.ToRotation();
 
-			MyRoll = MyRoll.LerpTo( TargetRoll, Time.Delta * 5f );
-			Rotation *= Rotation.From( 0, 0, MyRoll );
+			CurrentRoll = CurrentRoll.LerpTo( TargetRoll, Time.Delta * 5f );
+			Rotation *= Rotation.From( 0, 0, CurrentRoll );
 
 			if ( !IsAiming )
 			{

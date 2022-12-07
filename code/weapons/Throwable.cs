@@ -85,17 +85,9 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void SimulateAnimator( PawnAnimator anim )
+		public override void SimulateAnimator( AnimationHelperWithLegs anim )
 		{
-			anim.SetAnimParameter( "holdtype", 5 );
-			anim.SetAnimParameter( "aim_body_weight", 1 );
-
-			ViewModelEntity?.SetAnimParameter( "b_grounded", false );
-
-			if ( Owner.IsValid() )
-			{
-				ViewModelEntity?.SetAnimParameter( "aim_pitch", Owner.EyeRotation.Pitch() );
-			}
+			anim.HoldType = AnimationHelperWithLegs.HoldTypes.Punch;
 		}
 
 		protected virtual void OnThrown()

@@ -30,7 +30,7 @@ namespace Facepunch.Hidden
 		public override float ReloadTime => 4.0f;
 		public override bool HasFlashlight => true;
 		public override bool HasLaserDot => true;
-		public override int HoldType => 2;
+		public override AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.Rifle;
 
 		[ClientRpc]
 		protected override void ShootEffects()

@@ -45,7 +45,7 @@ namespace Facepunch.Hidden
 			Items.Add( item );
 		}
 
-		[Event.BuildInput]
+		[Event.Client.BuildInput]
 		public void BuildInput()
 		{
 			var shouldOpen = ShouldOpen();

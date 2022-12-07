@@ -31,7 +31,7 @@ namespace Facepunch.Hidden
 
 			var shouldShow = false;
 
-			if ( player.CameraMode is SpectateCamera camera )
+			if ( player.CurrentCamera is SpectateCamera camera )
 			{
 				shouldShow = true;
 

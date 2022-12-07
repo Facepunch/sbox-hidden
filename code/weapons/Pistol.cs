@@ -30,7 +30,7 @@ namespace Facepunch.Hidden
 		public override float DamageFalloffEnd => 8000f;
 		public override float ReloadTime => 3.0f;
 		public override bool HasLaserDot => true;
-		public override int HoldType => 1;
+		public override AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.Pistol;
 
 		[ClientRpc]
 		protected override void ShootEffects()
