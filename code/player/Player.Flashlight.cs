@@ -7,9 +7,10 @@ namespace Facepunch.Hidden
 	{
 		[Net, Local, Predicted] public float FlashlightBattery { get; set; } = 100f;
 
-		private Flashlight WorldFlashlight;
-		private Flashlight ViewFlashlight;
-		private Particles FlashEffect;
+		[Net] private Flashlight WorldFlashlight { get; set; }
+
+		private Flashlight ViewFlashlight { get; set; }
+		private Particles FlashEffect { get; set; }
 
 		public bool HasFlashlightEntity
 		{
@@ -17,10 +18,10 @@ namespace Facepunch.Hidden
 			{
 				if ( IsLocalPawn )
 				{
-					return (ViewFlashlight != null && ViewFlashlight.IsValid());
+					return ViewFlashlight.IsValid();
 				}
 
-				return (WorldFlashlight != null && WorldFlashlight.IsValid());
+				return WorldFlashlight.IsValid();
 			}
 		}
 
@@ -29,20 +30,15 @@ namespace Facepunch.Hidden
 			get
 			{
 				if ( IsLocalPawn )
-					return (HasFlashlightEntity && ViewFlashlight.Enabled);
+					return HasFlashlightEntity && ViewFlashlight.Enabled;
 
-				return (HasFlashlightEntity && WorldFlashlight.Enabled);
+				return HasFlashlightEntity && WorldFlashlight.Enabled;
 			}
 		}
 
 		public void ToggleFlashlight()
 		{
 			ShowFlashlight( !IsFlashlightOn );
-
-			if ( IsServer )
-			{
-				FlashEffect?.SetPosition( 3, new Vector3( IsFlashlightOn ? 1 : 0, 1, 0 ) );
-			}
 		}
 
 		public void ShowFlashlight( bool shouldShow, bool playSounds = true )
@@ -67,12 +63,6 @@ namespace Facepunch.Hidden
 			{
 				if ( !HasFlashlightEntity )
 				{
-					if ( FlashEffect == null && IsServer)
-					{
-						FlashEffect = Particles.Create( "particles/flashlight/flashlight.vpcf", weapon, "laser" );
-						FlashEffect.SetPosition( 2, new Color( 0.9f, 0.87f, 0.6f ) );
-					}
-					
 					if ( IsServer )
 					{
 						WorldFlashlight = new Flashlight();
@@ -85,8 +75,8 @@ namespace Facepunch.Hidden
 					{
 						ViewFlashlight = new Flashlight();
 						ViewFlashlight.EnableViewmodelRendering = true;
-						ViewFlashlight.Rotation = EyeRotation;
-						ViewFlashlight.Position = EyePosition + EyeRotation.Forward * 10f;
+						ViewFlashlight.Rotation = Camera.Rotation;
+						ViewFlashlight.Position = Camera.Position + Camera.Rotation.Forward * 10f;
 					}
 				}
 				else
@@ -155,7 +145,6 @@ namespace Facepunch.Hidden
 					if ( IsServer )
 					{
 						var shouldTurnOff = WorldFlashlight.UpdateFromBattery( FlashlightBattery );
-						FlashEffect.SetPosition( 3, new Vector3( shouldTurnOff ? 0 : 1, 1, 0 ) );
 
 						if ( shouldTurnOff )
 							ShowFlashlight( false, false );
@@ -169,7 +158,7 @@ namespace Facepunch.Hidden
 							if ( viewFlashlightParent != weapon.ViewModelEntity )
 							{
 								ViewFlashlight.SetParent( weapon.ViewModelEntity, "muzzle" );
-								ViewFlashlight.Rotation = EyeRotation;
+								ViewFlashlight.Rotation = Camera.Rotation;
 								ViewFlashlight.LocalPosition = Vector3.Zero;
 							}
 						}
@@ -178,8 +167,8 @@ namespace Facepunch.Hidden
 							if ( viewFlashlightParent != null )
 								ViewFlashlight.SetParent( null );
 
-							ViewFlashlight.Rotation = EyeRotation;
-							ViewFlashlight.Position = EyePosition + EyeRotation.Forward * 80f;
+							ViewFlashlight.Rotation = Camera.Rotation;
+							ViewFlashlight.Position = Camera.Position + Camera.Rotation.Forward * 80f;
 						}
 
 						var shouldTurnOff = ViewFlashlight.UpdateFromBattery( FlashlightBattery );

@@ -780,14 +780,32 @@ namespace Facepunch.Hidden
 		[Event.Client.Frame]
 		protected virtual void OnFrame()
 		{
-			if ( ActiveChild is Weapon weapon && LaserDot.IsValid() && LifeState == LifeState.Alive )
+			var weapon = ActiveChild as Weapon;
+
+			if ( IsFlashlightOn && weapon.IsValid() )
+			{
+				if ( FlashEffect == null )
+				{
+					FlashEffect = Particles.Create( "particles/flashlight/flashlight.vpcf", weapon.EffectEntity, "laser" );
+				}
+
+				FlashEffect.SetEntityAttachment( 0, weapon.EffectEntity, "laser" );
+				FlashEffect.SetPosition( 2, new Color( 0.9f, 0.87f, 0.6f ) );
+				FlashEffect.SetPosition( 3, new Vector3( 1f, 1f, 0f ) );
+			}
+			else
+			{
+				FlashEffect?.Destroy();
+				FlashEffect = null;
+			}
+
+			if ( weapon.IsValid() && LaserDot.IsValid() && LifeState == LifeState.Alive )
 			{
 				var attachment = weapon.EffectEntity.GetAttachment( "laser" );
 				if ( !attachment.HasValue ) return;
 
 				var position = Camera.Position;
 				var rotation = Camera.Rotation;
-
 				if ( !LaserDot.IsAuthority )
 				{
 					position = attachment.Value.Position;
