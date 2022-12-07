@@ -147,6 +147,7 @@ namespace Facepunch.Hidden
 			Controller = null;
 			DeathPosition = position;
 			TimeSinceDied = 0f;
+			LifeState = LifeState.Dead;
 		}
 
 		public virtual void RenderHud( Vector2 screenSize )

@@ -134,7 +134,7 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.FilmGrain.Intensity = 0.05f;
 			}
 
-			if ( player.CurrentCamera is SpectateCamera && !isHiddenTeam )
+			if ( player.IsSpectator && !isHiddenTeam )
 			{
 				ImmersionPostProcessing.Saturation = 0f;
 				/*
