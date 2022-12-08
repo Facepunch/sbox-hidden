@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 			}
 
 			var alpha = dist.LerpInverse( MaxDrawDistance, MaxDrawDistance * 0.1f, true );
-			var objectSize = 0.05f / dist / (2.0f * MathF.Tan( (Camera.FieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
+			var objectSize = 0.2f / dist / (2.0f * MathF.Tan( (Camera.FieldOfView / 2.0f).DegreeToRadian() )) * 1500.0f;
 
 			objectSize = objectSize.Clamp( 0.05f, 1.0f );
 
@@ -113,8 +113,8 @@ namespace Facepunch.Hidden
 
 			var transform = new PanelTransform();
 			transform.AddTranslateY( Length.Fraction( -1.0f ) );
-			transform.AddScale( objectSize );
 			transform.AddTranslateX( Length.Fraction( -0.5f ) );
+			transform.AddScale( objectSize );
 
 			tag.Style.Transform = transform;
 			tag.Style.Dirty();
