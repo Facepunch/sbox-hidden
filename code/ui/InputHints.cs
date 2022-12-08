@@ -77,11 +77,11 @@ namespace Facepunch.Hidden
 			if ( Local.Pawn is not Player player ) return;
 			if ( player.Team is not HiddenTeam ) return;
 
-			if ( player.Controller is HiddenController controller )
+			if ( player.Team is HiddenTeam )
 			{
-				if ( !controller.GroundEntity.IsValid() )
+				if ( !player.GroundEntity.IsValid() )
 				{
-					if ( controller.IsFrozen )
+					if ( player.IsFrozen )
 						RunHint.SetContent( "Leap from Wall" );
 					else
 						RunHint.SetContent( "Cling to Wall" );

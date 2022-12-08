@@ -2,19 +2,18 @@
 
 namespace Facepunch.Hidden
 {
-	[Library]
-	public class DuckController : BaseNetworkable
+	public class DuckController 
 	{
-		public BasePlayerController Controller;
-
+		public MoveController Controller { get; private set; }
+		public Player Player => Controller.Player;
 		public bool IsActive { get; private set; }
 
-		public DuckController( BasePlayerController controller )
+		public DuckController( MoveController controller )
 		{
 			Controller = controller;
 		}
 
-		public virtual void PreTick()
+		public void PreTick()
 		{
 			bool wants = Input.Down( InputButton.Duck );
 
@@ -31,7 +30,7 @@ namespace Facepunch.Hidden
 				Controller.SetTag( "ducked" );
 
 				var positionScale = 0.5f;
-				var lookDownDot = Controller.EyeRotation.Forward.Dot( Vector3.Down );
+				var lookDownDot = Player.EyeRotation.Forward.Dot( Vector3.Down );
 
 				if ( lookDownDot > 0.5f )
 				{
@@ -39,7 +38,7 @@ namespace Facepunch.Hidden
 					positionScale += f.Remap( 0f, 0.5f, 0f, 0.1f );
 				}
 
-				Controller.EyeLocalPosition *= positionScale;
+				Player.EyeLocalPosition *= positionScale;
 			}
 		}
 
@@ -50,7 +49,7 @@ namespace Facepunch.Hidden
 
 		private void TryUnDuck()
 		{
-			var pm = Controller.TraceBBox( Controller.Position, Controller.Position, OriginalMins, OriginalMaxs );
+			var pm = Controller.TraceBBox( Player.Position, Player.Position, OriginalMins, OriginalMaxs );
 
 			if ( pm.StartedSolid )
 				return;
@@ -58,8 +57,8 @@ namespace Facepunch.Hidden
 			IsActive = false;
 		}
 
-		private Vector3 OriginalMins;
-		private Vector3 OriginalMaxs;
+		private Vector3 OriginalMins { get; set; }
+		private Vector3 OriginalMaxs { get; set; }
 
 		internal void UpdateBBox( ref Vector3 mins, ref Vector3 maxs )
 		{

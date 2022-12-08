@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player : Sandbox.Player
+	public partial class Player : AnimatedEntity
 	{
 		private static List<Particles> AllBloodParticles { get; set; } = new();
 
@@ -27,6 +27,7 @@ namespace Facepunch.Hidden
 		[Net, Predicted] public TimeUntil StaminaRegenTime { get; set; }
 		[Net, Predicted] public TimeSince TimeSinceLastLeap { get; set; }
 		[Net, Predicted] public float Stamina { get; set; }
+		[Net, Predicted] public bool IsFrozen { get; set; }
 		[Net] public SenseAbility Sense { get; set; }
 		[Net] public ScreamAbility Scream { get; set; }
 		[Net] public DeploymentType Deployment { get; set; }
@@ -37,11 +38,37 @@ namespace Facepunch.Hidden
 		[Net] public int UniqueRandomSeed { get; set; }
 		[Net] public Color RandomColor { get; set; }
 
+		[Net, Predicted] public Entity ActiveChild { get; set; }
+		[ClientInput] public Vector3 InputDirection { get; protected set; }
+		[ClientInput] public Entity ActiveChildInput { get; set; }
+		[ClientInput] public Angles ViewAngles { get; set; }
+		public Angles OriginalViewAngles { get; private set; }
+
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
+		public MoveController Controller { get; private set; }
+		public Inventory Inventory { get; private set; }
 		public ICamera CurrentCamera { get; private set; }
 
-		private Particles HealthBloodDrip { get; set; }
+		public Vector3 EyePosition
+		{
+			get => Transform.PointToWorld( EyeLocalPosition );
+			set => EyeLocalPosition = Transform.PointToLocal( value );
+		}
+
+		[Net, Predicted]
+		public Vector3 EyeLocalPosition { get; set; }
+
+		public Rotation EyeRotation
+		{
+			get => Transform.RotationToWorld( EyeLocalRotation );
+			set => EyeLocalRotation = Transform.RotationToLocal( value );
+		}
+
+		[Net, Predicted]
+		public Rotation EyeLocalRotation { get; set; }
+
+		public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
 		private class LegsClothingObject
 		{
@@ -49,10 +76,11 @@ namespace Facepunch.Hidden
 			public Clothing Asset { get; set; }
 		}
 
+		private Entity LastActiveChild { get; set; }
+		private Particles HealthBloodDrip { get; set; }
 		private List<LegsClothingObject> LegsClothing { get; set; } = new();
 
 		public SceneModel AnimatedLegs { get; private set; }
-
 		public bool IsSenseActive { get; set; }
 
 		private HashSet<string> LegBonesToKeep = new()
@@ -113,13 +141,19 @@ namespace Facepunch.Hidden
 		{
 			Projectiles = new( this );
 			Inventory = new Inventory( this );
-			//Transmit = TransmitType.Always;
 			Ammo = new List<int>();
 		}
 
 		public bool IsSpectator
 		{
 			get => CurrentCamera is SpectateCamera;
+		}
+
+		public void SetMoveController<T>() where T : MoveController
+		{
+			var description = TypeLibrary.GetDescription( typeof( T ) );
+			SetMoveController( To.Single( this ), description.Identity );
+			Controller = description.Create<T>( new object[] { this } );
 		}
 
 		public void PlayRadioCommand( RadioCommandResource resource )
@@ -144,7 +178,6 @@ namespace Facepunch.Hidden
 		{
 			EnableAllCollisions = false;
 			EnableDrawing = false;
-			Controller = null;
 			DeathPosition = position;
 			TimeSinceDied = 0f;
 			LifeState = LifeState.Dead;
@@ -180,7 +213,7 @@ namespace Facepunch.Hidden
 			IsLonely = false;
 		}
 
-		public override void Respawn()
+		public virtual void Respawn()
 		{
 			Game.Instance?.Round?.OnPlayerSpawn( this );
 
@@ -191,14 +224,27 @@ namespace Facepunch.Hidden
 
 			PickupEntityBody = null;
 			PickupEntity = null;
-
+			LifeState = LifeState.Alive;
+			WaterLevel = 0;
+			Health = 100f;
+			Velocity = Vector3.Zero;
 			Stamina = 100f;
 
 			InputHints.UpdateOnClient( To.Single( this ) );
 
 			ClientRespawn();
+			CreateHull();
 
-			base.Respawn();
+			GameManager.Current?.MoveToSpawnpoint( this );
+			ResetInterpolation();
+		}
+
+		public override void Spawn()
+		{
+			EnableLagCompensation = true;
+			Tags.Add( "player" );
+
+			base.Spawn();
 		}
 
 		public override void OnNewModel( Model model )
@@ -232,7 +278,12 @@ namespace Facepunch.Hidden
 
 		public override void OnKilled()
 		{
-			base.OnKilled();
+			GameManager.Current?.OnKilled( this );
+
+			LifeState = LifeState.Dead;
+			StopUsing();
+
+			Client?.AddInt( "deaths", 1 );
 
 			ShowFlashlight( false, false );
 			ShowSenseParticles( false );
@@ -272,12 +323,36 @@ namespace Facepunch.Hidden
 			OnClientKilled();
 		}
 
+		public override void BuildInput()
+		{
+			OriginalViewAngles = ViewAngles;
+			InputDirection = Input.AnalogMove;
+
+			if ( Input.StopProcessing )
+				return;
+
+			var look = Input.AnalogLook;
+
+			if ( ViewAngles.pitch > 90f || ViewAngles.pitch < -90f )
+			{
+				look = look.WithYaw( look.yaw * -1f );
+			}
+
+			var viewAngles = ViewAngles;
+			viewAngles += look;
+			viewAngles.pitch = viewAngles.pitch.Clamp( -89f, 89f );
+			viewAngles.roll = 0f;
+			ViewAngles = viewAngles.Normal;
+
+			ActiveChild?.BuildInput();
+		}
+
 		public override void Simulate( Client client )
 		{
 			Projectiles.Simulate();
 
 			SimulateAnimation();
-			SimulateActiveChild( client, ActiveChild );
+			SimulateActiveChild( ActiveChild );
 			TickFlashlight();
 
 			if ( ActiveChildInput.IsValid() && ActiveChildInput.Owner == this )
@@ -314,13 +389,7 @@ namespace Facepunch.Hidden
 				SwitchToBestWeapon();
 			}
 
-			var controller = GetActiveController();
-			controller?.Simulate( client, this );
-		}
-
-		protected override void UseFail()
-		{
-			// Do nothing. By default this plays a sound that we don't want.
+			Controller?.Simulate();
 		}
 
 		public void CreateBloodExplosion( int decalCount, float maxDistance = 800f )
@@ -405,53 +474,11 @@ namespace Facepunch.Hidden
 			ActiveChild = best;
 		}
 
-		public override void OnActiveChildChanged( Entity from, Entity to )
+		[ClientRpc]
+		private void SetMoveController( int id )
 		{
-			if ( from is Weapon && LaserDot.IsValid() )
-			{
-				DestroyLaserDot();
-			}
-
-			if ( to is Weapon && HasFlashlightEntity )
-			{
-				ShowFlashlight( false );
-			}
-
-			base.OnActiveChildChanged( from, to );
-		}
-
-		public override void OnAnimEventFootstep( Vector3 position, int foot, float volume )
-		{
-			if ( LifeState == LifeState.Dead || !IsClient )
-				return;
-
-			if ( TimeSinceLastFootstep < 0.2f )
-				return;
-
-			volume *= FootstepVolume();
-
-			TimeSinceLastFootstep = 0f;
-
-			var trace = Trace.Ray( position, position + Vector3.Down * 20f )
-				.Radius( 1f )
-				.Ignore( this )
-				.Run();
-
-			if ( !trace.Hit ) return;
-
-			trace.Surface.DoFootstep( this, trace, foot, volume );
-
-			if ( Team is IrisTeam )
-			{
-				var sound = PlaySound( "add.walking" );
-				sound.SetVolume( volume * 0.3f );
-			}
-		}
-
-		public override float FootstepVolume()
-		{
-			var scale = Team is HiddenTeam ? 0.5f : 1f;
-			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * scale;
+			var description = TypeLibrary.GetDescriptionByIdent( id );
+			Controller = description.Create<MoveController>( new object[] { this } );
 		}
 
 		private void AddClothingToLegs( Entity child )
@@ -477,6 +504,61 @@ namespace Facepunch.Hidden
 					SceneObject = clothing,
 					Asset = asset
 				} );
+			}
+		}
+
+		protected virtual float GetFootstepVolume()
+		{
+			var scale = Team is HiddenTeam ? 0.5f : 1f;
+			return Velocity.WithZ( 0f ).Length.LerpInverse( 0f, 300f ) * scale;
+		}
+
+		protected virtual void CreateHull()
+		{
+			SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( -16f, -16f, 0f ), new Vector3( 16f, 16f, 72f ) );
+			EnableHitboxes = true;
+		}
+
+		protected virtual void SimulateActiveChild( Entity child )
+		{
+			if ( Prediction.FirstTime )
+			{
+				if ( LastActiveChild != child )
+				{
+					OnActiveChildChanged( LastActiveChild, child );
+					LastActiveChild = child;
+				}
+			}
+
+			if ( !LastActiveChild.IsValid() )
+				return;
+
+			if ( LastActiveChild.IsAuthority )
+			{
+				LastActiveChild.Simulate( Client );
+			}
+		}
+
+		protected virtual void OnActiveChildChanged( Entity previous, Entity next )
+		{
+			if ( previous is Weapon previousWeapon )
+			{
+				previousWeapon?.ActiveEnd( this, previousWeapon.Owner != this );
+
+				if ( LaserDot.IsValid() )
+				{
+					DestroyLaserDot();
+				}
+			}
+
+			if ( next is Weapon nextWeapon )
+			{
+				nextWeapon?.ActiveStart( this );
+
+				if ( HasFlashlightEntity )
+				{
+					ShowFlashlight( false );
+				}
 			}
 		}
 
@@ -607,6 +689,34 @@ namespace Facepunch.Hidden
 			Camera.FieldOfView += FOV;
 		}
 
+		public override void OnAnimEventFootstep( Vector3 position, int foot, float volume )
+		{
+			if ( LifeState == LifeState.Dead || !IsClient )
+				return;
+
+			if ( TimeSinceLastFootstep < 0.2f )
+				return;
+
+			volume *= GetFootstepVolume();
+
+			TimeSinceLastFootstep = 0f;
+
+			var trace = Trace.Ray( position, position + Vector3.Down * 20f )
+				.Radius( 1f )
+				.Ignore( this )
+				.Run();
+
+			if ( !trace.Hit ) return;
+
+			trace.Surface.DoFootstep( this, trace, foot, volume );
+
+			if ( Team is IrisTeam )
+			{
+				var sound = PlaySound( "add.walking" );
+				sound.SetVolume( volume * 0.3f );
+			}
+		}
+
 		public override void TakeDamage( DamageInfo info )
 		{
 			if ( !Game.Instance.Round.CanPlayerTakeDamage )
@@ -658,7 +768,20 @@ namespace Facepunch.Hidden
 
 			LastDamageInfo = info;
 
-			base.TakeDamage( info );
+			if ( LifeState == LifeState.Alive )
+			{
+				base.TakeDamage( info );
+
+				this.ProceduralHitReaction( info );
+
+				if ( LifeState == LifeState.Dead && info.Attacker.IsValid() )
+				{
+					if ( info.Attacker.Client.IsValid() && info.Attacker.IsValid() )
+					{
+						info.Attacker.Client.AddInt( "kills" );
+					}
+				}
+			}
 		}
 
 		public void RemoveRagdollEntity()
@@ -677,12 +800,6 @@ namespace Facepunch.Hidden
 				return;
 
 			DamageIndicator.Current?.OnHit( position );
-		}
-
-		public override void OnChildAdded( Entity child )
-		{
-			base.OnChildAdded( child );
-			AddClothingToLegs( child );
 		}
 
 		public override void FrameSimulate( Client cl )
@@ -709,6 +826,8 @@ namespace Facepunch.Hidden
 				}
 
 				AddCameraEffects();
+
+				Controller?.FrameSimulate();
 			}
 			else
 			{
@@ -728,9 +847,15 @@ namespace Facepunch.Hidden
 			CurrentCamera?.Update();
 		}
 
+		public override void OnChildAdded( Entity child )
+		{
+			Inventory?.OnChildAdded( child );
+			AddClothingToLegs( child );
+		}
+
 		public override void OnChildRemoved( Entity child )
 		{
-			base.OnChildRemoved( child );
+			Inventory?.OnChildRemoved( child );
 
 			if ( AnimatedLegs.IsValid() && child is ModelEntity model && child is not Weapon )
 			{

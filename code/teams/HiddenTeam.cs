@@ -49,7 +49,7 @@ namespace Facepunch.Hidden
 			player.AttachClothing( "models/citizen_clothes/shoes/sneakers/models/sneakers.vmdl" );
 			player.AttachClothing( "models/citizen_clothes/trousers/trousers_tracksuit.vmdl" );
 
-			player.Controller = new HiddenController();
+			player.SetMoveController<HiddenController>();
 
 			player.DrawPlayer( false );
 		}
@@ -159,7 +159,7 @@ namespace Facepunch.Hidden
 				if ( player.TimeSinceLastLeap > 3f )
 					return;
 
-				if ( controller.IsFrozen )
+				if ( player.IsFrozen )
 					return;
 
 				var trace = Trace.Ray( player.EyePosition, player.EyePosition + player.EyeRotation.Forward * 40f )
@@ -171,7 +171,7 @@ namespace Facepunch.Hidden
 
 				if ( trace.Hit )
 				{
-					controller.IsFrozen = true;
+					player.IsFrozen = true;
 					player.PlaySound( "hidden.stick" );
 				}
 			}

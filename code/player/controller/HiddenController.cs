@@ -3,10 +3,8 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	public partial class HiddenController : CustomWalkController
+	public partial class HiddenController : MoveController
 	{
-		[Net, Predicted] public bool IsFrozen { get; set; }
-
 		public override bool EnableSprinting => false;
 		public override float WalkSpeed { get; set; } = 380f;
 
@@ -15,41 +13,45 @@ namespace Facepunch.Hidden
 
 		private float FallVelocity;
 
+		public HiddenController( Player player ) : base( player )
+		{
+		}
+
 		public virtual void CheckLeapButton()
 		{
 			if ( Swimming )
 			{
 				ClearGroundEntity();
-				Velocity = Velocity.WithZ( 100f );
+				Player.Velocity = Player.Velocity.WithZ( 100f );
 				return;
 			}
 
-			if ( GroundEntity == null )
+			if ( !Player.GroundEntity.IsValid() )
 				return;
 
 			ClearGroundEntity();
 
 			var flGroundFactor = 1f;
 			var flMul = 268.3281572999747f * 1.2f;
-			var startZ = Velocity.z;
+			var startZ = Player.Velocity.z;
 
-			Velocity = Velocity.WithZ( startZ + flMul * flGroundFactor );
-			Velocity -= new Vector3( 0f, 0f, Gravity * 0.5f ) * Time.Delta;
+			Player.Velocity = Player.Velocity.WithZ( startZ + flMul * flGroundFactor );
+			Player.Velocity -= new Vector3( 0f, 0f, Gravity * 0.5f ) * Time.Delta;
 
-			if ( Pawn is Player player && player.Stamina > 20f )
+			if ( Player.Stamina > 20f )
 			{
 				var minLeapVelocity = (LeapVelocity * 0.2f);
 				var extraLeapVelocity = (LeapVelocity * 0.8f);
-				var actualLeapVelocity = minLeapVelocity + (extraLeapVelocity / 100f) * player.Stamina;
-				var rotation = player.ViewAngles.ToRotation();
+				var actualLeapVelocity = minLeapVelocity + (extraLeapVelocity / 100f) * Player.Stamina;
+				var rotation = Player.ViewAngles.ToRotation();
 
-				Velocity += (rotation.Forward * actualLeapVelocity);
+				Player.Velocity += (rotation.Forward * actualLeapVelocity);
 
-				player.PlaySound( "hidden.leap" );
+				Player.PlaySound( "hidden.leap" );
 
-				player.TimeSinceLastLeap = 0f;
-				player.StaminaRegenTime = 1f;
-				player.Stamina = MathF.Max( player.Stamina - LeapStaminaLoss, 0f );
+				Player.TimeSinceLastLeap = 0f;
+				Player.StaminaRegenTime = 1f;
+				Player.Stamina = MathF.Max( Player.Stamina - LeapStaminaLoss, 0f );
 			}
 
 			AddEvent( "jump" );
@@ -67,43 +69,38 @@ namespace Facepunch.Hidden
 		{
 			var speed = base.GetWishSpeed();
 
-			if ( Pawn is Player player )
-			{
-				if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
-					speed *= 0.75f;
-				else if ( player.Deployment == DeploymentType.HIDDEN_ROGUE )
-					speed *= 1.25f;
-			}
+			if ( Player.Deployment == DeploymentType.HIDDEN_BEAST )
+				speed *= 0.75f;
+			else if ( Player.Deployment == DeploymentType.HIDDEN_ROGUE )
+				speed *= 1.25f;
 
 			return speed;
 		}
 
 		public override void Simulate()
 		{
-			if ( Pawn is not Player player ) return;
-
-			if ( IsFrozen )
+			if ( Player.IsFrozen )
 			{
-				if ( Input.Released( InputButton.Run ) || player.Stamina <= 5 )
+				if ( Input.Released( InputButton.Run ) || Player.Stamina <= 5 )
 				{
-					player.TimeSinceLastLeap = 0f;
+					Player.TimeSinceLastLeap = 0f;
 
-					var rotation = player.ViewAngles.ToRotation();
+					var rotation = Player.ViewAngles.ToRotation();
 
-					BaseVelocity = Vector3.Zero;
+					Player.BaseVelocity = Vector3.Zero;
 					WishVelocity = Vector3.Zero;
-					Velocity = (rotation.Forward * LeapVelocity * 2f);
-					IsFrozen = false;
+					Player.Velocity = (rotation.Forward * LeapVelocity * 2f);
+					Player.IsFrozen = false;
 				}
 
-				player.Stamina = MathF.Max( player.Stamina - (5f * Time.Delta), 0f );
+				Player.Stamina = MathF.Max( Player.Stamina - (5f * Time.Delta), 0f );
 
 				return;
 			}
 
-			if ( player.StaminaRegenTime )
+			if ( Player.StaminaRegenTime )
 			{
-				player.Stamina = MathF.Min( player.Stamina + (10f * Time.Delta), 100f );
+				Player.Stamina = MathF.Min( Player.Stamina + (10f * Time.Delta), 100f );
 			}
 
 			base.Simulate();
@@ -111,14 +108,14 @@ namespace Facepunch.Hidden
 
 		public override void OnPreTickMove()
 		{
-			FallVelocity = Velocity.z;
+			FallVelocity = Player.Velocity.z;
 		}
 
 		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
 		{
 			if ( trace.Hit && FallVelocity < -200f )
 			{
-				Pawn.PlaySound( "soft.impact" );
+				Player.PlaySound( "soft.impact" );
 			}
 		}
 	}

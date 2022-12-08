@@ -4,7 +4,7 @@ namespace Facepunch.Hidden;
 
 public partial class Player
 {
-	private Entity LastActiveChild { get; set; }
+	private Entity LastWeaponEntity { get; set; }
 
 	protected void SimulateAnimation()
 	{
@@ -26,7 +26,7 @@ public partial class Player
 		var animHelper = new AnimationHelperWithLegs( this );
 
 		animHelper.WithWishVelocity( Controller.WishVelocity );
-		animHelper.WithVelocity( Controller.Velocity );
+		animHelper.WithVelocity( Velocity );
 		animHelper.WithLookAt( EyePosition + EyeRotation.Forward * 100.0f, 1.0f, 1.0f, 0.5f );
 		animHelper.AimAngle = rotation;
 		animHelper.FootShuffle = shuffle;
@@ -40,7 +40,7 @@ public partial class Player
 		animHelper.IsWeaponLowered = false;
 
 		if ( Controller.HasEvent( "jump" ) ) animHelper.TriggerJump();
-		if ( ActiveChild != LastActiveChild ) animHelper.TriggerDeploy();
+		if ( ActiveChild != LastWeaponEntity ) animHelper.TriggerDeploy();
 
 		if ( ActiveChild is Weapon weapon )
 		{
@@ -52,6 +52,6 @@ public partial class Player
 			animHelper.AimBodyWeight = 0.5f;
 		}
 
-		LastActiveChild = ActiveChild;
+		LastWeaponEntity = ActiveChild;
 	}
 }

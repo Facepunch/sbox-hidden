@@ -3,7 +3,7 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	public class IrisController : CustomWalkController
+	public class IrisController : MoveController
 	{
 		public float FallDamageVelocity = 550f;
 		public float FallDamageScale = 0.25f;
@@ -14,45 +14,46 @@ namespace Facepunch.Hidden
 
 		private float FallVelocity;
 
+		public IrisController( Player player ) : base( player )
+		{
+		}
+
 		public override void Simulate()
 		{
-			if ( Pawn is Player player )
+			var staminaLossPerSecond = StaminaLossPerSecond;
+
+			if ( Player.Deployment == DeploymentType.IRIS_BRAWLER )
 			{
-				var staminaLossPerSecond = StaminaLossPerSecond;
+				staminaLossPerSecond *= 1.3f;
 
-				if ( player.Deployment == DeploymentType.IRIS_BRAWLER )
-				{
-					staminaLossPerSecond *= 1.3f;
-
-					MaxSprintSpeed = 200f;
-					MaxWalkSpeed = 120f;
-				}
-				else if ( player.Deployment == DeploymentType.IRIS_TACTICAL )
-				{
-					MaxSprintSpeed = 250f;
-					MaxWalkSpeed = 120f;
-				}
-
-				if ( Input.Down( InputButton.Run ) && Velocity.Length >= SprintSpeed * 0.8f )
-				{
-					player.StaminaRegenTime = 1f;
-					player.Stamina = MathF.Max( player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
-				}
-				else if ( player.StaminaRegenTime )
-				{
-					player.Stamina = MathF.Min( player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
-				}
-
-				SprintSpeed = MaxWalkSpeed + (((MaxSprintSpeed - MaxWalkSpeed) / 100f) * player.Stamina) + 40f;
-				WalkSpeed = MaxWalkSpeed;
+				MaxSprintSpeed = 200f;
+				MaxWalkSpeed = 120f;
 			}
+			else if ( Player.Deployment == DeploymentType.IRIS_TACTICAL )
+			{
+				MaxSprintSpeed = 250f;
+				MaxWalkSpeed = 120f;
+			}
+
+			if ( Input.Down( InputButton.Run ) && Player.Velocity.Length >= SprintSpeed * 0.8f )
+			{
+				Player.StaminaRegenTime = 1f;
+				Player.Stamina = MathF.Max( Player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );
+			}
+			else if ( Player.StaminaRegenTime )
+			{
+				Player.Stamina = MathF.Min( Player.Stamina + (StaminaGainPerSecond * Time.Delta), 100f );
+			}
+
+			SprintSpeed = MaxWalkSpeed + (((MaxSprintSpeed - MaxWalkSpeed) / 100f) * Player.Stamina) + 40f;
+			WalkSpeed = MaxWalkSpeed;
 
 			base.Simulate();
 		}
 
 		public override void OnPreTickMove()
 		{
-			FallVelocity = Velocity.z;
+			FallVelocity = Player.Velocity.z;
 		}
 
 		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
@@ -64,17 +65,17 @@ namespace Facepunch.Hidden
 				using ( Prediction.Off() )
 				{
 					var damageInfo = new DamageInfo()
-						.WithAttacker( Pawn )
+						.WithAttacker( Player )
 						.WithFlag( DamageFlags.Fall );
 
 					damageInfo.Damage = damage;
 
-					Pawn.TakeDamage( damageInfo );
+					Player.TakeDamage( damageInfo );
 				}
 			}
 			else if ( trace.Hit && FallVelocity < -(FallDamageVelocity * 0.4f) )
 			{
-				Pawn.PlaySound( "soft.impact" );
+				Player.PlaySound( "soft.impact" );
 			}
 		}
 	}

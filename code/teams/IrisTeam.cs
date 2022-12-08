@@ -138,7 +138,7 @@ namespace Facepunch.Hidden
 			player.EnableHideInFirstPerson = true;
 			player.EnableShadowInFirstPerson = true;
 
-			player.Controller = new IrisController();
+			player.SetMoveController<IrisController>();
 		}
 
 		public override void OnJoin( Player player )
