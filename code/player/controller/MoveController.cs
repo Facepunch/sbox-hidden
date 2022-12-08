@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	public class MoveController
+	public class MoveController : BaseNetworkable
 	{
 		public virtual bool EnableSprinting => true;
 		public virtual float SprintSpeed { get; set; } = 320f;
 		public virtual float WalkSpeed { get; set; } = 150f;
+
 		public float Acceleration { get; set; } = 10f;
 		public float AirAcceleration { get; set; } = 50f;
 		public float FallSoundZ { get; set; } = -30f;
@@ -50,10 +51,14 @@ namespace Facepunch.Hidden
 
 		private int StuckTries { get; set; } = 0;
 
-		public MoveController( Player player )
+		public MoveController()
 		{
-			Player = player; 
 			Duck = new DuckController( this );
+		}
+
+		public void SetActivePlayer( Player player )
+		{
+			Player = player;
 		}
 
 		public void ClearGroundEntity()
@@ -132,11 +137,15 @@ namespace Facepunch.Hidden
 
 		public virtual void FrameSimulate()
 		{
+			Assert.NotNull( Player );
+
 			Player.EyeRotation = Player.ViewAngles.ToRotation();
 		}
 
 		public virtual void Simulate()
 		{
+			Assert.NotNull( Player );
+
 			Events?.Clear();
 			Tags?.Clear();
 

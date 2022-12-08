@@ -5,21 +5,19 @@ namespace Facepunch.Hidden
 {
 	public class IrisController : MoveController
 	{
-		public float FallDamageVelocity = 550f;
-		public float FallDamageScale = 0.25f;
-		public float MaxSprintSpeed = 300f;
-		public float MaxWalkSpeed = 150f;
-		public float StaminaLossPerSecond = 15f;
-		public float StaminaGainPerSecond = 20f;
+		public float FallDamageVelocity { get; set; } = 550f;
+		public float FallDamageScale { get; set; } = 0.25f;
+		public float MaxSprintSpeed { get; set; } = 300f;
+		public float MaxWalkSpeed { get; set; } = 150f;
+		public float StaminaLossPerSecond { get; set; } = 15f;
+		public float StaminaGainPerSecond { get; set; } = 20f;
 
-		private float FallVelocity;
-
-		public IrisController( Player player ) : base( player )
-		{
-		}
+		private float FallVelocity { get; set; }
 
 		public override void Simulate()
 		{
+			Assert.NotNull( Player );
+
 			var staminaLossPerSecond = StaminaLossPerSecond;
 
 			if ( Player.Deployment == DeploymentType.IRIS_BRAWLER )

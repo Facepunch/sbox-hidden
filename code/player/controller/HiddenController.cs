@@ -11,11 +11,7 @@ namespace Facepunch.Hidden
 		public float LeapVelocity { get; set; } = 300f;
 		public float LeapStaminaLoss { get; set; } = 25f;
 
-		private float FallVelocity;
-
-		public HiddenController( Player player ) : base( player )
-		{
-		}
+		private float FallVelocity { get; set; }
 
 		public virtual void CheckLeapButton()
 		{
@@ -79,6 +75,8 @@ namespace Facepunch.Hidden
 
 		public override void Simulate()
 		{
+			Assert.NotNull( Player );
+
 			if ( Player.IsFrozen )
 			{
 				if ( Input.Released( InputButton.Run ) || Player.Stamina <= 5 )

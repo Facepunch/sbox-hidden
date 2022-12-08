@@ -38,6 +38,7 @@ namespace Facepunch.Hidden
 		[Net] public int UniqueRandomSeed { get; set; }
 		[Net] public Color RandomColor { get; set; }
 
+		[Net, Predicted] public MoveController Controller { get; private set; }
 		[Net, Predicted] public Entity ActiveChild { get; set; }
 		[ClientInput] public Vector3 InputDirection { get; protected set; }
 		[ClientInput] public Entity ActiveChildInput { get; set; }
@@ -46,7 +47,6 @@ namespace Facepunch.Hidden
 
 		public RealTimeSince TimeSinceLastHit { get; private set; }
 		public ProjectileSimulator Projectiles { get; private set; }
-		public MoveController Controller { get; private set; }
 		public Inventory Inventory { get; private set; }
 		public ICamera CurrentCamera { get; private set; }
 
@@ -149,11 +149,9 @@ namespace Facepunch.Hidden
 			get => CurrentCamera is SpectateCamera;
 		}
 
-		public void SetMoveController<T>() where T : MoveController
+		public void SetMoveController<T>() where T : MoveController, new()
 		{
-			var description = TypeLibrary.GetDescription( typeof( T ) );
-			SetMoveController( To.Single( this ), description.Identity );
-			Controller = description.Create<T>( new object[] { this } );
+			Controller = new T();
 		}
 
 		public void PlayRadioCommand( RadioCommandResource resource )
@@ -389,6 +387,7 @@ namespace Facepunch.Hidden
 				SwitchToBestWeapon();
 			}
 
+			Controller?.SetActivePlayer( this );
 			Controller?.Simulate();
 		}
 
@@ -472,13 +471,6 @@ namespace Facepunch.Hidden
 			if ( best == null ) return;
 
 			ActiveChild = best;
-		}
-
-		[ClientRpc]
-		private void SetMoveController( int id )
-		{
-			var description = TypeLibrary.GetDescriptionByIdent( id );
-			Controller = description.Create<MoveController>( new object[] { this } );
 		}
 
 		private void AddClothingToLegs( Entity child )
@@ -827,6 +819,7 @@ namespace Facepunch.Hidden
 
 				AddCameraEffects();
 
+				Controller?.SetActivePlayer( this );
 				Controller?.FrameSimulate();
 			}
 			else
