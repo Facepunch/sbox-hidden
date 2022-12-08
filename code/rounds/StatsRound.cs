@@ -28,7 +28,7 @@ namespace Facepunch.Hidden
 
 				StatsPanel.Winner.Text = Winner;
 
-				StatsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new Stats.StatInfo
 				{
 					Title = "Hidden Kills",
 					PlayerName = HiddenName,
@@ -37,7 +37,7 @@ namespace Facepunch.Hidden
 					Text = HiddenKills.ToString()
 				} );
 
-				StatsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new Stats.StatInfo
 				{
 					Title = "Hidden Hunter",
 					PlayerName = !string.IsNullOrEmpty( HiddenHunter ) ? HiddenHunter : "N/A",
@@ -46,7 +46,7 @@ namespace Facepunch.Hidden
 					Text = ""
 				} );
 
-				StatsPanel.AddStat( new StatInfo
+				StatsPanel.AddStat( new Stats.StatInfo
 				{
 					Title = "First Death",
 					PlayerName = !string.IsNullOrEmpty( FirstDeath ) ? FirstDeath : "N/A",

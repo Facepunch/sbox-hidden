@@ -1,0 +1,76 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Facepunch.Hidden;
+
+@namespace Facepunch.Hidden
+@attribute [StyleSheet( "/ui/WeaponListItem.scss" )]
+@inherits Panel
+
+<root class="weapon">
+    <div class="icon-container">
+        <img @ref="Icon" class="icon" />
+    </div>
+
+    <div class="weapon-name">
+        <text @ref="Name" class="Name"></text>
+    </div>
+
+    <div @ref="SlotContainer" class="weapon-number">
+        <text @ref="Slot">0</text>
+    </div>
+</root>
+
+@code
+{
+    public bool IsAvailable { get; set; }
+    public bool IsActive { get; set; }
+    public bool IsHidden { get; set; }
+    public string KeyBind { get; set; }
+    public Panel SlotContainer { get; private set; }
+    public Weapon Weapon { get; set; }
+    public Label Slot { get; private set; }
+    public Image Icon { get; private set; }
+    public Label Name { get; private set; }
+
+    public override void Tick()
+    {
+        SetClass( "unavailable", !IsAvailable );
+        SetClass( "hidden", IsHidden );
+        SetClass( "active", IsActive );
+
+        base.Tick();
+    }
+
+    protected override void OnAfterTreeRender( bool firstTime )
+    {
+        if ( Weapon.IsValid() )
+        {
+            Icon.Texture = Texture.Load( FileSystem.Mounted, Weapon.Config.Icon );
+            Name.Text = Weapon.Config.Name;
+
+            if ( !string.IsNullOrEmpty( KeyBind ) )
+            {
+                SlotContainer.SetClass( "hidden", false );
+                Slot.Text = Input.GetKeyWithBinding( KeyBind ).ToUpper();
+            }
+            else
+            {
+                SlotContainer.SetClass( "hidden", true );
+                Slot.Text = string.Empty;
+            }
+
+            var isHidden = (Weapon.Owner is Player player && player.Team is HiddenTeam);
+
+            SetClass( "team_red", isHidden );
+            SetClass( "team_blue", !isHidden );
+        }
+
+        base.OnAfterTreeRender( firstTime );
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine( Weapon, KeyBind );
+    }
+}

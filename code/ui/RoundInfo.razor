@@ -1,0 +1,53 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Facepunch.Hidden;
+@using Sandbox.UI.Construct;
+
+@namespace Facepunch.Hidden
+@attribute [StyleSheet( "/ui/RoundInfo.scss" )]
+@inherits Panel
+
+@code
+{
+	public Panel Container;
+	public Label RoundName;
+	public Label TimeLeft;
+	public Panel Icon;
+
+	public RoundInfo()
+	{
+		Container = Add.Panel( "roundContainer" );
+		RoundName = Container.Add.Label( "Round", "roundName" );
+		Icon = Container.Add.Panel( "icon" );
+		TimeLeft = Container.Add.Label( "00:00", "timeLeft" );
+	}
+
+	public override void Tick()
+	{
+		var player = Local.Pawn;
+		if ( player == null ) return;
+
+		var game = Game.Instance;
+		if ( game == null ) return;
+
+		var round = game.Round;
+		if ( round == null ) return;
+
+		RoundName.Text = round.RoundName;
+
+		if ( round.RoundDuration > 0 && !string.IsNullOrEmpty( round.TimeLeftFormatted ) )
+		{
+			TimeLeft.Text = round.TimeLeftFormatted;
+			Container.SetClass( "roundNameOnly", false );
+		}
+		else
+		{
+			Container.SetClass( "roundNameOnly", true );
+		}
+
+		SetClass( "hidden", Scoreboard.Current?.IsOpen ?? false );
+
+		base.Tick();
+	}
+}

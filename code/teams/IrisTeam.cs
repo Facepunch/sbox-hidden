@@ -152,7 +152,7 @@ namespace Facepunch.Hidden
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
 		{
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "ASSAULT",
 				Description = "Sprints faster and is equipped with a high firerate SMG.",
@@ -160,7 +160,7 @@ namespace Facepunch.Hidden
 				OnDeploy = () => callback( DeploymentType.IRIS_ASSAULT )
 			} );
 
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "BRAWLER",
 				Description = "Moves slower in general but is equipped with a high damage shotgun.",
@@ -168,7 +168,7 @@ namespace Facepunch.Hidden
 				OnDeploy = () => callback( DeploymentType.IRIS_BRAWLER )
 			} );
 
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "TACTICAL",
 				Description = "Sprints slower and is equipped with a burst mode rifle.",

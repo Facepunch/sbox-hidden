@@ -24,6 +24,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AdditionalFiles Remove="ui\Abilities.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="ui\ChatBox.Network.cs" />
+	  <Compile Remove="ui\InputHints.Network.cs" />
+	  <Compile Remove="ui\WeaponList.Network.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="ui\Abilities.razor" />
+	  <None Remove="ui\RadialMenu.razor" />
+	  <None Remove="ui\RadialMenuItem.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="ui\ChatBox.Network.cs" />
+	  <AdditionalFiles Include="ui\InputHints.Network.cs" />
+	  <AdditionalFiles Include="ui\WeaponList.Network.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Using Include="Sandbox.Internal.GlobalGameNamespace" Static="true" />
 	</ItemGroup>
 
@@ -35,7 +57,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll"/>
+		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll" />
+		<Compile Include="ui\Abilities.razor" />
 		<Reference Include="..\..\..\bin\managed/Sandbox.System.dll" />
 		<Reference Include="..\..\..\bin\managed/Sandbox.Engine.dll" />
 		<Reference Include="..\..\..\bin\managed/Sandbox.Game.dll" />
@@ -47,6 +70,15 @@
   <ItemGroup>
 		<ProjectReference Include="S:\Steam\steamapps\common\sbox\addons\base\code\base.csproj" />
 
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ui\RadialMenu.scss">
+      <DependentUpon>%(Filename).cs</DependentUpon>
+    </None>
+    <None Update="ui\RadialMenuItem.scss">
+      <DependentUpon>%(Filename).cs</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿RadialMenuItem {
     position: absolute;
-    background-color: rgba( lerp( seagreen, rgba( 0 0 0 1 ), 0.1 ), 0.7 );
-    width: 150px;
-    height: 150px;
+    background-color: rgba( 0 0 0 0.4 );
+    width: 120px;
+    height: 120px;
     opacity: 1;
     border-radius: 10%;
     display: flex;
@@ -10,14 +10,14 @@
     justify-content: center;
 
     .icon {
-        width: 100px;
-        height: 100px;
+        width: 80%;
+        height: 80%;
         opacity: 0.9;
     }
 
     &.selected {
-        box-shadow: 0px 10px 13px -7px #000000, 0px 0px 27px 3px lerp( seagreen, rgba( 0 0 0 1 ), 0.3 );
-        border-color: lerp( seagreen, rgba( 255 255 255 1 ), 0.3 );
+        box-shadow: 0px 10px 13px -7px #000000, 0px 0px 27px 3px lerp( #333, rgba( 0 0 0 1 ), 0.3 );
+        border-color: lerp( #444, rgba( 255 255 255 1 ), 0.3 );
         border-width: 2px;
     }
 }

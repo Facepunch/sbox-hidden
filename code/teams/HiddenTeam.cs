@@ -56,7 +56,7 @@ namespace Facepunch.Hidden
 
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
 		{
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "CLASSIC",
 				Description = "Well rounded and recommended for beginners.",
@@ -64,7 +64,7 @@ namespace Facepunch.Hidden
 				OnDeploy = () => callback( DeploymentType.HIDDEN_CLASSIC )
 			} );
 
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "BEAST",
 				Description = "Harder to kill but moves slower. Deals more damage. Sense ability can be used more frequently.",
@@ -72,7 +72,7 @@ namespace Facepunch.Hidden
 				OnDeploy = () => callback( DeploymentType.HIDDEN_BEAST )
 			} );
 
-			panel.AddDeployment( new DeploymentInfo
+			panel.AddDeployment( new Deployment.DeploymentInfo
 			{
 				Title = "ROGUE",
 				Description = "Moves faster but easier to kill. Deals less damage. Sense ability can be used less frequently.",

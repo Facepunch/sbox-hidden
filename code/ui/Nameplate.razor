@@ -1,0 +1,18 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Facepunch.Hidden;
+@using Sandbox.UI.Construct;
+
+@namespace Facepunch.Hidden
+@inherits Panel
+
+@code
+{
+	public Label NameLabel;
+
+	public Nameplate( Player player )
+	{
+		NameLabel = Add.Label( player.Client.Name );
+	}
+}

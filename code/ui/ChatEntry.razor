@@ -1,0 +1,32 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Facepunch.Hidden;
+@using Sandbox.UI.Construct;
+
+@namespace Facepunch.Hidden
+@attribute [StyleSheet( "/ui/ChatEntry.scss" )]
+@inherits Panel
+
+@code
+{
+	public Label NameLabel { get; internal set; }
+	public Label Message { get; internal set; }
+	public Image Avatar { get; internal set; }
+
+	private RealTimeSince TimeSinceBorn { get; set; } = 0f;
+
+	public ChatEntry()
+	{
+		Avatar = Add.Image();
+		NameLabel = Add.Label( "Name", "name" );
+		Message = Add.Label( "Message", "message" );
+	}
+
+	public override void Tick() 
+	{
+		base.Tick();
+
+		SetClass( "faded", TimeSinceBorn > 10f );
+	}
+}
