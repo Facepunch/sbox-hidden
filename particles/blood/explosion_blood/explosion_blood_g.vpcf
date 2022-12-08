@@ -159,18 +159,18 @@
 			}
 		},
 		{
-			_class = "C_INIT_InitFloat"
+			_class = "C_INIT_InitFloatCollection"
 			m_InputValue = 
 			{
 				m_nType = "PF_TYPE_RANDOM_UNIFORM"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 0.0
+				m_flLiteralValue = 20.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
 				m_nVectorComponent = 0
-				m_flRandomMin = -360.0
-				m_flRandomMax = 360.0
+				m_flRandomMin = -69.0
+				m_flRandomMax = 69.0
 				m_nRandomMode = "PF_RANDOM_MODE_CONSTANT"
 				m_flLOD0 = 0.0
 				m_flLOD1 = 0.0
@@ -207,15 +207,12 @@
 			}
 			m_nOutputField = "4"
 		},
-		{
-			_class = "C_INIT_PositionPlaceOnGround"
-		},
-		{
-			_class = "C_INIT_CreateWithinSphere"
-		},
 	]
 	m_Operators = 
 	[
+		{
+			_class = "C_OP_Decay"
+		},
 		{
 			_class = "C_OP_SetFloat"
 			m_InputValue = 
@@ -299,14 +296,14 @@
 			}
 		},
 		{
-			_class = "C_OP_EndCapTimedDecay"
+			_class = "C_OP_FadeOutSimple"
 		},
 	]
 	m_Renderers = 
 	[
 		{
 			_class = "C_OP_RenderProjected"
-			m_hProjectedMaterial = resource:"materials/particles/fluids/blood_decals/fluid_spray_b_decals_28_22.vmat"
+			m_hProjectedMaterial = resource:"materials/decals/blood1.vmat"
 		},
 	]
 }
