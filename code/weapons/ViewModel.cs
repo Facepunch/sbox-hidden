@@ -48,7 +48,7 @@ namespace Facepunch.Hidden
 			if ( Owner is not Player player )
 				return;
 
-			Camera.Main.SetViewModelCamera( 90f, 0.1f, 50f );
+			Camera.Main.SetViewModelCamera( 90f, 0.1f, 200f );
 
 			Position = Camera.Position;
 			Rotation = Camera.Rotation;
