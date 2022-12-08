@@ -109,7 +109,7 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.Saturation = 0f;
 
 				ImmersionPostProcessing.FilmGrain.Response = 0.2f;
-				ImmersionPostProcessing.FilmGrain.Intensity = 0.1f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.05f;
 
 				HealthPostProcessing.Vignette.Intensity = 0f;
 			}
