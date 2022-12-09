@@ -1,5 +1,6 @@
 ﻿using Gamelib.Utility;
 using Sandbox;
+using Sandbox.Utility;
 using System.Collections.Generic;
 
 namespace Facepunch.Hidden
@@ -40,7 +41,7 @@ namespace Facepunch.Hidden
 		public virtual float MeleeRange => 200f;
 		public virtual float MeleeRate => 1f;
 		public virtual float ChargeAttackDuration => 2f;
-		public virtual DamageFlags DamageType => DamageFlags.Bullet;
+		public virtual string DamageType => "bullet";
 		public virtual AnimationHelperWithLegs.HoldTypes HoldType => AnimationHelperWithLegs.HoldTypes.Pistol;
 		public virtual int ViewModelMaterialGroup => 0;
 		public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
@@ -408,7 +409,7 @@ namespace Facepunch.Hidden
 					{
 						var damageInfo = new DamageInfo()
 							.WithPosition( trace.EndPosition )
-							.WithFlag( DamageFlags.Blunt )
+							.WithTag( "blunt" )
 							.WithForce( forward * 100f * force )
 							.UsingTraceResult( trace )
 							.WithAttacker( Owner )
@@ -462,7 +463,7 @@ namespace Facepunch.Hidden
 					{
 						var damageInfo = new DamageInfo()
 							.WithPosition( trace.EndPosition )
-							.WithFlag( DamageType )
+							.WithTag( DamageType )
 							.WithForce( forward * 100f * force )
 							.UsingTraceResult( trace )
 							.WithAttacker( Owner )
@@ -584,7 +585,7 @@ namespace Facepunch.Hidden
 				.WithWeapon( this )
 				.WithPosition( position )
 				.WithForce( force )
-				.WithFlag( DamageType );
+				.WithTag( DamageType );
 
 			damageInfo.Damage = damage;
 

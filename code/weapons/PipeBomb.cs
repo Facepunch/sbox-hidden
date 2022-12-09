@@ -22,7 +22,7 @@ namespace Facepunch.Hidden
 		//public override string TrailEffect => "particles/weapons/fireball/fireball_trail.vpcf";
 		public override string ProjectileModel => "models/grenade/w_grenade.vmdl";
 		public override string ThrowSound => "pipebomb.throw";
-		public override DamageFlags DamageType => DamageFlags.Blast;
+		public override string DamageType => "blast";
 		public override float ProjectileStartRange => 100f;
 		public override float ProjectileLifeTime => 3f;
 		public override float ThrowAnimationTime => 0.5f;

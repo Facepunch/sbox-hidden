@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Sandbox.Physics;
 
 namespace Facepunch.Hidden
 {
@@ -223,7 +224,6 @@ namespace Facepunch.Hidden
 			PickupEntityBody = null;
 			PickupEntity = null;
 			LifeState = LifeState.Alive;
-			WaterLevel = 0;
 			Health = 100f;
 			Velocity = Vector3.Zero;
 			Stamina = 100f;
@@ -287,7 +287,7 @@ namespace Facepunch.Hidden
 			ShowSenseParticles( false );
 			DrawPlayer( false );
 
-			if ( LastDamageInfo.Flags.HasFlag( DamageFlags.Blast ) || LastDamageInfo.Damage >= 100f )
+			if ( LastDamageInfo.HasTag( "blast" ) || LastDamageInfo.Damage >= 100f )
 			{
 				var gib = Particles.Create( "particles/blood/gib.vpcf", this );
 				gib.SetPosition( 0, WorldSpaceBounds.Center );
@@ -739,18 +739,18 @@ namespace Facepunch.Hidden
 				attacker.ShowHitMarker( To.Single( attacker ), info.Hitbox.HasTag( "head" ) );
 			}
 
-			if ( info.Flags.HasFlag( DamageFlags.Bullet ) )
+			if ( info.HasTag( "bullet" ) )
 				CreateBloodShotDecal( info, 1000f );
-			else if ( info.Flags.HasFlag( DamageFlags.Blunt ) )
+			else if ( info.HasTag( "blunt" ) )
 				CreateBloodShotDecal( info, 200f );
 
-			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.Flags );
+			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position, info.HasTag( "fall" ) );
 
-			if ( info.Flags.HasFlag( DamageFlags.Fall ) )
+			if ( info.HasTag( "fall" ) )
 			{
 				PlaySound( "fall" );
 			}
-			else if ( info.Flags.HasFlag( DamageFlags.Bullet ) || info.Flags.HasFlag( DamageFlags.Blunt ) )
+			else if ( info.HasTag( "bullet" ) || info.HasTag( "blunt" ) )
 			{
 				if ( !Team?.PlayPainSounds( this ) == false )
 				{
@@ -786,9 +786,9 @@ namespace Facepunch.Hidden
 		}
 
 		[ClientRpc]
-		public void TookDamage( Vector3 position, DamageFlags flags )
+		public void TookDamage( Vector3 position, bool isFallDamage )
 		{
-			if ( flags.HasFlag( DamageFlags.Fall ) )
+			if ( isFallDamage )
 				return;
 
 			DamageIndicator.Current?.OnHit( position );

@@ -36,7 +36,7 @@ public partial class Player
 		animHelper.IsSitting = Controller.HasTag( "sitting" );
 		animHelper.IsNoclipping = Controller.HasTag( "noclip" );
 		animHelper.IsClimbing = Controller.HasTag( "climbing" );
-		animHelper.IsSwimming = WaterLevel >= 0.5f;
+		animHelper.IsSwimming = false;
 		animHelper.IsWeaponLowered = false;
 
 		if ( Controller.HasEvent( "jump" ) ) animHelper.TriggerJump();

@@ -64,7 +64,7 @@ namespace Facepunch.Hidden
 				{
 					var damageInfo = new DamageInfo()
 						.WithAttacker( Player )
-						.WithFlag( DamageFlags.Fall );
+						.WithTag( "fall" );
 
 					damageInfo.Damage = damage;
 

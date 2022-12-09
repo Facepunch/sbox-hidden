@@ -164,7 +164,7 @@ namespace Facepunch.Hidden
 				return;
 
 			CheckLadder();
-			Swimming = Player.WaterLevel > 0.6f;
+			Swimming = false;
 
 			if ( !Swimming && !IsTouchingLadder )
 			{

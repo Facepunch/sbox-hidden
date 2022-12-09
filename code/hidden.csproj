@@ -24,32 +24,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="ui\Hud.razor" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Using Include="Sandbox.Internal.GlobalGameNamespace" Static="true" />
 	</ItemGroup>
 
   <PropertyGroup>
-	<OutputPath>..\..\../.vs/output/</OutputPath>
-	<DocumentationFile>..\..\../.vs/output/hidden.xml</DocumentationFile>
+	<OutputPath>G:\Facepunch\sbox\game/.vs/output/</OutputPath>
+	<DocumentationFile>G:\Facepunch\sbox\game/.vs/output/hidden.xml</DocumentationFile>
 	<RootNamespace>Sandbox</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.System.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.Engine.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.Game.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.Event.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.Bind.dll" />
-		<Reference Include="..\..\..\bin\managed/Sandbox.Reflection.dll" />
+		<Analyzer Include="G:\Facepunch\sbox\game\bin\managed\Sandbox.Generator.dll"/>
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.System.dll" />
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.Engine.dll" />
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.Game.dll" />
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.Event.dll" />
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.Bind.dll" />
+		<Reference Include="G:\Facepunch\sbox\game\bin\managed/Sandbox.Reflection.dll" />
 	</ItemGroup>
 
   <ItemGroup>
-		<ProjectReference Include="S:\Steam\steamapps\common\sbox\addons\base\code\base.csproj" />
+		<ProjectReference Include="G:\Facepunch\sbox\game\addons\base\code\base.csproj" />
 
   </ItemGroup>
 

@@ -19,7 +19,7 @@ namespace Facepunch.Hidden
 			ragdoll.ApplyForceToBone( info.Force, LastDamageInfo.BoneIndex );
 			ragdoll.Player = this;
 
-			if ( info.Flags.HasFlag( DamageFlags.Blast ) )
+			if ( info.HasTag( "blast" ) )
 			{
 				ragdoll.NumberOfFeedsLeft = 0;
 				ragdoll.SetMaterialGroup( 5 );
