@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,15 +41,14 @@ namespace Facepunch.Hidden
 		public static int VoiceRadius { get; set; } = 2048;
 
 		private RealTimeUntil NextSecondTime { get; set; }
+		private ScreenEffects HealthPostProcessing { get; set; }
+		private ScreenEffects ImmersionPostProcessing { get; set; }
+		private Color OverlayColor { get; set; } = Color.Orange;
+		private float BlurAmount { get; set; } = 0f;
 
 		public Game()
 		{
 			Teams = new();
-
-			if ( IsServer )
-			{
-				Hud = new();
-			}
 
 			LightFlickers = new();
 			HiddenTeam = new();
@@ -90,6 +90,21 @@ namespace Facepunch.Hidden
 			Round?.Finish();
 			Round = round;
 			Round?.Start();
+		}
+
+		public override void ClientSpawn()
+		{
+			Local.Hud?.Delete( true );
+			Local.Hud = new Hud();
+
+			ImmersionPostProcessing = new();
+			HealthPostProcessing = new();
+
+			Camera.Main.RemoveAllHooks();
+			Camera.Main.AddHook( ImmersionPostProcessing );
+			Camera.Main.AddHook( HealthPostProcessing );
+
+			base.ClientSpawn();
 		}
 
 		public override void DoPlayerNoclip( Client client )
@@ -226,6 +241,81 @@ namespace Facepunch.Hidden
 			}
 
 			LightFlickers?.OnTick();
+		}
+
+		[Event.Tick.Client]
+		private void ClientTick()
+		{
+			if ( Local.Pawn is not Player player )
+				return;
+
+			var isHiddenTeam = player.Team is HiddenTeam;
+
+			if ( isHiddenTeam )
+			{
+				ImmersionPostProcessing.ChromaticAberration.Scale = 0.75f;
+				ImmersionPostProcessing.ChromaticAberration.Offset = new Vector3( 0.002f, 0f, 0.002f );
+			}
+			else
+			{
+				ImmersionPostProcessing.ChromaticAberration.Scale = 0f;
+			}
+
+			ImmersionPostProcessing.Sharpen = 0.1f;
+
+			if ( isHiddenTeam )
+			{
+				ImmersionPostProcessing.Saturation = 1f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0f;
+
+				ImmersionPostProcessing.Vignette.Intensity = 0.3f;
+				ImmersionPostProcessing.Vignette.Color = Color.Red.Darken( 0.3f ).WithAlpha( 0.9f );
+				ImmersionPostProcessing.Vignette.Smoothness = 0.9f;
+				ImmersionPostProcessing.Vignette.Roundness = 0.5f;
+
+				if ( player.IsSenseActive )
+				{
+					OverlayColor = Color.Lerp( OverlayColor, Color.Red, Time.Delta * 4f );
+					BlurAmount = BlurAmount.LerpTo( 0f, Time.Delta * 4f );
+				}
+				else
+				{
+					OverlayColor = Color.Lerp( OverlayColor, Color.Orange, Time.Delta * 4f );
+					BlurAmount = BlurAmount.LerpTo( 0f, Time.Delta * 4f );
+				}
+			}
+			else
+			{
+				ImmersionPostProcessing.Saturation = 0.9f;
+
+				ImmersionPostProcessing.Vignette.Intensity = 0.6f;
+				ImmersionPostProcessing.Vignette.Color = Color.Black.WithAlpha( 0.5f );
+				ImmersionPostProcessing.Vignette.Smoothness = 0.9f;
+				ImmersionPostProcessing.Vignette.Roundness = 0.7f;
+
+				ImmersionPostProcessing.FilmGrain.Response = 0.1f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.02f;
+			}
+
+			if ( player.IsSpectator && !isHiddenTeam )
+			{
+				ImmersionPostProcessing.Saturation = 0f;
+
+				ImmersionPostProcessing.FilmGrain.Response = 0.2f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.05f;
+
+				HealthPostProcessing.Vignette.Intensity = 0f;
+			}
+			else
+			{
+				var healthScale = (0.4f / 100f) * player.Health;
+				HealthPostProcessing.Saturation = 0.6f + healthScale;
+
+				HealthPostProcessing.Vignette.Intensity = 0.5f - healthScale * 2f;
+				HealthPostProcessing.Vignette.Color = Color.Red.Darken( 0.8f ).WithAlpha( 0.5f );
+				HealthPostProcessing.Vignette.Smoothness = 0.9f;
+				HealthPostProcessing.Vignette.Roundness = 0.5f;
+			}
 		}
 
 		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )

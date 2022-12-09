@@ -1,0 +1,43 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Facepunch.Hidden;
+
+@namespace Facepunch.Hidden
+@attribute [StyleSheet( "/ui/Hud.scss" )]
+@inherits RootPanel
+
+@if (Local.Pawn is not Player player) return;
+
+<root class="@(player.Team is not null ? player.Team.HudClassName : "")">
+    <div class="overlay @(player.Team is not HiddenTeam ? "hidden" : "")"></div>
+
+    <div class="hud_right">
+        <WeaponList></WeaponList>
+    </div>
+
+    <RoundInfo></RoundInfo>
+    <Vitals></Vitals>
+    <Ammo></Ammo>
+    <VoiceList></VoiceList>
+    <Nameplates></Nameplates>
+    <DamageIndicator></DamageIndicator>
+    <InputHints></InputHints>
+    <CCTVViewer></CCTVViewer>
+    <ChatBox></ChatBox>
+    <Scoreboard></Scoreboard>
+
+    <div class="hud_center">
+        <RadialVoiceMenu></RadialVoiceMenu>
+    </div>
+</root>
+
+@code
+{
+    protected override int BuildHash()
+    {
+        var player = Local.Pawn as Player;
+        if ( !player.IsValid() ) return 0;
+        return HashCode.Combine( player, player.Team );
+    }
+}

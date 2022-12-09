@@ -17,7 +17,6 @@ namespace Facepunch.Hidden
 		{
 			if ( player.IsLocalPawn )
 			{
-				Local.Hud.AddClass( HudClassName );
 				InputHints.UpdateOnClient();
 			}
 
@@ -26,11 +25,6 @@ namespace Facepunch.Hidden
 
 		public void Leave( Player player )
 		{
-			if ( player.IsLocalPawn )
-			{
-				Local.Hud.RemoveClass( HudClassName );
-			}
-
 			OnLeave( player );
 		}
 
