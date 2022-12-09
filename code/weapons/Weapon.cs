@@ -72,11 +72,11 @@ namespace Facepunch.Hidden
 
 		private Queue<Angles> RecoilQueue { get; set; } = new();
 
-		public Player Player => Owner as Player;
+		public HiddenPlayer Player => Owner as HiddenPlayer;
 
 		public int AvailableAmmo()
 		{
-			if ( Owner is not Player owner ) return 0;
+			if ( Owner is not HiddenPlayer owner ) return 0;
 			return owner.AmmoCount( Config.AmmoType );
 		}
 
@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 		{
 			var remainingAmmo = (ClipSize - AmmoClip);
 
-			if ( remainingAmmo > 0 && Owner is Player player )
+			if ( remainingAmmo > 0 && Owner is HiddenPlayer player )
 			{
 				player.GiveAmmo( Config.AmmoType, remainingAmmo );
 			}
@@ -178,7 +178,7 @@ namespace Facepunch.Hidden
 
 			TimeSinceReload = 0f;
 
-			if ( Owner is Player player )
+			if ( Owner is HiddenPlayer player )
 			{
 				if ( !UnlimitedAmmo )
 				{
@@ -196,7 +196,7 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client owner )
 		{
-			if ( HasLaserDot && Owner is Player player )
+			if ( HasLaserDot && Owner is HiddenPlayer player )
 			{
 				if ( ShouldShowLaserDot() )
 				{
@@ -286,7 +286,7 @@ namespace Facepunch.Hidden
 		{
 			IsReloading = false;
 
-			if ( Owner is Player player )
+			if ( Owner is HiddenPlayer player )
 			{
 				if ( !UnlimitedAmmo )
 				{
@@ -311,13 +311,13 @@ namespace Facepunch.Hidden
 
 		public virtual void RenderHud( Vector2 screenSize )
 		{
-			if ( Owner is not Player player )
+			if ( Owner is not HiddenPlayer player )
 				return;
 
 			RenderCrosshair( player, screenSize * 0.5f );
 		}
 
-		public virtual void RenderCrosshair( Player player, Vector2 center )
+		public virtual void RenderCrosshair( HiddenPlayer player, Vector2 center )
 		{
 			var draw = Util.Draw;
 			var lastHitMarkerTime = player.TimeSinceLastHit.Relative;
@@ -522,7 +522,7 @@ namespace Facepunch.Hidden
 			if ( RecoilQueue.Count > 0 )
 			{
 				var recoil = RecoilQueue.Dequeue();
-				var player = Owner as Player;
+				var player = Owner as HiddenPlayer;
 				player.ViewAngles += recoil;
 			}
 		}

@@ -19,12 +19,12 @@ namespace Facepunch.Hidden
 			TimeSinceLastUse = -1;
 		}
 
-		public void Use( Player player )
+		public void Use( HiddenPlayer player )
 		{
 			OnUse( player );
 		}
 
-		public float GetCooldownTimeLeft( Player player )
+		public float GetCooldownTimeLeft( HiddenPlayer player )
 		{
 			if ( TimeSinceLastUse == -1 )
 				return 0;
@@ -32,7 +32,7 @@ namespace Facepunch.Hidden
 			return GetCooldown( player ) - TimeSinceLastUse;
 		}
 
-		public virtual float GetCooldown( Player player )
+		public virtual float GetCooldown( HiddenPlayer player )
 		{
 			return Cooldown;
 		}
@@ -43,12 +43,12 @@ namespace Facepunch.Hidden
 			return "";
 		}
 
-		public virtual bool IsUsable( Player player )
+		public virtual bool IsUsable( HiddenPlayer player )
 		{
 			return ( TimeSinceLastUse == -1 || TimeSinceLastUse > GetCooldown( player ) );
 		}
 
-		protected virtual void OnUse( Player player ) { }
+		protected virtual void OnUse( HiddenPlayer player ) { }
 	}
 }
 

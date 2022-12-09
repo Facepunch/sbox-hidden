@@ -28,7 +28,7 @@ namespace Facepunch.Hidden
 
 		public virtual void FireProjectile()
 		{
-			if ( Owner is not Player player )
+			if ( Owner is not HiddenPlayer player )
 				return;
 
 			var projectile = new T()

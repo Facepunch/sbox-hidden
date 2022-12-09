@@ -11,69 +11,67 @@
 
 @code
 {
-	private readonly Dictionary<Player, Nameplate> ActiveNameplates = new();
+    private readonly Dictionary<HiddenPlayer, Nameplate> ActiveNameplates = new();
 
-	public float MaxDrawDistance = 400;
-	public int MaxNameplates = 10;
+    public float MaxDrawDistance = 400;
+    public int MaxNameplates = 10;
 
-	public override void Tick()
-	{
-		base.Tick();
+    public override void Tick()
+    {
+        base.Tick();
 
-		var deleteList = new List<Player>();
-		var count = 0;
+        var deleteList = new List<HiddenPlayer>();
+        var count = 0;
 
-		deleteList.AddRange( ActiveNameplates.Keys );
+        deleteList.AddRange( ActiveNameplates.Keys );
 
-		var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
+        var players = Entity.All.OfType<HiddenPlayer>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
 
-		foreach ( var v in players )
-		{
-			if ( v is not Player player ) continue;
+        foreach ( var v in players )
+        {
+            if ( UpdateNameplate( v ) )
+            {
+                deleteList.Remove( v );
+                count++;
+            }
 
-			if ( UpdateNameplate( player ) )
-			{
-				deleteList.Remove( player );
-				count++;
-			}
+            if ( count >= MaxNameplates )
+                break;
+        }
 
-			if ( count >= MaxNameplates )
-				break;
-		}
+        foreach ( var player in deleteList )
+        {
+            ActiveNameplates[player].Delete();
+            ActiveNameplates.Remove( player );
+        }
+    }
 
-		foreach ( var player in deleteList )
-		{
-			ActiveNameplates[player].Delete();
-			ActiveNameplates.Remove( player );
-		}
-	}
-
-	public Nameplate CreateNameplate( Player player )
-	{
-		var tag = new Nameplate( player )
+    public Nameplate CreateNameplate( HiddenPlayer player )
+    {
+        var tag = new Nameplate( player )
 		{
 			Parent = this
 		};
 
-		return tag;
-	}
+        return tag;
+    }
 
-	public bool UpdateNameplate( Player player )
-	{
-		if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
-			return false;
+    public bool UpdateNameplate( HiddenPlayer player )
+    {
+        if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
+            return false;
 
-		if ( player.LifeState != LifeState.Alive )
-			return false;
+        if ( player.LifeState != LifeState.Alive )
+            return false;
 
-		var labelPos = player.EyePosition + player.Rotation.Up * 10f;
+        var labelPos = player.EyePosition + player.Rotation.Up * 10f;
 
-		float dist = labelPos.Distance( Camera.Position );
+        float dist = labelPos.Distance( Camera.Position );
 
-		if ( dist > MaxDrawDistance )
-			return false;
+        if ( dist > MaxDrawDistance )
+            return false;
 
-		var localPlayer = Local.Pawn as Player;
+        var localPlayer = HiddenPlayer.Me;
 
 		// If we're not spectating only show nameplates of players we can see.
 		if ( !localPlayer.IsSpectator )

@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 
 		private Radar RadarHud;
 
-		public virtual void DressPlayer( Player player )
+		public virtual void DressPlayer( HiddenPlayer player )
 		{
 			Rand.SetSeed( player.UniqueRandomSeed );
 
@@ -92,7 +92,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void SupplyLoadout( Player player )
+		public override void SupplyLoadout( HiddenPlayer player )
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
@@ -115,7 +115,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnStart( Player player )
+		public override void OnStart( HiddenPlayer player )
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
@@ -141,7 +141,7 @@ namespace Facepunch.Hidden
 			player.SetMoveController<IrisController>();
 		}
 
-		public override void OnJoin( Player player )
+		public override void OnJoin( HiddenPlayer player )
 		{
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
@@ -177,7 +177,7 @@ namespace Facepunch.Hidden
 			} );
 		}
 
-		public override void OnLeave( Player player )
+		public override void OnLeave( HiddenPlayer player )
 		{
 			if ( player.IsLocalPawn )
 			{

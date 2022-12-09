@@ -7,7 +7,7 @@ namespace Facepunch.Hidden
 	{
 		public int NumberOfFeedsLeft { get; set; } = 4;
 		public bool HasBeenFound { get; set; }
-		public Player Player { get; set; }
+		public HiddenPlayer Player { get; set; }
 
 		public PlayerCorpse()
 		{
@@ -17,7 +17,7 @@ namespace Facepunch.Hidden
 			Tags.Add( "corpse" );
 		}
 
-		public void CopyFrom( Player player )
+		public void CopyFrom( HiddenPlayer player )
 		{
 			SetModel( player.GetModelName() );
 			TakeDecalsFrom( player );
@@ -41,7 +41,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			foreach ( var finder in All.OfType<Player>() )
+			foreach ( var finder in All.OfType<HiddenPlayer>() )
 			{
 				if ( finder.Team is IrisTeam && finder.LifeState == LifeState.Alive
 					&& finder.Position.Distance( Position ) <= 3000f )

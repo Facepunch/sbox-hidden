@@ -45,7 +45,7 @@ namespace Facepunch.Hidden
 			if ( Global.IsRunningInVR )
 				return;
 
-			if ( Owner is not Player player )
+			if ( Owner is not HiddenPlayer player )
 				return;
 
 			Camera.Main.SetViewModelCamera( 90f, 0.1f, 200f );
@@ -63,7 +63,7 @@ namespace Facepunch.Hidden
 
 		private void AddCameraEffects()
 		{
-			if ( Owner is not Player player )
+			if ( Owner is not HiddenPlayer player )
 				return;
 
 			if ( IsAiming )

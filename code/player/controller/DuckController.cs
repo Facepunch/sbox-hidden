@@ -5,7 +5,7 @@ namespace Facepunch.Hidden
 	public class DuckController 
 	{
 		public MoveController Controller { get; private set; }
-		public Player Player => Controller.Player;
+		public HiddenPlayer Player => Controller.Player;
 		public bool IsActive { get; private set; }
 
 		public DuckController( MoveController controller )

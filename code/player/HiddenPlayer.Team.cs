@@ -3,7 +3,7 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		[Net, Change( nameof( OnTeamIndexChanged ) )] public int TeamIndex { get; set; }
 

@@ -10,7 +10,7 @@ namespace Facepunch.Hidden
 		public Vector3 DeathPosition { get; set; }
 		public bool IsHidden { get; set; }
 
-		public Player TargetPlayer { get; set; }
+		public HiddenPlayer TargetPlayer { get; set; }
 		public CCTVCamera CCTVEntity { get; set; }
 
 		private List<CCTVCamera> CCTVEntities;
@@ -33,7 +33,7 @@ namespace Facepunch.Hidden
 
 		public void Update()
 		{
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not HiddenPlayer player )
 				return;
 
 			if ( !IsHidden )
@@ -85,7 +85,7 @@ namespace Facepunch.Hidden
 
 		private Vector3 GetSpectatePoint()
 		{
-			if ( Local.Pawn is not Player )
+			if ( Local.Pawn is not HiddenPlayer )
 				return DeathPosition;
 
 			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
@@ -96,7 +96,7 @@ namespace Facepunch.Hidden
 
 		private Vector3 GetViewOffset()
 		{
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not HiddenPlayer player )
 				return Vector3.Zero;
 
 			return player.EyeRotation.Forward * -150f + Vector3.Up * 10f;

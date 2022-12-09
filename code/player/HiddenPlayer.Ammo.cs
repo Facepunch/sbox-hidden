@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		[Net] public IList<int> Ammo { get; set; }
 

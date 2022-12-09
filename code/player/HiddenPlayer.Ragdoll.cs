@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		public PlayerCorpse Ragdoll { get; set; }
 

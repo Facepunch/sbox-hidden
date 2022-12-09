@@ -6,10 +6,10 @@ namespace Facepunch.Hidden
 {
 	public struct AnimationHelperWithLegs
 	{
-		private Player Owner { get; set; }
+		private HiddenPlayer Owner { get; set; }
 		private SceneModel Legs => Owner.AnimatedLegs;
 
-		public AnimationHelperWithLegs( Player entity )
+		public AnimationHelperWithLegs( HiddenPlayer entity )
 		{
 			Owner = entity;
 		}

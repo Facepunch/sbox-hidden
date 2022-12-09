@@ -10,12 +10,12 @@ namespace Facepunch.Hidden
 		public override bool HideNameplate => true;
 		public override string HudClassName => "team_hidden";
 		public override string Name => "Hidden";
-		public Player CurrentPlayer { get; set; }
+		public HiddenPlayer CurrentPlayer { get; set; }
 
 		private float NextLightFlicker;
 		private Abilities AbilitiesHud;
 
-		public override void SupplyLoadout( Player player )
+		public override void SupplyLoadout( HiddenPlayer player )
 		{
 			var pipeBombs = Math.Min( (Game.Instance.GetTeamPlayers<IrisTeam>().Count() / 3f).CeilToInt(), 3 );
 
@@ -25,7 +25,7 @@ namespace Facepunch.Hidden
 			player.Inventory.Add( new PipeBomb() { Slot = 2, AmmoClip = pipeBombs } );
 		}
 
-		public override void OnStart( Player player )
+		public override void OnStart( HiddenPlayer player )
 		{
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
@@ -81,7 +81,7 @@ namespace Facepunch.Hidden
 			} );
 		}
 
-		public override void OnTakeDamageFromPlayer( Player player, Player attacker, DamageInfo info )
+		public override void OnTakeDamageFromPlayer( HiddenPlayer player, HiddenPlayer attacker, DamageInfo info )
 		{
 			if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
 			{
@@ -93,7 +93,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnDealDamageToPlayer( Player player, Player target, DamageInfo info )
+		public override void OnDealDamageToPlayer( HiddenPlayer player, HiddenPlayer target, DamageInfo info )
 		{
 			if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
 			{
@@ -133,7 +133,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void Simulate( Player player )
+		public override void Simulate( HiddenPlayer player )
 		{
 			if ( Input.Pressed( InputButton.Drop ) )
 			{
@@ -177,14 +177,14 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override bool PlayPainSounds( Player player )
+		public override bool PlayPainSounds( HiddenPlayer player )
 		{
 			player.PlaySound( "hidden_grunt" + Rand.Int( 1, 2 ) );
 
 			return true;
 		}
 
-		public override void OnJoin( Player player  )
+		public override void OnJoin( HiddenPlayer player  )
 		{
 			if ( Host.IsClient && player.IsLocalPawn )
 			{
@@ -206,7 +206,7 @@ namespace Facepunch.Hidden
 			base.OnJoin( player );
 		}
 
-		public override void OnLeave( Player player )
+		public override void OnLeave( HiddenPlayer player )
 		{
 			player.EnableShadowReceive = true;
 			player.EnableShadowCasting = true;

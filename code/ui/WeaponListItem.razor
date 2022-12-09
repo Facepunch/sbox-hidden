@@ -60,7 +60,7 @@
                 Slot.Text = string.Empty;
             }
 
-            var isHidden = (Weapon.Owner is Player player && player.Team is HiddenTeam);
+            var isHidden = (Weapon.Owner is HiddenPlayer player && player.Team is HiddenTeam);
 
             SetClass( "team_red", isHidden );
             SetClass( "team_blue", !isHidden );

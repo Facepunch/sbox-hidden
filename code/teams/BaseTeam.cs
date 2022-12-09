@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public virtual string HudClassName => "";
 		public virtual string Name => "";
 
-		public void Join( Player player )
+		public void Join( HiddenPlayer player )
 		{
 			if ( player.IsLocalPawn )
 			{
@@ -23,32 +23,32 @@ namespace Facepunch.Hidden
 			OnJoin( player );
 		}
 
-		public void Leave( Player player )
+		public void Leave( HiddenPlayer player )
 		{
 			OnLeave( player );
 		}
 
 		public virtual void OnTick() { }
 
-		public virtual void Simulate( Player player ) { }
+		public virtual void Simulate( HiddenPlayer player ) { }
 
-		public virtual void OnLeave( Player player  ) { }
+		public virtual void OnLeave( HiddenPlayer player  ) { }
 
-		public virtual void OnJoin( Player player  ) { }
+		public virtual void OnJoin( HiddenPlayer player  ) { }
 
-		public virtual void OnStart( Player player ) { }
+		public virtual void OnStart( HiddenPlayer player ) { }
 
-		public virtual void OnTakeDamageFromPlayer( Player player, Player attacker, DamageInfo info ) { }
+		public virtual void OnTakeDamageFromPlayer( HiddenPlayer player, HiddenPlayer attacker, DamageInfo info ) { }
 
-		public virtual void OnDealDamageToPlayer( Player player, Player target, DamageInfo info ) { }
+		public virtual void OnDealDamageToPlayer( HiddenPlayer player, HiddenPlayer target, DamageInfo info ) { }
 
 		public virtual void AddDeployments( Deployment panel, Action<DeploymentType> callback ) { }
 
-		public virtual void OnPlayerKilled( Player player ) { }
+		public virtual void OnPlayerKilled( HiddenPlayer player ) { }
 
-		public virtual void SupplyLoadout( Player player  ) { }
+		public virtual void SupplyLoadout( HiddenPlayer player  ) { }
 
-		public virtual bool PlayPainSounds( Player player )
+		public virtual bool PlayPainSounds( HiddenPlayer player )
 		{
 			return false;
 		}

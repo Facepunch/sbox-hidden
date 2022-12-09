@@ -80,7 +80,7 @@ namespace Facepunch.Hidden
 			if ( AmmoClip >= ClipSize )
 				return;
 
-			if ( Owner is Player player )
+			if ( Owner is HiddenPlayer player )
 			{
 				var ammo = player.TakeAmmo( Config.AmmoType, 1 );
 				if ( ammo == 0 )

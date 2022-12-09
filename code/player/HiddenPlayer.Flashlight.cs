@@ -3,7 +3,7 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		[Net, Local, Predicted] public float FlashlightBattery { get; set; } = 100f;
 

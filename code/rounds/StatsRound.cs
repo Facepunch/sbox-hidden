@@ -72,7 +72,7 @@ namespace Facepunch.Hidden
 			base.OnTimeUp();
 		}
 
-		public override void OnPlayerSpawn( Player player )
+		public override void OnPlayerSpawn( HiddenPlayer player )
 		{
 			if ( Players.Contains( player ) ) return;
 

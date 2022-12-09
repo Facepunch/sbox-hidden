@@ -37,7 +37,7 @@ namespace Facepunch.Hidden
 
 		public override void AttackSecondary()
 		{
-			if ( Owner is Player player && player.Stamina > 20f )
+			if ( Owner is HiddenPlayer player && player.Stamina > 20f )
 			{
 				player.StaminaRegenTime = 1f;
 				player.Stamina = Math.Max( player.Stamina - 80f, 0f );
@@ -63,7 +63,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnMeleeStrikeHit( Entity entity, DamageInfo info )
 		{
-			if ( entity is Player player )
+			if ( entity is HiddenPlayer player )
 			{
 				if ( info.Damage > Config.Damage * 1.5f )
 					Sound.FromEntity( "pigstick.slash", player );
@@ -74,7 +74,7 @@ namespace Facepunch.Hidden
 			{
 				if ( corpse.NumberOfFeedsLeft > 0 )
 				{
-					if ( Owner is Player owner && owner.Health < 100f )
+					if ( Owner is HiddenPlayer owner && owner.Health < 100f )
 					{
 						var impact = Particles.Create( "particles/blood/large_blood/large_blood.vpcf" );
 						impact.SetPosition( 0, info.Position );

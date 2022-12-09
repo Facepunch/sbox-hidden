@@ -20,7 +20,7 @@ namespace Facepunch.Hidden
 			return Input.GetKeyWithBinding( "iv_view" ).ToUpper();
 		}
 
-		protected override void OnUse( Player player )
+		protected override void OnUse( HiddenPlayer player )
 		{
 			TimeSinceLastUse = 0;
 
@@ -33,7 +33,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private void PlayScreamSound( Player from )
+		private void PlayScreamSound( HiddenPlayer from )
 		{
 			var soundName = Rand.FromArray( ScreamSounds );
 			from.PlaySound( soundName );

@@ -22,7 +22,7 @@ namespace Facepunch.Hidden
 		[ConCmd.Server( "hdn_select_deployment" )]
 		public static void SelectDeploymentCmd( string type )
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player player )
+			if ( ConsoleSystem.Caller.Pawn is HiddenPlayer player )
 			{
 				if ( Game.Instance.Round is HideRound )
 				{
@@ -42,7 +42,7 @@ namespace Facepunch.Hidden
 
 		public static void SelectDeployment( DeploymentType type )
 		{
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is HiddenPlayer player )
 				player.Deployment = type;
 
 			SelectDeploymentCmd( type.ToString() );
@@ -61,7 +61,7 @@ namespace Facepunch.Hidden
 			} );
 		}
 
-		public override void OnPlayerSpawn( Player player )
+		public override void OnPlayerSpawn( HiddenPlayer player )
 		{
 			if ( Players.Contains( player ) ) return;
 
@@ -83,11 +83,11 @@ namespace Facepunch.Hidden
 		{
 			if ( Host.IsServer )
 			{
-				Player.ClearAllBloodParticles();
+				HiddenPlayer.ClearAllBloodParticles();
 
 				foreach ( var client in Client.All )
 				{
-					if ( client.Pawn is Player player )
+					if ( client.Pawn is HiddenPlayer player )
 						player.Respawn();
 				}
 

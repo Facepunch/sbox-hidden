@@ -16,23 +16,23 @@
 
 @code
 {
-	private readonly Dictionary<Player, RadarDot> RadarDots = new();
+    private readonly Dictionary<HiddenPlayer, RadarDot> RadarDots = new();
 
 	public override void Tick()
 	{
 		base.Tick();
 
-		if ( Local.Pawn is not Player localPlayer )
+        if ( Local.Pawn is not HiddenPlayer localPlayer )
 			return;
 
 		SetClass( "hidden", localPlayer.LifeState != LifeState.Alive );
 
-		var deleteList = new List<Player>();
+        var deleteList = new List<HiddenPlayer>();
 		var count = 0;
 
 		deleteList.AddRange( RadarDots.Keys );
 
-		var players = Entity.All.OfType<Player>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
+        var players = Entity.All.OfType<HiddenPlayer>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
 
 		foreach ( var v in players )
 		{
@@ -50,7 +50,7 @@
 		}
 	}
 
-	public RadarDot CreateRadarDot( Player player )
+    public RadarDot CreateRadarDot( HiddenPlayer player )
 	{
 		var tag = new RadarDot()
 		{
@@ -60,7 +60,7 @@
 		return tag;
 	}
 
-	public bool UpdateRadar( Player player )
+    public bool UpdateRadar( HiddenPlayer player )
 	{
 		if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
 			return false;

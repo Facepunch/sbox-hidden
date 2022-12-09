@@ -7,7 +7,7 @@
 @attribute [StyleSheet( "/ui/Hud.scss" )]
 @inherits RootPanel
 
-@if (Local.Pawn is not Player player) return;
+@if ( Local.Pawn is not HiddenPlayer player ) return;
 
 <root class="@(player.Team is not null ? player.Team.HudClassName : "")">
     <div class="overlay @(player.Team is not HiddenTeam ? "hidden" : "")"></div>
@@ -36,7 +36,7 @@
 {
     protected override int BuildHash()
     {
-        var player = Local.Pawn as Player;
+        var player = HiddenPlayer.Me;
         if ( !player.IsValid() ) return 0;
         return HashCode.Combine( player, player.Team );
     }

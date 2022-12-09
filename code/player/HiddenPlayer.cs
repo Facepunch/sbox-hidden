@@ -3,11 +3,14 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Sandbox.Physics;
+using Sandbox.Component;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player : AnimatedEntity
+	public partial class HiddenPlayer : AnimatedEntity
 	{
+		public static HiddenPlayer Me => Local.Pawn as HiddenPlayer;
+
 		private static List<Particles> AllBloodParticles { get; set; } = new();
 
 		public static void ClearAllBloodParticles()
@@ -124,7 +127,7 @@ namespace Facepunch.Hidden
 		[ConCmd.Server( "hdn_radio" )]
 		public static void PlayVoiceCmd( int resourceId )
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player player )
+			if ( ConsoleSystem.Caller.Pawn is HiddenPlayer player )
 			{
 				var resource = ResourceLibrary.GetAll<RadioCommandResource>().FirstOrDefault( c => c.ResourceId == resourceId );
 				if ( resource == null ) return;
@@ -138,11 +141,20 @@ namespace Facepunch.Hidden
 			get => Team != null;
 		}
 
-		public Player()
+		public HiddenPlayer()
 		{
 			Projectiles = new( this );
 			Inventory = new Inventory( this );
 			Ammo = new List<int>();
+		}
+
+		public float WaterLevel
+		{
+			get
+			{
+				var c = Components.Get<WaterEffectComponent>();
+				return c?.WaterLevel ?? 0;
+			}
 		}
 
 		public bool IsSpectator
@@ -164,7 +176,7 @@ namespace Facepunch.Hidden
 
 			ChatBox.AddChatFromServer( To.Multiple( irisPlayers.Select( p => p.Client ) ), this, $"*beep* {resource.Text}", radioColor, radioColor );
 
-			var playersCloseBy = All.OfType<Player>().Where( p => p != this && p.Position.Distance( Position ) <= resource.ProximityDistance );
+			var playersCloseBy = All.OfType<HiddenPlayer>().Where( p => p != this && p.Position.Distance( Position ) <= resource.ProximityDistance );
 			var inRadioRange = irisPlayers.Except( playersCloseBy );
 
 			Sound.FromScreen( To.Multiple( inRadioRange.Select( p => p.Client ) ), resource.Sound.ResourceName );
@@ -726,7 +738,7 @@ namespace Facepunch.Hidden
 				info.Damage *= Game.ScaleHiddenDamage;
 			}
 
-			if ( info.Attacker is Player attacker && attacker != this )
+			if ( info.Attacker is HiddenPlayer attacker && attacker != this )
 			{
 				if ( !Game.FriendlyFire && attacker.Team == Team )
 				{
@@ -1098,7 +1110,7 @@ namespace Facepunch.Hidden
 				if ( NextLonelyCheck )
 				{
 					var otherPlayersNearby = FindInSphere( Position, 1500f )
-						.OfType<Player>()
+						.OfType<HiddenPlayer>()
 						.Where( p => p != this );
 
 					if ( Team is IrisTeam )

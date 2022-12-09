@@ -72,11 +72,11 @@ namespace Facepunch.Hidden
 			return Teams[index - 1];
 		}
 
-		public IEnumerable<Player> GetTeamPlayers<T>( bool isAlive = false ) where T : BaseTeam
+		public IEnumerable<HiddenPlayer> GetTeamPlayers<T>( bool isAlive = false ) where T : BaseTeam
 		{
 			var output = Client.All
-				.Where( c => c.Pawn is Player player && player.Team is T )
-				.Select( c => c.Pawn as Player );
+				.Where( c => c.Pawn is HiddenPlayer player && player.Team is T )
+				.Select( c => c.Pawn as HiddenPlayer );
 
 			if ( isAlive )
 				output = output.Where( p => p.LifeState == LifeState.Alive );
@@ -134,7 +134,7 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( Client cl )
 		{
-			var player = cl.Pawn as Player;
+			var player = cl.Pawn as HiddenPlayer;
 
 			if ( player.IsValid() && Input.Down( InputButton.Voice ) && player.LifeState == LifeState.Alive )
 			{
@@ -159,7 +159,7 @@ namespace Facepunch.Hidden
 
 		public override void OnKilled( Entity entity)
 		{
-			if ( entity is Player player )
+			if ( entity is HiddenPlayer player )
 				Round?.OnPlayerKilled( player );
 
 			base.OnKilled( entity);
@@ -167,16 +167,16 @@ namespace Facepunch.Hidden
 
 		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
 		{
-			Round?.OnPlayerLeave( client.Pawn as Player );
+			Round?.OnPlayerLeave( client.Pawn as HiddenPlayer );
 			base.ClientDisconnect( client, reason );
 		}
 
 		public override void RenderHud()
 		{
-			var pawn = Local.Pawn as Player;
-			if ( !pawn.IsValid() ) return;
+			var player = HiddenPlayer.Me;
+			if ( !player.IsValid() ) return;
 
-			pawn.RenderHud( Screen.Size );
+			player.RenderHud( Screen.Size );
 
 			foreach ( var entity in All.OfType<IHudRenderer>() )
 			{
@@ -189,7 +189,7 @@ namespace Facepunch.Hidden
 
 		public override void MoveToSpawnpoint( Entity pawn )
 		{
-			if ( pawn is not Player player )
+			if ( pawn is not HiddenPlayer player )
 			{
 				base.MoveToSpawnpoint( pawn );
 				return;
@@ -211,7 +211,7 @@ namespace Facepunch.Hidden
 
 		public override void ClientJoined( Client client )
 		{
-			var pawn = new Player();
+			var pawn = new HiddenPlayer();
 			client.Pawn = pawn;
 			pawn.UniqueRandomSeed = Rand.Int( 0, 999999 );
 			pawn.Respawn();
@@ -247,7 +247,7 @@ namespace Facepunch.Hidden
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not HiddenPlayer player )
 				return;
 
 			var isHiddenTeam = player.Team is HiddenTeam;
@@ -325,7 +325,7 @@ namespace Facepunch.Hidden
 			newRound?.Start();
 		}
 
-		private bool IsValidSpawnpoint( Player player, TeamSpawnpoint spawnpoint )
+		private bool IsValidSpawnpoint( HiddenPlayer player, TeamSpawnpoint spawnpoint )
 		{
 			if ( player.Team is HiddenTeam )
 				return spawnpoint.Team == TeamSpawnpoint.TeamType.Hidden;

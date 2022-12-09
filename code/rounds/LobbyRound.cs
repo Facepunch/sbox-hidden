@@ -14,7 +14,7 @@ namespace Facepunch.Hidden
 			{
 				foreach ( var client in Client.All )
 				{
-					if ( client.Pawn is Player player )
+					if ( client.Pawn is HiddenPlayer player )
 						player.Respawn();
 				}
 			}
@@ -25,21 +25,21 @@ namespace Facepunch.Hidden
 
 		}
 
-		public override void OnPlayerKilled( Player player )
+		public override void OnPlayerKilled( HiddenPlayer player )
 		{
 			_ = StartRespawnTimer( player );
 
 			base.OnPlayerKilled( player );
 		}
 
-		private async Task StartRespawnTimer( Player player )
+		private async Task StartRespawnTimer( HiddenPlayer player )
 		{
 			await Task.Delay( 1000 );
 
 			player.Respawn();
 		}
 
-		public override void OnPlayerSpawn( Player player )
+		public override void OnPlayerSpawn( HiddenPlayer player )
 		{
 			if ( Players.Contains( player ) )
 			{

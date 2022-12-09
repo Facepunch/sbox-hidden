@@ -21,12 +21,12 @@ namespace Facepunch.Hidden
 
 		protected override bool ShouldOpen()
 		{
-			return Local.Pawn is Player player && player.Team is IrisTeam;
+			return Local.Pawn is HiddenPlayer player && player.Team is IrisTeam;
 		}
 
 		private void AddRadioCommand( string name, int resourceId, string icon = null )
 		{
-			AddItem( name, "Play through radio", string.IsNullOrEmpty( icon ) ? "ui/icons/icon-ability-2.png" : icon, () => Player.PlayVoiceCmd( resourceId ) );
+			AddItem( name, "Play through radio", string.IsNullOrEmpty( icon ) ? "ui/icons/icon-ability-2.png" : icon, () => HiddenPlayer.PlayVoiceCmd( resourceId ) );
 		}
 	}
 }

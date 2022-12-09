@@ -14,7 +14,7 @@ namespace Facepunch.Hidden
 		public virtual bool CanPlayerSuicide => false;
 		public virtual bool CanPlayerTakeDamage => true;
 
-		public List<Player> Players = new();
+		public List<HiddenPlayer> Players = new();
 
 		public float RoundEndTime { get; set; }
 
@@ -49,7 +49,7 @@ namespace Facepunch.Hidden
 			OnFinish();
 		}
 
-		public void AddPlayer( Player player )
+		public void AddPlayer( HiddenPlayer player )
 		{
 			Host.AssertServer();
 
@@ -59,11 +59,11 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public virtual void OnPlayerSpawn( Player player ) { }
+		public virtual void OnPlayerSpawn( HiddenPlayer player ) { }
 
-		public virtual void OnPlayerKilled( Player player ) { }
+		public virtual void OnPlayerKilled( HiddenPlayer player ) { }
 
-		public virtual void OnPlayerLeave( Player player )
+		public virtual void OnPlayerLeave( HiddenPlayer player )
 		{
 			Players.Remove( player );
 		}

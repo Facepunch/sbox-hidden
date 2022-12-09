@@ -10,19 +10,19 @@
 
 @code
 {
-	public Panel Blinker { get; private set; }
-	public Label Name { get; private set; }
+    public Panel Blinker { get; private set; }
+    public Label Name { get; private set; }
 
-	public CCTVViewer()
-	{
-		Blinker = Add.Panel( "blinker" );
-		Name = Add.Label( "CCTV", "name" );
-	}
+    public CCTVViewer()
+    {
+        Blinker = Add.Panel( "blinker" );
+        Name = Add.Label( "CCTV", "name" );
+    }
 
-	public override void Tick()
-	{
-		var player = Local.Pawn as Player;
-		if ( player == null ) return;
+    public override void Tick()
+    {
+        var player = HiddenPlayer.Me;
+        if ( !player.IsValid() ) return;
 
 		var game = Game.Instance;
 		if ( game == null ) return;

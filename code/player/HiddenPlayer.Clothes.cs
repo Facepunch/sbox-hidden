@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		private List<ModelEntity> Clothing { get; set; } = new();
 

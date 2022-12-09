@@ -14,7 +14,7 @@ namespace Facepunch.Hidden
 			return Input.GetKeyWithBinding( "iv_drop" ).ToUpper();
 		}
 
-		protected override void OnUse( Player player )
+		protected override void OnUse( HiddenPlayer player )
 		{
 			TimeSinceLastUse = 0;
 
@@ -31,7 +31,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override float GetCooldown( Player player )
+		public override float GetCooldown( HiddenPlayer player )
 		{
 			if ( player.Deployment == DeploymentType.HIDDEN_BEAST )
 				return Cooldown * 0.5f;
@@ -41,7 +41,7 @@ namespace Facepunch.Hidden
 			return base.GetCooldown( player );
 		}
 
-		private async Task StartGlowAbility( Player caller )
+		private async Task StartGlowAbility( HiddenPlayer caller )
 		{
 			var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
 

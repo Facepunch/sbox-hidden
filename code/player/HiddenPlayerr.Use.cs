@@ -3,7 +3,7 @@ using System;
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		public Entity Using { get; protected set; }
 

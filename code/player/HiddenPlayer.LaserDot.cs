@@ -2,7 +2,7 @@
 
 namespace Facepunch.Hidden
 {
-	public partial class Player
+	public partial class HiddenPlayer
 	{
 		[Net] public LaserDot LaserDot { get; private set; }
 

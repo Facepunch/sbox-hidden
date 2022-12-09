@@ -28,7 +28,7 @@
 
 	public override void Tick()
 	{
-		if ( Local.Pawn is not Player player ) return;
+        if ( Local.Pawn is not HiddenPlayer player ) return;
 
 		if ( player.Team is not HiddenTeam ) return;
 
@@ -53,7 +53,7 @@
 
 	private void UpdateAbility( AbilityInfo info, BaseAbility ability )
 	{
-		if ( Local.Pawn is not Player player )
+        if ( Local.Pawn is not HiddenPlayer player )
 			return;
 
 		info.Panel.SetClass( "hidden", ability == null || player.LifeState == LifeState.Dead );

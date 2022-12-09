@@ -7,7 +7,7 @@ namespace Facepunch.Hidden;
 public partial class ChatBox
 {
 	[ClientRpc]
-	public static void AddChatFromServer( Player player, string message, Color color, Color messageColor )
+	public static void AddChatFromServer( HiddenPlayer player, string message, Color color, Color messageColor )
 	{
 		if ( player.IsValid() )
 		{
@@ -25,7 +25,7 @@ public partial class ChatBox
 	{
 		var client = Client.All.FirstOrDefault( c => c.SteamId == long.Parse( playerId ) );
 
-		if ( client.IsValid() && client.Pawn is Player player && player.Team is not null )
+		if ( client.IsValid() && client.Pawn is HiddenPlayer player && player.Team is not null )
 		{
 			Current?.AddEntry( client.Name, message, player.Team.Color );
 

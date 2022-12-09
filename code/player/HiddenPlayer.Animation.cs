@@ -2,7 +2,7 @@
 
 namespace Facepunch.Hidden;
 
-public partial class Player
+public partial class HiddenPlayer
 {
 	private Entity LastWeaponEntity { get; set; }
 

@@ -43,7 +43,7 @@ namespace Facepunch.Hidden
 		public Vector3 GroundNormal { get; set; }
 		public Vector3 WishVelocity { get; set; }
 
-		public Player Player { get; private set; }
+		public HiddenPlayer Player { get; private set; }
 		public DuckController Duck { get; private set; }
 
 		public bool IsServer => Host.IsServer;
@@ -56,7 +56,7 @@ namespace Facepunch.Hidden
 			Duck = new DuckController( this );
 		}
 
-		public void SetActivePlayer( Player player )
+		public void SetActivePlayer( HiddenPlayer player )
 		{
 			Player = player;
 		}
@@ -164,7 +164,8 @@ namespace Facepunch.Hidden
 				return;
 
 			CheckLadder();
-			Swimming = false;
+
+			Swimming = Player.WaterLevel > 0.6f;
 
 			if ( !Swimming && !IsTouchingLadder )
 			{

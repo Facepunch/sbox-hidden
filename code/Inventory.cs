@@ -7,9 +7,9 @@ namespace Facepunch.Hidden
 {
 	public class Inventory
 	{
-		public Player Player { get; private set; }
+		public HiddenPlayer Player { get; private set; }
 
-		public Inventory( Player player )
+		public Inventory( HiddenPlayer player )
 		{
 			Player = player;
 		}

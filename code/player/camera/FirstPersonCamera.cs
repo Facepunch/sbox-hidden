@@ -17,7 +17,7 @@ namespace Facepunch.Hidden
 
 		public void Update()
 		{
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not HiddenPlayer player )
 				return;
 
 			Camera.Rotation = player.ViewAngles.ToRotation();

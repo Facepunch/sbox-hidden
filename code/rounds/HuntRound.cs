@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 		public override int RoundDuration => 300;
 		public override bool CanPlayerSuicide => true;
 
-		public List<Player> Spectators = new();
+		public List<HiddenPlayer> Spectators = new();
 
 		private string HiddenHunter;
 		private string FirstDeath;
@@ -30,7 +30,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnPlayerKilled( Player player )
+		public override void OnPlayerKilled( HiddenPlayer player )
 		{
 			Players.Remove( player );
 			Spectators.Add( player );
@@ -39,7 +39,7 @@ namespace Facepunch.Hidden
 
 			if ( player.Team is HiddenTeam )
 			{
-				if ( player.LastAttacker is Player attacker )
+				if ( player.LastAttacker is HiddenPlayer attacker )
 				{
 					HiddenHunter = attacker.Client.Name;
 				}
@@ -64,7 +64,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnPlayerLeave( Player player )
+		public override void OnPlayerLeave( HiddenPlayer player )
 		{
 			base.OnPlayerLeave( player );
 
@@ -76,7 +76,7 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void OnPlayerSpawn( Player player )
+		public override void OnPlayerSpawn( HiddenPlayer player )
 		{
 			player.MakeSpectator();
 
@@ -92,7 +92,7 @@ namespace Facepunch.Hidden
 			{
 				foreach ( var client in Client.All )
 				{
-					if ( client.Pawn is Player player )
+					if ( client.Pawn is HiddenPlayer player )
 						SupplyLoadouts( player );
 				}
 			}
@@ -115,7 +115,7 @@ namespace Facepunch.Hidden
 			base.OnTimeUp();
 		}
 
-		private void SupplyLoadouts( Player player )
+		private void SupplyLoadouts( HiddenPlayer player )
 		{
 			// Give everyone who is alive their starting loadouts.
 			if ( player.Team != null && player.LifeState == LifeState.Alive )
