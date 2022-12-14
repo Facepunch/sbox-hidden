@@ -23,7 +23,7 @@ namespace Facepunch.Hidden
 		[ConCmd.Admin( "hdn_end_round" )]
 		public static void EndRoundCmd()
 		{
-			if ( Game.Instance.Round is HuntRound round )
+			if ( HiddenGame.Entity.Round is HuntRound round )
 			{
 				round.RoundEndTime = 0f;
 				round.OnTimeUp();
@@ -88,9 +88,9 @@ namespace Facepunch.Hidden
 
 		protected override void OnStart()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
-				foreach ( var client in Client.All )
+				foreach ( var client in Game.Clients )
 				{
 					if ( client.Pawn is HiddenPlayer player )
 						SupplyLoadouts( player );
@@ -100,7 +100,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnFinish()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Spectators.Clear();
 			}
@@ -131,13 +131,13 @@ namespace Facepunch.Hidden
 
 			await Task.Delay( delay * 1000 );
 
-			if ( Game.Instance.Round != this )
+			if ( HiddenGame.Entity.Round != this )
 				return;
 
-			var hidden = Game.Instance.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
+			var hidden = HiddenGame.Entity.GetTeamPlayers<HiddenTeam>().FirstOrDefault();
 			var hiddenName = hidden != null ? hidden.Client.Name : "";
 
-			Game.Instance.ChangeRound( new StatsRound
+			HiddenGame.Entity.ChangeRound( new StatsRound
 			{
 				HiddenName = hiddenName,
 				HiddenKills = HiddenKills,

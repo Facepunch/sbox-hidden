@@ -45,13 +45,13 @@ namespace Facepunch.Hidden
 		{
 			if ( IsFlashlightOn )
 			{
-				if ( IsServer )
+				if ( Game.IsServer )
 					WorldFlashlight.Enabled = false;
 				else
 					ViewFlashlight.Enabled = false;
 			}
 
-			if ( IsServer && IsFlashlightOn != shouldShow )
+			if ( Game.IsServer && IsFlashlightOn != shouldShow )
 			{
 				ShowFlashlightLocal( To.Single( this ), shouldShow );
 			}
@@ -63,7 +63,7 @@ namespace Facepunch.Hidden
 			{
 				if ( !HasFlashlightEntity )
 				{
-					if ( IsServer )
+					if ( Game.IsServer )
 					{
 						WorldFlashlight = new Flashlight();
 						WorldFlashlight.EnableHideInFirstPerson = true;
@@ -81,7 +81,7 @@ namespace Facepunch.Hidden
 				}
 				else
 				{
-					if ( IsServer )
+					if ( Game.IsServer )
 					{
 						WorldFlashlight.SetParent( null );
 						WorldFlashlight.LocalRotation = EyeRotation;
@@ -95,7 +95,7 @@ namespace Facepunch.Hidden
 					}
 				}
 
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					WorldFlashlight.UpdateFromBattery( FlashlightBattery );
 					WorldFlashlight.Reset();
@@ -106,10 +106,10 @@ namespace Facepunch.Hidden
 					ViewFlashlight.Reset();
 				}
 
-				if ( IsServer && playSounds )
+				if ( Game.IsServer && playSounds )
 					PlaySound( "flashlight-on" );
 			}
-			else if ( IsServer && playSounds )
+			else if ( Game.IsServer && playSounds )
 			{
 				PlaySound( "flashlight-off" );
 			}
@@ -142,7 +142,7 @@ namespace Facepunch.Hidden
 
 				using ( Prediction.Off() )
 				{
-					if ( IsServer )
+					if ( Game.IsServer )
 					{
 						var shouldTurnOff = WorldFlashlight.UpdateFromBattery( FlashlightBattery );
 

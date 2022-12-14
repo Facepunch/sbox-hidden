@@ -84,7 +84,7 @@
         if ( ItemContainer == null ) return;
 
         var shouldOpen = ShouldOpen();
-        var player = Local.Pawn as Player;
+        var player = Game.LocalPawn as HiddenPlayer;
 
         if ( Input.Pressed( Button ) && shouldOpen )
         {

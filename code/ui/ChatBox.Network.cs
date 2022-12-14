@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System.Linq;
 using System.Collections.Generic;
+using Sandbox.Diagnostics;
 
 namespace Facepunch.Hidden;
 
@@ -13,7 +14,7 @@ public partial class ChatBox
 		{
 			Current?.AddEntry( player.Client.Name, message, color, messageColor );
 
-			if ( !Global.IsListenServer )
+			if ( !Game.IsListenServer )
 			{
 				Log.Info( $"{player.Client.Name}: {message}" );
 			}
@@ -23,13 +24,13 @@ public partial class ChatBox
 	[ConCmd.Client( "hdn_chat_add", CanBeCalledFromServer = true )]
 	public static void AddChatEntry( string playerId, string message )
 	{
-		var client = Client.All.FirstOrDefault( c => c.SteamId == long.Parse( playerId ) );
+		var client = Game.Clients.FirstOrDefault( c => c.SteamId == long.Parse( playerId ) );
 
 		if ( client.IsValid() && client.Pawn is HiddenPlayer player && player.Team is not null )
 		{
 			Current?.AddEntry( client.Name, message, player.Team.Color );
 
-			if ( !Global.IsListenServer )
+			if ( !Game.IsListenServer )
 			{
 				Log.Info( $"{client.Name}: {message}" );
 			}

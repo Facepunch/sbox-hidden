@@ -41,7 +41,7 @@
 	{
 		base.Tick();
 
-		if ( Local.Pawn is not Player player )
+        if ( Game.LocalPawn is not HiddenPlayer player )
 			return;
 
 		for ( int i = 0; i < Weapons.Length; i++ )
@@ -109,7 +109,7 @@
 		return false;
 	}
 
-	private void PreviousWeapon( Player player )
+	private void PreviousWeapon( HiddenPlayer player )
 	{
 		var currentIndex = 0;
 
@@ -147,7 +147,7 @@
 		SelectWeapon( player, currentIndex );
 	}
 
-	private void NextWeapon( Player player )
+    private void NextWeapon( HiddenPlayer player )
 	{
 		var currentIndex = 0;
 
@@ -214,7 +214,7 @@
 		return 0;
 	}
 
-	private void SelectWeapon( Player player, int index )
+    private void SelectWeapon( HiddenPlayer player, int index )
 	{
 		var weapon = Weapons[index];
 
@@ -228,7 +228,7 @@
 	[Event.Client.BuildInput]
 	private void ProcessClientInput()
 	{
-		if ( Local.Pawn is not Player player )
+        if ( Game.LocalPawn is not HiddenPlayer player )
 			return;
 
 		if ( Input.MouseWheel == 1 )

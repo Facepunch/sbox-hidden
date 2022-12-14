@@ -31,7 +31,7 @@
 		RunHint = null;
 		UseHint = null;
 
-        if ( Local.Pawn is HiddenPlayer player )
+        if ( Game.LocalPawn is HiddenPlayer player )
 		{
 			if ( player.CurrentCamera is SpectateCamera )
 			{
@@ -72,7 +72,7 @@
 	private void UpdateUseHint()
 	{
 		if ( UseHint == null ) return;
-        if ( Local.Pawn is not HiddenPlayer player ) return;
+        if ( Game.LocalPawn is not HiddenPlayer player ) return;
 		if ( player.Team is not HiddenTeam ) return;
 
 		if ( player.Team is HiddenTeam )

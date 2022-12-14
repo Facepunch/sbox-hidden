@@ -40,7 +40,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		protected override void ShootEffects()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			base.ShootEffects();
 
@@ -89,11 +89,11 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public override void Simulate( Client owner )
+		public override void Simulate( IClient owner )
 		{
 			base.Simulate( owner );
 
-			if ( IsClient && ViewModelEntity is ViewModel vm )
+			if ( Game.IsClient && ViewModelEntity is ViewModel vm )
 			{
 				//vm.IsAiming = Input.Down( InputButton.SecondaryAttack );
 			}
@@ -105,13 +105,13 @@ namespace Facepunch.Hidden
 					FireBulletNow = false;
 					BulletsToFire--;
 
-					Rand.SetSeed( Time.Tick );
+					Game.SetRandomSeed( Time.Tick );
 
 					ShootEffects();
 					PlaySound( $"ar2_shoot" );
 					ShootBullet( 0.015f, 1.5f, Config.Damage, 8.0f );
 					PlayAttackAnimation();
-					AddRecoil( new Angles( Rand.Float( -0.3f, -0.6f ), 0f, 0f ) );
+					AddRecoil( new Angles( Game.Random.Float( -0.3f, -0.6f ), 0f, 0f ) );
 
 					LastBulletTime = 0f;
 				}

@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Diagnostics;
 using System.Collections.Generic;
 
 namespace Facepunch.Hidden
@@ -45,9 +46,6 @@ namespace Facepunch.Hidden
 
 		public HiddenPlayer Player { get; private set; }
 		public DuckController Duck { get; private set; }
-
-		public bool IsServer => Host.IsServer;
-		public bool IsClient => Host.IsClient;
 
 		private int StuckTries { get; set; } = 0;
 
@@ -573,7 +571,7 @@ namespace Facepunch.Hidden
 				return false;
 			}
 
-			if ( IsClient ) return true;
+			if ( Game.IsClient ) return true;
 
 			var attemptsPerTick = 20;
 

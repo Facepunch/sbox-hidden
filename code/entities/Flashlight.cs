@@ -32,7 +32,7 @@ namespace Facepunch.Hidden
 			Brightness = 0.01f + ((0.69f / 100f) * battery);
 			Flicker = (battery <= 10);
 
-			if ( IsServer && Flicker && !DidPlayFlickerSound )
+			if ( Game.IsServer && Flicker && !DidPlayFlickerSound )
 			{
 				DidPlayFlickerSound = true;
 				

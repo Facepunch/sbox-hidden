@@ -25,10 +25,10 @@
 
 	public override void Tick()
 	{
-		var player = Local.Pawn;
+		var player = Game.LocalPawn;
 		if ( player == null ) return;
 
-		var game = Game.Instance;
+		var game = HiddenGame.Entity;
 		if ( game == null ) return;
 
 		var round = game.Round;

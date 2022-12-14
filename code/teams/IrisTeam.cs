@@ -15,11 +15,11 @@ namespace Facepunch.Hidden
 
 		public virtual void DressPlayer( HiddenPlayer player )
 		{
-			Rand.SetSeed( player.UniqueRandomSeed );
+			Game.SetRandomSeed( player.UniqueRandomSeed );
 
-			player.SetMaterialGroup( Rand.Int( 3 ) );
+			player.SetMaterialGroup( Game.Random.Int( 3 ) );
 
-			var beard = Rand.FromArray( new[]
+			var beard = Game.Random.FromArray( new[]
 			{
 				"models/citizen_clothes/hair/scruffy_beard/models/scruffy_beard_black.vmdl",
 				"models/citizen_clothes/hair/scruffy_beard/models/scruffy_beard_brown.vmdl",
@@ -30,21 +30,21 @@ namespace Facepunch.Hidden
 				string.Empty
 			} );
 
-			var femaleFeatures = Rand.FromArray( new[]
+			var femaleFeatures = Game.Random.FromArray( new[]
 			{
 				"models/citizen_clothes/hair/eyebrows_drawn/models/eyebrows_drawn.vmdl",
 				"models/citizen_clothes/hair/eyelashes/models/eyelashes.vmdl",
 				string.Empty,
 			} );
 
-			var faceFeatures = Rand.FromArray( new[]
+			var faceFeatures = Game.Random.FromArray( new[]
 			{
 				"models/citizen_clothes/makeup/face_tattoos/models/face_tattoos.vmdl",
 				"models/citizen_clothes/makeup/freckles/model/freckles.vmdl",
 				string.Empty
 			} );
 
-			var outfit = Rand.Int( 3 );
+			var outfit = Game.Random.Int( 3 );
 
 			if ( outfit == 0 )
 			{
@@ -143,9 +143,9 @@ namespace Facepunch.Hidden
 
 		public override void OnJoin( HiddenPlayer player )
 		{
-			if ( Host.IsClient && player.IsLocalPawn )
+			if ( Game.IsClient && player.IsLocalPawn )
 			{
-				RadarHud = Local.Hud.AddChild<Radar>();	
+				RadarHud = Game.RootPanel.AddChild<Radar>();	
 			}
 			base.OnJoin( player );
 		}

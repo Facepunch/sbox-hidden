@@ -58,7 +58,7 @@ namespace Facepunch.Hidden
 			HasBeenThrown = true;
 		}
 
-		public override void Simulate( Client owner )
+		public override void Simulate( IClient owner )
 		{
 			if ( Prediction.FirstTime && HasBeenThrown && NextThrowTime )
 			{
@@ -67,7 +67,7 @@ namespace Facepunch.Hidden
 					ViewModelEntity?.SetAnimParameter( "deploy", true );
 				}
 
-				Rand.SetSeed( Time.Tick );
+				Game.SetRandomSeed( Time.Tick );
 				FireProjectile();
 
 				HasBeenThrown = false;
@@ -105,7 +105,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnProjectileFired( T projectile )
 		{
-			if ( IsClient && IsFirstPersonMode )
+			if ( Game.IsClient && IsFirstPersonMode )
 			{
 				//projectile.Position = EffectEntity.Position + EffectEntity.Rotation.Forward * 24f + EffectEntity.Rotation.Right * 8f + EffectEntity.Rotation.Down * 4f;
 			}

@@ -34,7 +34,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		protected override void ShootEffects()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			base.ShootEffects();
 
@@ -56,7 +56,7 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			Rand.SetSeed( Time.Tick );
+			Game.SetRandomSeed( Time.Tick );
 
 			ShootEffects();
 			PlaySound( $"shotgun1_shoot" );
@@ -67,7 +67,7 @@ namespace Facepunch.Hidden
 			}
 
 			PlayAttackAnimation();
-			AddRecoil( new Angles( Rand.Float( -2f, -3f ), 0f, 0f ) );
+			AddRecoil( new Angles( Game.Random.Float( -2f, -3f ), 0f, 0f ) );
 		}
 
 		public override void OnReloadFinish()

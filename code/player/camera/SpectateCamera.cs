@@ -33,14 +33,14 @@ namespace Facepunch.Hidden
 
 		public void Update()
 		{
-			if ( Local.Pawn is not HiddenPlayer player )
+			if ( Game.LocalPawn is not HiddenPlayer player )
 				return;
 
 			if ( !IsHidden )
 			{
 				if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
 				{
-					var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
+					var players = HiddenGame.Entity.GetTeamPlayers<IrisTeam>( true );
 					var count = players.Count();
 
 					if ( players != null && count > 0 )
@@ -85,7 +85,7 @@ namespace Facepunch.Hidden
 
 		private Vector3 GetSpectatePoint()
 		{
-			if ( Local.Pawn is not HiddenPlayer )
+			if ( Game.LocalPawn is not HiddenPlayer )
 				return DeathPosition;
 
 			if ( TargetPlayer == null || !TargetPlayer.IsValid() || TimeSinceDied < 3 )
@@ -96,7 +96,7 @@ namespace Facepunch.Hidden
 
 		private Vector3 GetViewOffset()
 		{
-			if ( Local.Pawn is not HiddenPlayer player )
+			if ( Game.LocalPawn is not HiddenPlayer player )
 				return Vector3.Zero;
 
 			return player.EyeRotation.Forward * -150f + Vector3.Up * 10f;

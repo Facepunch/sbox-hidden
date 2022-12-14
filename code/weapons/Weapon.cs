@@ -82,7 +82,7 @@ namespace Facepunch.Hidden
 
 		public void AddRecoil( Angles angles )
 		{
-			if ( Host.IsServer ) return;
+			if ( Game.IsServer ) return;
 			RecoilQueue.Enqueue( angles );
 		}
 
@@ -194,13 +194,13 @@ namespace Facepunch.Hidden
 			DoClientReload();
 		}
 
-		public override void Simulate( Client owner )
+		public override void Simulate( IClient owner )
 		{
 			if ( HasLaserDot && Owner is HiddenPlayer player )
 			{
 				if ( ShouldShowLaserDot() )
 				{
-					if ( IsServer && !player.LaserDot.IsValid() )
+					if ( Game.IsServer && !player.LaserDot.IsValid() )
 					{
 						using ( Prediction.Off() )
 						{
@@ -248,8 +248,9 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		public virtual void SimulateAnimator( AnimationHelperWithLegs anim )
+		public override void SimulateAnimator( AnimationHelperWithLegs anim )
 		{
+			base.SimulateAnimator( anim );
 			anim.HoldType = HoldType;
 		}
 
@@ -374,7 +375,7 @@ namespace Facepunch.Hidden
 			TimeSincePrimaryAttack = 0f;
 			TimeSinceSecondaryAttack = 0f;
 
-			Rand.SetSeed( Time.Tick );
+			Game.SetRandomSeed( Time.Tick );
 
 			ShootEffects();
 			ShootBullet( 0.05f, 1.5f, Config.Damage, 3.0f );
@@ -403,7 +404,7 @@ namespace Facepunch.Hidden
 					impact?.SetForward( 0, trace.Normal );
 				}
 
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					using ( Prediction.Off() )
 					{
@@ -452,7 +453,7 @@ namespace Facepunch.Hidden
 					impact?.SetForward( 0, trace.Normal );
 				}
 
-				if ( !IsServer )
+				if ( !Game.IsServer )
 					continue;
 
 				Weapons.PlayFlybySounds( Owner, trace.Entity, trace.StartPosition, trace.EndPosition, bulletSize * 2f, bulletSize * 50f, FlybySounds );
@@ -491,7 +492,7 @@ namespace Facepunch.Hidden
 
 		public override void CreateViewModel()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( string.IsNullOrEmpty( ViewModelPath ) )
 				return;
@@ -553,7 +554,7 @@ namespace Facepunch.Hidden
 		[ClientRpc]
 		protected virtual void ShootEffects()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( !IsMelee )
 			{

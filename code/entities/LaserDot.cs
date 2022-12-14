@@ -12,7 +12,7 @@ namespace Facepunch.Hidden
 			Predictable = true;
 			Transmit = TransmitType.Always;
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				DotParticles = Particles.Create( "particles/laserdot.vpcf" );
 				DotParticles.SetEntity( 0, this, true );

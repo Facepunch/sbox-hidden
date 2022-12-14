@@ -55,7 +55,7 @@
 
 @code
 {
-	Dictionary<Client, ScoreboardEntry> Entries = new();
+    Dictionary<IClient, ScoreboardEntry> Entries = new();
 		
 	public Panel HiddenSection { get; set; }
 	public Panel IrisSection { get; set; }
@@ -78,7 +78,7 @@
 		if ( !IsVisible )
 			return;
 
-		foreach(Client cl in Client.All.Except(Entries.Keys))
+        foreach ( IClient cl in Game.Clients.Except( Entries.Keys ) )
 		{
 			ScoreboardEntry entry = new();
 			Entries.Add(cl, entry);
@@ -86,22 +86,22 @@
 
 		}
 
-		foreach (Client cl in Entries.Keys.Except(Client.All))
+        foreach ( IClient cl in Entries.Keys.Except( Game.Clients ) )
 		{
-			if( Entries.TryGetValue(cl, out var entry))
+			if( Entries.TryGetValue( cl, out var entry ) )
 			{
 				entry.Delete();
-				Entries.Remove(cl);
+				Entries.Remove( cl );
 			}
 		}
 
-		var incorrectlyLocated = Entries.Where(kvp => kvp.Value.Parent != GetCorrectSection(kvp.Key)).ToList();
+		var incorrectlyLocated = Entries.Where( kvp => kvp.Value.Parent != GetCorrectSection( kvp.Key ) ).ToList();
 
-		foreach(var kvp in incorrectlyLocated)
-			kvp.Value.Parent = GetCorrectSection(kvp.Key);
+		foreach( var kvp in incorrectlyLocated )
+			kvp.Value.Parent = GetCorrectSection( kvp.Key );
 	}
 
-	private Panel GetCorrectSection(Client client)
+	private Panel GetCorrectSection( IClient client )
 	{
 		return client.GetInt( "Team", 2 ) == 1 ? HiddenSection : IrisSection;
 	}

@@ -21,7 +21,7 @@ namespace Facepunch.Hidden
 
 		protected override bool ShouldOpen()
 		{
-			return Local.Pawn is HiddenPlayer player && player.Team is IrisTeam;
+			return Game.LocalPawn is HiddenPlayer player && player.Team is IrisTeam;
 		}
 
 		private void AddRadioCommand( string name, int resourceId, string icon = null )

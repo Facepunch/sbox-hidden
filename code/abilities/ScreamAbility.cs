@@ -24,7 +24,7 @@ namespace Facepunch.Hidden
 		{
 			TimeSinceLastUse = 0;
 
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				using ( Prediction.Off() )
 				{
@@ -35,7 +35,7 @@ namespace Facepunch.Hidden
 
 		private void PlayScreamSound( HiddenPlayer from )
 		{
-			var soundName = Rand.FromArray( ScreamSounds );
+			var soundName = Game.Random.FromArray( ScreamSounds );
 			from.PlaySound( soundName );
 		}
 	}

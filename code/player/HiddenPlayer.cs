@@ -4,12 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 using Sandbox.Physics;
 using Sandbox.Component;
+using Sandbox.Diagnostics;
 
 namespace Facepunch.Hidden
 {
 	public partial class HiddenPlayer : AnimatedEntity
 	{
-		public static HiddenPlayer Me => Local.Pawn as HiddenPlayer;
+		public static HiddenPlayer Me => Game.LocalPawn as HiddenPlayer;
 
 		private static List<Particles> AllBloodParticles { get; set; } = new();
 
@@ -172,7 +173,7 @@ namespace Facepunch.Hidden
 			Assert.NotNull( resource );
 
 			var radioColor = Color.Green.Lighten( 0.5f ).Desaturate( 0.5f );
-			var irisPlayers = Game.Instance.GetTeamPlayers<IrisTeam>();
+			var irisPlayers = HiddenGame.Entity.GetTeamPlayers<IrisTeam>();
 
 			ChatBox.AddChatFromServer( To.Multiple( irisPlayers.Select( p => p.Client ) ), this, $"*beep* {resource.Text}", radioColor, radioColor );
 
@@ -226,7 +227,7 @@ namespace Facepunch.Hidden
 
 		public virtual void Respawn()
 		{
-			Game.Instance?.Round?.OnPlayerSpawn( this );
+			HiddenGame.Entity?.Round?.OnPlayerSpawn( this );
 
 			RemoveRagdollEntity();
 			DrawPlayer( true );
@@ -267,7 +268,7 @@ namespace Facepunch.Hidden
 					AnimatedLegs = null;
 				}
 
-				AnimatedLegs = new( Map.Scene, model, Transform );
+				AnimatedLegs = new( Game.SceneWorld, model, Transform );
 				AnimatedLegs.SetBodyGroup( "Head", 1 );
 
 				foreach ( var clothing in LegsClothing )
@@ -357,7 +358,7 @@ namespace Facepunch.Hidden
 			ActiveChild?.BuildInput();
 		}
 
-		public override void Simulate( Client client )
+		public override void Simulate( IClient client )
 		{
 			Projectiles.Simulate();
 
@@ -370,7 +371,7 @@ namespace Facepunch.Hidden
 
 			if ( LifeState != LifeState.Alive )
 			{
-				if ( IsServer )
+				if ( Game.IsServer )
 					DestroyLaserDot();
 
 				return;
@@ -378,7 +379,7 @@ namespace Facepunch.Hidden
 
 			TickPlayerUse();
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				using ( Prediction.Off() )
 				{
@@ -500,7 +501,7 @@ namespace Facepunch.Hidden
 				|| asset.Category == Sandbox.Clothing.ClothingCategory.Footwear
 				|| asset.Category == Sandbox.Clothing.ClothingCategory.Tops )
 			{
-				var clothing = new SceneModel( Map.Scene, model.Model, AnimatedLegs.Transform );
+				var clothing = new SceneModel( Game.SceneWorld, model.Model, AnimatedLegs.Transform );
 				AnimatedLegs.AddChild( "clothing", clothing );
 
 				LegsClothing.Add( new()
@@ -628,7 +629,7 @@ namespace Facepunch.Hidden
 							PickupEntity.PlaySound( "body.stick" );
 							PickupEntity.Tags.Add( "stuck" );
 
-							PhysicsJoint.CreateLength( PhysicsPoint.World( Map.Physics.Body, trace.EndPosition ), PickupEntityBody, 8f );
+							PhysicsJoint.CreateLength( PhysicsPoint.World( Game.PhysicsWorld.Body, trace.EndPosition ), PickupEntityBody, 8f );
 
 							trace = Trace.Ray( PickupEntityBody.Position, PickupEntityBody.Position + Vector3.Down * 600f )
 								.WorldOnly()
@@ -695,7 +696,7 @@ namespace Facepunch.Hidden
 
 		public override void OnAnimEventFootstep( Vector3 position, int foot, float volume )
 		{
-			if ( LifeState == LifeState.Dead || !IsClient )
+			if ( LifeState == LifeState.Dead || !Game.IsClient )
 				return;
 
 			if ( TimeSinceLastFootstep < 0.2f )
@@ -723,7 +724,7 @@ namespace Facepunch.Hidden
 
 		public override void TakeDamage( DamageInfo info )
 		{
-			if ( !Game.Instance.Round.CanPlayerTakeDamage )
+			if ( !HiddenGame.Entity.Round.CanPlayerTakeDamage )
 			{
 				return;
 			}
@@ -735,12 +736,12 @@ namespace Facepunch.Hidden
 
 			if ( Team is HiddenTeam )
 			{
-				info.Damage *= Game.ScaleHiddenDamage;
+				info.Damage *= HiddenGame.ScaleHiddenDamage;
 			}
 
 			if ( info.Attacker is HiddenPlayer attacker && attacker != this )
 			{
-				if ( !Game.FriendlyFire && attacker.Team == Team )
+				if ( !HiddenGame.FriendlyFire && attacker.Team == Team )
 				{
 					return;
 				}
@@ -766,7 +767,7 @@ namespace Facepunch.Hidden
 			{
 				if ( !Team?.PlayPainSounds( this ) == false )
 				{
-					PlaySound( "grunt" + Rand.Int( 1, 4 ) );
+					PlaySound( "grunt" + Game.Random.Int( 1, 4 ) );
 				}
 			}
 
@@ -806,7 +807,7 @@ namespace Facepunch.Hidden
 			DamageIndicator.Current?.OnHit( position );
 		}
 
-		public override void FrameSimulate( Client cl )
+		public override void FrameSimulate( IClient cl )
 		{
 			if ( LifeState == LifeState.Alive )
 			{
@@ -1133,7 +1134,7 @@ namespace Facepunch.Hidden
 				{
 					LonelyLoopSound = Sound.FromEntity( Team is HiddenTeam ? "hidden.whispers" : "heartbeat.loop", this );
 
-					if ( TimeSinceLastAlone > 20f && Rand.Float() >= 0.5f )
+					if ( TimeSinceLastAlone > 20f && Game.Random.Float() >= 0.5f )
 					{
 						var resource = RadioCommandResource.FindByName( "alone" );
 						PlayVoiceCmd( resource.ResourceId );

@@ -22,7 +22,7 @@ namespace Facepunch.Hidden
 					CurrentTeam = value;
 					CurrentTeam.Join( this );
 
-					if ( IsServer )
+					if ( Game.IsServer )
 					{
 						TeamIndex = CurrentTeam.Index;
 						Client.SetInt( "team", TeamIndex );
@@ -33,7 +33,7 @@ namespace Facepunch.Hidden
 
 		private void OnTeamIndexChanged( int teamIndex )
 		{
-			Team = Game.Instance.GetTeamByIndex( teamIndex );
+			Team = HiddenGame.Entity.GetTeamByIndex( teamIndex );
 		}
 	}
 }

@@ -22,7 +22,7 @@
 	{
 		base.Tick();
 
-        if ( Local.Pawn is not HiddenPlayer localPlayer )
+        if ( Game.LocalPawn is not HiddenPlayer localPlayer )
 			return;
 
 		SetClass( "hidden", localPlayer.LifeState != LifeState.Alive );
@@ -68,7 +68,7 @@
 		if ( player.LifeState != LifeState.Alive )
 			return false;
 
-		if ( Local.Pawn is not Player localPlayer )
+        if ( Game.LocalPawn is not HiddenPlayer localPlayer )
 			return false;
 
 		var radarRange = 2048f;

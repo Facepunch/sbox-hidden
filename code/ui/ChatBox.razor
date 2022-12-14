@@ -70,7 +70,7 @@
 
 	private bool CanTalkInChat()
 	{
-		if ( !Local.Pawn.IsValid() || Local.Pawn.LifeState == LifeState.Dead )
+		if ( !Game.LocalPawn.IsValid() || Game.LocalPawn.LifeState == LifeState.Dead )
 			return false;
 
 		return true;

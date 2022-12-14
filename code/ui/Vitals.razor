@@ -19,7 +19,7 @@
 
 	public override void Tick()
 	{
-		if ( Local.Pawn is not Player player ) return;
+        if ( Game.LocalPawn is not HiddenPlayer player ) return;
 		SetClass( "hidden", player.LifeState != LifeState.Alive );
 		base.Tick();
 	}

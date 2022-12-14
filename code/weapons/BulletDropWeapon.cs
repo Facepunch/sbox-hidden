@@ -21,7 +21,7 @@ namespace Facepunch.Hidden
 		{
 			if ( Prediction.FirstTime )
             {
-				Rand.SetSeed( Time.Tick );
+				Game.SetRandomSeed( Time.Tick );
 				FireProjectile();
             }
 		}
@@ -129,7 +129,7 @@ namespace Facepunch.Hidden
 
 		protected virtual void OnProjectileHit( T projectile, TraceResult trace )
 		{
-			if ( IsServer && trace.Entity.IsValid() )
+			if ( Game.IsServer && trace.Entity.IsValid() )
 			{
 				var distance = trace.EndPosition.Distance( projectile.StartPosition );
 				var damage = GetDamageFalloff( distance, Config.Damage );

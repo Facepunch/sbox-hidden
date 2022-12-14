@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Diagnostics;
 using Sandbox.Effects;
 using Sandbox.UI;
 using System;
@@ -7,17 +8,14 @@ using System.Linq;
 
 namespace Facepunch.Hidden
 {
-	partial class Game : GameManager
+	partial class HiddenGame : GameManager
 	{
 		public LightFlickers LightFlickers { get; set; }
 		public HiddenTeam HiddenTeam { get; set; }
 		public IrisTeam IrisTeam { get; set; }
 		public Hud Hud { get; set; }
 
-		public static Game Instance
-		{
-			get => Current as Game;
-		}
+		public static HiddenGame Entity => Current as HiddenGame;
 
 		[Net, Change( nameof( OnRoundChanged ) )] public BaseRound Round { get; private set; }
 
@@ -47,7 +45,7 @@ namespace Facepunch.Hidden
 		private Color OverlayColor { get; set; } = Color.Orange;
 		private float BlurAmount { get; set; } = 0f;
 
-		public Game()
+		public HiddenGame() : base()
 		{
 			Teams = new();
 
@@ -74,7 +72,7 @@ namespace Facepunch.Hidden
 
 		public IEnumerable<HiddenPlayer> GetTeamPlayers<T>( bool isAlive = false ) where T : BaseTeam
 		{
-			var output = Client.All
+			var output = Game.Clients
 				.Where( c => c.Pawn is HiddenPlayer player && player.Team is T )
 				.Select( c => c.Pawn as HiddenPlayer );
 
@@ -95,8 +93,8 @@ namespace Facepunch.Hidden
 
 		public override void ClientSpawn()
 		{
-			Local.Hud?.Delete( true );
-			Local.Hud = new Hud();
+			Game.RootPanel?.Delete( true );
+			Game.RootPanel = new Hud();
 
 			ImmersionPostProcessing = new();
 			HealthPostProcessing = new();
@@ -108,31 +106,26 @@ namespace Facepunch.Hidden
 			base.ClientSpawn();
 		}
 
-		public override void DoPlayerNoclip( Client client )
+		public override bool CanHearPlayerVoice( IClient src, IClient dest )
 		{
-			// Do nothing. The player can't noclip in this mode.
-		}
-
-		public override bool CanHearPlayerVoice( Client source, Client dest )
-		{
-			if ( !source.IsValid() || !dest.IsValid() )
+			if ( !src.IsValid() || !dest.IsValid() )
 				return false;
 
-			if ( !source.Pawn.IsValid() || !dest.Pawn.IsValid() )
+			if ( !src.Pawn.IsValid() || !dest.Pawn.IsValid() )
 				return false;
 
-			var sourcePawn = source.Pawn as Entity;
-			if ( sourcePawn.LifeState == LifeState.Dead )
+			var srcPawn = src.Pawn as Entity;
+			if ( srcPawn.LifeState == LifeState.Dead )
 				return false;
 
 			// Don't play our own voice back to us.
-			if ( source == dest )
+			if ( src == dest )
 				return false;
 
-			return source.Pawn.Position.Distance( dest.Pawn.Position ) <= VoiceRadius;
+			return src.Pawn.Position.Distance( dest.Pawn.Position ) <= VoiceRadius;
 		}
 
-		public override void Simulate( Client cl )
+		public override void Simulate( IClient cl )
 		{
 			var player = cl.Pawn as HiddenPlayer;
 
@@ -145,9 +138,9 @@ namespace Facepunch.Hidden
 			base.Simulate( cl );
 		}
 
-		public override void OnVoicePlayed( Client client )
+		public override void OnVoicePlayed( IClient client )
 		{
-			client.VoiceStereo = false;
+			client.Voice.WantsStereo = false;
 
 			base.OnVoicePlayed( client );
 		}
@@ -165,7 +158,7 @@ namespace Facepunch.Hidden
 			base.OnKilled( entity);
 		}
 
-		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
+		public override void ClientDisconnect( IClient client, NetworkDisconnectionReason reason )
 		{
 			Round?.OnPlayerLeave( client.Pawn as HiddenPlayer );
 			base.ClientDisconnect( client, reason );
@@ -209,11 +202,11 @@ namespace Facepunch.Hidden
 			pawn.Transform = spawnpoint.Transform;
 		}
 
-		public override void ClientJoined( Client client )
+		public override void ClientJoined( IClient client )
 		{
 			var pawn = new HiddenPlayer();
 			client.Pawn = pawn;
-			pawn.UniqueRandomSeed = Rand.Int( 0, 999999 );
+			pawn.UniqueRandomSeed = Game.Random.Int( 0, 999999 );
 			pawn.Respawn();
 
 			base.ClientJoined( client );
@@ -247,7 +240,7 @@ namespace Facepunch.Hidden
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( Local.Pawn is not HiddenPlayer player )
+			if ( Game.LocalPawn is not HiddenPlayer player )
 				return;
 
 			var isHiddenTeam = player.Team is HiddenTeam;
@@ -338,7 +331,7 @@ namespace Facepunch.Hidden
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Client.All.Count >= MinPlayers)
+			if ( Game.Clients.Count >= MinPlayers)
 			{
 				if ( Round is LobbyRound || Round == null )
 				{

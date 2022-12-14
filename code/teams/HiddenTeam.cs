@@ -17,7 +17,7 @@ namespace Facepunch.Hidden
 
 		public override void SupplyLoadout( HiddenPlayer player )
 		{
-			var pipeBombs = Math.Min( (Game.Instance.GetTeamPlayers<IrisTeam>().Count() / 3f).CeilToInt(), 3 );
+			var pipeBombs = Math.Min( (HiddenGame.Entity.GetTeamPlayers<IrisTeam>().Count() / 3f).CeilToInt(), 3 );
 
 			player.ClearAmmo();
 			player.Inventory.DeleteContents();
@@ -107,7 +107,7 @@ namespace Facepunch.Hidden
 
 		public override void OnTick()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				if ( Time.Now <= NextLightFlicker )
 					return;
@@ -123,13 +123,13 @@ namespace Facepunch.Hidden
 						// Make sure we don't also flicker flashlights.
 						if ( entity is SpotLightEntity light && entity is not Flashlight )
 						{
-							if ( Rand.Float( 0f, 1f ) >= 0.5f )
-								Game.Instance.LightFlickers.Add( light, Rand.Float( 0.5f, 2f ) );
+							if ( Game.Random.Float( 0f, 1f ) >= 0.5f )
+								HiddenGame.Entity.LightFlickers.Add( light, Game.Random.Float( 0.5f, 2f ) );
 						}
 					}
 				}
 
-				NextLightFlicker = Time.Now + Rand.Float( 2f, 5f );
+				NextLightFlicker = Time.Now + Game.Random.Float( 2f, 5f );
 			}
 		}
 
@@ -179,22 +179,22 @@ namespace Facepunch.Hidden
 
 		public override bool PlayPainSounds( HiddenPlayer player )
 		{
-			player.PlaySound( "hidden_grunt" + Rand.Int( 1, 2 ) );
+			player.PlaySound( "hidden_grunt" + Game.Random.Int( 1, 2 ) );
 
 			return true;
 		}
 
 		public override void OnJoin( HiddenPlayer player  )
 		{
-			if ( Host.IsClient && player.IsLocalPawn )
+			if ( Game.IsClient && player.IsLocalPawn )
 			{
-				AbilitiesHud = Local.Hud.AddChild<Abilities>();
+				AbilitiesHud = Game.RootPanel.AddChild<Abilities>();
 			}
 
 			player.EnableShadowCasting = false;
 			player.EnableShadowReceive = false;
 
-			if ( Game.CanUseSense )
+			if ( HiddenGame.CanUseSense )
 				player.Sense = new SenseAbility();
 			else
 				player.Sense = null;

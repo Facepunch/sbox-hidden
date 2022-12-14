@@ -30,7 +30,7 @@ namespace Facepunch.Hidden
 
 		public void Start()
 		{
-			if ( Host.IsServer && RoundDuration > 0 )
+			if ( Game.IsServer && RoundDuration > 0 )
 			{
 				RoundEndTime = Time.Now + RoundDuration;
 			}
@@ -40,7 +40,7 @@ namespace Facepunch.Hidden
 
 		public void Finish()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				RoundEndTime = 0f;
 				Players.Clear();
@@ -51,7 +51,7 @@ namespace Facepunch.Hidden
 
 		public void AddPlayer( HiddenPlayer player )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( !Players.Contains(player) )
 			{
@@ -72,7 +72,7 @@ namespace Facepunch.Hidden
 
 		public virtual void OnSecond()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				if ( RoundEndTime == 0f )
 				{

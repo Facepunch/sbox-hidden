@@ -42,7 +42,7 @@ namespace Facepunch.Hidden
 
 		public override void PlaceViewmodel()
 		{
-			if ( Global.IsRunningInVR )
+			if ( Game.IsRunningInVR )
 				return;
 
 			if ( Owner is not HiddenPlayer player )

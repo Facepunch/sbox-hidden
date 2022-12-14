@@ -20,13 +20,13 @@ namespace Facepunch.Hidden
 
 			using ( Prediction.Off() )
 			{
-				if ( Host.IsClient )
+				if ( Game.IsClient )
 				{
 					_ = StartGlowAbility( player );
 				}
 				else
 				{
-					player.PlaySound( $"i-see-you-{Rand.Int(1, 3)}" );
+					player.PlaySound( $"i-see-you-{Game.Random.Int(1, 3)}" );
 				}
 			}
 		}
@@ -43,7 +43,7 @@ namespace Facepunch.Hidden
 
 		private async Task StartGlowAbility( HiddenPlayer caller )
 		{
-			var players = Game.Instance.GetTeamPlayers<IrisTeam>( true );
+			var players = HiddenGame.Entity.GetTeamPlayers<IrisTeam>( true );
 
 			caller.IsSenseActive = true;
 

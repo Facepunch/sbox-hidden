@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Diagnostics;
 using System;
 
 namespace Facepunch.Hidden
@@ -56,7 +57,7 @@ namespace Facepunch.Hidden
 
 		public override void OnPostCategorizePosition( bool stayOnGround, TraceResult trace )
 		{
-			if ( Host.IsServer && trace.Hit && FallVelocity < -FallDamageVelocity )
+			if ( Game.IsServer && trace.Hit && FallVelocity < -FallDamageVelocity )
 			{
 				var damage = (MathF.Abs( FallVelocity ) - FallDamageVelocity) * FallDamageScale;
 

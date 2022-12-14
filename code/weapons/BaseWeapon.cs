@@ -19,7 +19,7 @@ namespace Facepunch.Hidden
 		[Net, Predicted]
 		public TimeSince TimeSinceSecondaryAttack { get; set; }
 
-		public override void Simulate( Client player )
+		public override void Simulate( IClient player )
 		{
 			if ( CanReload() )
 			{
@@ -119,7 +119,7 @@ namespace Facepunch.Hidden
 
 		public virtual void OnCarryStart( Entity carrier )
 		{
-			if ( IsClient ) return;
+			if ( Game.IsClient ) return;
 
 			SetParent( carrier, true );
 			Owner = carrier;
@@ -136,7 +136,7 @@ namespace Facepunch.Hidden
 
 		public virtual void OnCarryDrop( Entity dropper )
 		{
-			if ( IsClient ) return;
+			if ( Game.IsClient ) return;
 
 			SetParent( null );
 			Owner = null;
@@ -162,7 +162,7 @@ namespace Facepunch.Hidden
 				EnableDrawing = false;
 			}
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				DestroyViewModel();
 			}
@@ -172,7 +172,7 @@ namespace Facepunch.Hidden
 		{
 			base.OnDestroy();
 
-			if ( IsClient && ViewModelEntity.IsValid() )
+			if ( Game.IsClient && ViewModelEntity.IsValid() )
 			{
 				DestroyViewModel();
 			}
@@ -180,7 +180,7 @@ namespace Facepunch.Hidden
 
 		public virtual void CreateViewModel()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( string.IsNullOrEmpty( ViewModelPath ) )
 				return;

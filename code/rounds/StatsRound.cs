@@ -22,9 +22,9 @@ namespace Facepunch.Hidden
 
 		protected override void OnStart()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
-				StatsPanel = Local.Hud.AddChild<Stats>();
+				StatsPanel = Game.RootPanel.AddChild<Stats>();
 
 				StatsPanel.Winner.Text = Winner;
 
@@ -67,7 +67,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnTimeUp()
 		{
-			Game.Instance.ChangeRound( new HideRound() );
+			HiddenGame.Entity.ChangeRound( new HideRound() );
 
 			base.OnTimeUp();
 		}

@@ -66,7 +66,7 @@ namespace Facepunch.Hidden
 			{
 				ModelEntity placeholder = null;
 
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					placeholder = new ModelEntity( ProjectileModel );
 					placeholder.Transform = projectile.Transform;
@@ -85,7 +85,7 @@ namespace Facepunch.Hidden
 
 				placeholder?.Delete();
 
-				if ( IsClient ) return;
+				if ( Game.IsClient ) return;
 
 				DamageInRadius( position, BlastRadius, Config.Damage, 10f );
 			}

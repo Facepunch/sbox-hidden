@@ -37,7 +37,7 @@ namespace Facepunch.Hidden
 
 		public void DeleteContents()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			foreach ( var item in List.ToArray() )
 			{
@@ -127,7 +127,7 @@ namespace Facepunch.Hidden
 
 		public Entity DropActive()
 		{
-			if ( !Host.IsServer ) return null;
+			if ( !Game.IsServer ) return null;
 
 			var active = Active;
 			if ( active == null ) return null;
@@ -143,7 +143,7 @@ namespace Facepunch.Hidden
 
 		public bool Drop( Entity entity )
 		{
-			if ( !Host.IsServer )
+			if ( !Game.IsServer )
 				return false;
 
 			if ( !Contains( entity ) )
@@ -174,7 +174,7 @@ namespace Facepunch.Hidden
 
 		public bool Add( Entity entity, bool makeActive = false )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var weapon = entity as Weapon;
 

@@ -17,12 +17,12 @@ namespace Facepunch.Hidden
 
 		public void Update()
 		{
-			if ( Local.Pawn is not HiddenPlayer player )
+			if ( Game.LocalPawn is not HiddenPlayer player )
 				return;
 
 			Camera.Rotation = player.ViewAngles.ToRotation();
 			Camera.Position = player.EyePosition;
-			Camera.FieldOfView = Local.UserPreference.FieldOfView;
+			Camera.FieldOfView = Game.Preferences.FieldOfView;
 			Camera.FirstPersonViewer = player;
 			Camera.ZNear = 1f;
 			Camera.ZFar = 5000f;

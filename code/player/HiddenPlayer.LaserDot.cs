@@ -8,7 +8,7 @@ namespace Facepunch.Hidden
 
 		public void CreateLaserDot()
 		{
-			if ( !IsServer ) return;
+			if ( !Game.IsServer ) return;
 
 			DestroyLaserDot();
 
@@ -22,7 +22,7 @@ namespace Facepunch.Hidden
 		{
 			if ( LaserDot.IsValid() )
 			{
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					LaserDot.Delete();
 					LaserDot = null;
@@ -35,16 +35,16 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		private void SimulateLaserDot( Client client )
+		private void SimulateLaserDot( IClient client )
 		{
 			if ( ActiveChild is Weapon weapon && weapon.HasLaserDot )
 			{
 				if ( LaserDot.IsValid() )
 				{
-					var position = IsServer ? EyePosition : Camera.Position;
-					var rotation = IsServer ? EyeRotation : Camera.Rotation;
+					var position = Game.IsServer ? EyePosition : Camera.Position;
+					var rotation = Game.IsServer ? EyeRotation : Camera.Rotation;
 
-					if ( IsServer )
+					if ( Game.IsServer )
 					{
 						var attachment = weapon.GetAttachment( "laser" );
 
@@ -65,7 +65,7 @@ namespace Facepunch.Hidden
 					LaserDot.Position = trace.EndPosition;
 				}
 			}
-			else if ( IsServer )
+			else if ( Game.IsServer )
 			{
 				DestroyLaserDot();
 			}

@@ -10,9 +10,9 @@ namespace Facepunch.Hidden
 
 		protected override void OnStart()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
-				foreach ( var client in Client.All )
+				foreach ( var client in Game.Clients )
 				{
 					if ( client.Pawn is HiddenPlayer player )
 						player.Respawn();
@@ -49,7 +49,7 @@ namespace Facepunch.Hidden
 
 			AddPlayer( player );
 
-			player.Team = Game.Instance.IrisTeam;
+			player.Team = HiddenGame.Entity.IrisTeam;
 			player.Team.OnStart( player );
 			player.Team.SupplyLoadout( player );
 

@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Facepunch.Hidden
 		{
 			if ( ConsoleSystem.Caller.Pawn is HiddenPlayer player )
 			{
-				if ( Game.Instance.Round is HideRound )
+				if ( HiddenGame.Entity.Round is HideRound )
 				{
 					player.Deployment = Enum.Parse<DeploymentType>( type );
 				}
@@ -34,15 +35,15 @@ namespace Facepunch.Hidden
 		[ConCmd.Client( "hdn_open_deployment", CanBeCalledFromServer = true) ]
 		public static void OpenDeploymentCmd( int teamIndex )
 		{
-			if ( Game.Instance.Round is HideRound round )
+			if ( HiddenGame.Entity.Round is HideRound round )
 			{
-				round.OpenDeployment( Game.Instance.GetTeamByIndex( teamIndex ) );
+				round.OpenDeployment( HiddenGame.Entity.GetTeamByIndex( teamIndex ) );
 			}
 		}
 
 		public static void SelectDeployment( DeploymentType type )
 		{
-			if ( Local.Pawn is HiddenPlayer player )
+			if ( Game.LocalPawn is HiddenPlayer player )
 				player.Deployment = type;
 
 			SelectDeploymentCmd( type.ToString() );
@@ -52,7 +53,7 @@ namespace Facepunch.Hidden
 		{
 			CloseDeploymentPanel();
 
-			DeploymentPanel = Local.Hud.AddChild<Deployment>();
+			DeploymentPanel = Game.RootPanel.AddChild<Deployment>();
 
 			team.AddDeployments( DeploymentPanel, (selection) =>
 			{
@@ -69,7 +70,7 @@ namespace Facepunch.Hidden
 
 			if ( RoundStarted )
 			{
-				player.Team = Game.Instance.IrisTeam;
+				player.Team = HiddenGame.Entity.IrisTeam;
 				player.Team.OnStart( player );
 
 				if ( player.Team.HasDeployments )
@@ -81,11 +82,11 @@ namespace Facepunch.Hidden
 
 		protected override void OnStart()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				HiddenPlayer.ClearAllBloodParticles();
 
-				foreach ( var client in Client.All )
+				foreach ( var client in Game.Clients )
 				{
 					if ( client.Pawn is HiddenPlayer player )
 						player.Respawn();
@@ -101,7 +102,7 @@ namespace Facepunch.Hidden
 				}
 
 				// Select a random Hidden player.
-				var hidden = Players[Rand.Int( selectStartIndex, Players.Count - 1 )];
+				var hidden = Players[Game.Random.Int( selectStartIndex, Players.Count - 1 )];
 
 				if ( !string.IsNullOrEmpty( HostTeam ) && HostTeam == "hidden" )
 				{
@@ -110,7 +111,7 @@ namespace Facepunch.Hidden
 
 				Assert.NotNull( hidden );
 
-				hidden.Team = Game.Instance.HiddenTeam;
+				hidden.Team = HiddenGame.Entity.HiddenTeam;
 				hidden.Team.OnStart( hidden );
 
 				// Make everyone else I.R.I.S.
@@ -118,7 +119,7 @@ namespace Facepunch.Hidden
 				{
 					if ( player != hidden )
 					{
-						player.Team = Game.Instance.IrisTeam;
+						player.Team = HiddenGame.Entity.IrisTeam;
 						player.Team.OnStart( player );
 					}
 
@@ -137,7 +138,7 @@ namespace Facepunch.Hidden
 
 		protected override void OnTimeUp()
 		{
-			Game.Instance.ChangeRound( new HuntRound() );
+			HiddenGame.Entity.ChangeRound( new HuntRound() );
 
 			base.OnTimeUp();
 		}

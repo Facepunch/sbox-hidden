@@ -9,7 +9,7 @@ namespace Facepunch.Hidden
 
 		protected virtual void TickPlayerUse()
 		{
-			if ( !IsServer ) return;
+			if ( !Game.IsServer ) return;
 
 			using ( Prediction.Off() )
 			{
