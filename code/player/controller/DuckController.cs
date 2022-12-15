@@ -8,6 +8,8 @@ namespace Facepunch.Hidden
 		public HiddenPlayer Player => Controller.Player;
 		public bool IsActive { get; private set; }
 
+		private float Scale { get; set; } = 1f;
+
 		public DuckController( MoveController controller )
 		{
 			Controller = controller;
@@ -25,21 +27,25 @@ namespace Facepunch.Hidden
 					TryUnDuck();
 			}
 
+			var targetScale = 1f;
+
 			if ( IsActive )
 			{
 				Controller.SetTag( "ducked" );
 
-				var positionScale = 0.5f;
+				targetScale = 0.5f;
+
 				var lookDownDot = Player.EyeRotation.Forward.Dot( Vector3.Down );
 
 				if ( lookDownDot > 0.5f )
 				{
 					var f = lookDownDot - 0.5f;
-					positionScale += f.Remap( 0f, 0.5f, 0f, 0.1f );
+					targetScale += f.Remap( 0f, 0.5f, 0f, 0.1f );
 				}
-
-				Player.EyeLocalPosition *= positionScale;
 			}
+
+			Scale = Scale.LerpTo( targetScale, Time.Delta * 8f );
+			Player.EyeLocalPosition *= Scale;
 		}
 
 		private void TryDuck()
