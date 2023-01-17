@@ -34,7 +34,6 @@ namespace Facepunch.Hidden
 		protected bool IsTouchingLadder { get; set; }
 		protected Vector3 LadderNormal { get; set; }
 		protected Vector3 TraceOffset { get; set; }
-		protected Vector3 PreVelocity { get; set; }
 		protected Vector3 Mins { get; set; }
 		protected Vector3 Maxs { get; set; }
 
@@ -357,9 +356,6 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		/// <summary>
-		/// Add our wish direction and speed onto our velocity.
-		/// </summary>
 		public virtual void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration )
 		{
 			if ( speedLimit > 0 && wishSpeed > speedLimit )
@@ -379,9 +375,6 @@ namespace Facepunch.Hidden
 			Player.Velocity += wishDir * accelSpeed;
 		}
 
-		/// <summary>
-		/// Remove ground friction from velocity.
-		/// </summary>
 		public virtual void ApplyFriction( float frictionAmount = 1.0f )
 		{
 			var speed = Player.Velocity.Length;
@@ -481,9 +474,6 @@ namespace Facepunch.Hidden
 			Player.Velocity = mover.Velocity;
 		}
 
-		/// <summary>
-		/// Check for a new ground entity.
-		/// </summary>
 		public virtual void UpdateGroundEntity( TraceResult tr )
 		{
 			GroundNormal = tr.Normal;
@@ -499,9 +489,6 @@ namespace Facepunch.Hidden
 			}
 		}
 
-		/// <summary>
-		/// Try to keep a walking player on the ground when running down slopes, etc.
-		/// </summary>
 		public virtual void StayOnGround()
 		{
 			var start = Player.Position + Vector3.Up * 2;
@@ -520,6 +507,7 @@ namespace Facepunch.Hidden
 		}
 
 		public virtual void OnPreTickMove() { }
+
 		public virtual void AddJumpVelocity() { }
 
 		public virtual void HandleJumping()

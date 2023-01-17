@@ -11,8 +11,6 @@ namespace Facepunch.Hidden
 		public override Color Color => Color.Parse( "#4a8a59" ).Value;
 		public override string Name => "I.R.I.S.";
 
-		private Radar RadarHud;
-
 		public virtual void DressPlayer( HiddenPlayer player )
 		{
 			Game.SetRandomSeed( player.UniqueRandomSeed );
@@ -141,15 +139,6 @@ namespace Facepunch.Hidden
 			player.SetMoveController<IrisController>();
 		}
 
-		public override void OnJoin( HiddenPlayer player )
-		{
-			if ( Game.IsClient && player.IsLocalPawn )
-			{
-				RadarHud = Game.RootPanel.AddChild<Radar>();	
-			}
-			base.OnJoin( player );
-		}
-
 		public override void AddDeployments( Deployment panel, Action<DeploymentType> callback )
 		{
 			panel.AddDeployment( new Deployment.DeploymentInfo
@@ -175,20 +164,6 @@ namespace Facepunch.Hidden
 				ClassName = "tactical",
 				OnDeploy = () => callback( DeploymentType.IRIS_TACTICAL )
 			} );
-		}
-
-		public override void OnLeave( HiddenPlayer player )
-		{
-			if ( player.IsLocalPawn )
-			{
-				if ( RadarHud != null )
-				{
-					RadarHud.Delete( true );
-					RadarHud = null;
-				}
-			}
-
-			base.OnLeave( player );
 		}
 	}
 }

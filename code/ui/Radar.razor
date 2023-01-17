@@ -9,6 +9,9 @@
 @attribute [StyleSheet( "/ui/Radar.scss" )]
 @inherits Panel
 
+@if ( Game.LocalPawn is not HiddenPlayer localPlayer ) return;
+@if ( localPlayer.Team is not IrisTeam ) return;
+
 <root class="radar">
     <div class="background"></div>
     <div class="anchor"></div>
@@ -18,85 +21,87 @@
 {
     private readonly Dictionary<HiddenPlayer, RadarDot> RadarDots = new();
 
-	public override void Tick()
-	{
-		base.Tick();
+    public override void Tick()
+    {
+        base.Tick();
 
-        if ( Game.LocalPawn is not HiddenPlayer localPlayer )
-			return;
-
-		SetClass( "hidden", localPlayer.LifeState != LifeState.Alive );
+        SetClass( "hidden", Game.LocalPawn.LifeState != LifeState.Alive );
 
         var deleteList = new List<HiddenPlayer>();
-		var count = 0;
+        var count = 0;
 
-		deleteList.AddRange( RadarDots.Keys );
+        deleteList.AddRange( RadarDots.Keys );
 
         var players = Entity.All.OfType<HiddenPlayer>().OrderBy( x => Vector3.DistanceBetween( x.EyePosition, Camera.Position ) );
 
-		foreach ( var v in players )
-		{
-			if ( UpdateRadar( v ) )
-			{
-				deleteList.Remove( v );
-				count++;
-			}
-		}
+        foreach ( var v in players )
+        {
+            if ( UpdateRadar( v ) )
+            {
+                deleteList.Remove( v );
+                count++;
+            }
+        }
 
-		foreach ( var player in deleteList )
-		{
-			RadarDots[player].Delete();
-			RadarDots.Remove( player );
-		}
-	}
+        foreach ( var player in deleteList )
+        {
+            RadarDots[player].Delete();
+            RadarDots.Remove( player );
+        }
+    }
 
     public RadarDot CreateRadarDot( HiddenPlayer player )
-	{
-		var tag = new RadarDot()
+    {
+        var tag = new RadarDot()
 		{
 			Parent = this
 		};
 
-		return tag;
-	}
+        return tag;
+    }
 
     public bool UpdateRadar( HiddenPlayer player )
-	{
-		if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
-			return false;
+    {
+        if ( player.IsLocalPawn || !player.HasTeam || player.Team.HideNameplate )
+            return false;
 
-		if ( player.LifeState != LifeState.Alive )
-			return false;
+        if ( player.LifeState != LifeState.Alive )
+            return false;
 
         if ( Game.LocalPawn is not HiddenPlayer localPlayer )
-			return false;
+            return false;
 
-		var radarRange = 2048f;
+        var radarRange = 2048f;
 
-		if ( player.Position.Distance( localPlayer.Position ) > radarRange )
-			return false;
+        if ( player.Position.Distance( localPlayer.Position ) > radarRange )
+            return false;
 
-		if ( !RadarDots.TryGetValue( player, out var tag ) )
-		{
-			tag = CreateRadarDot( player );
-			RadarDots[player] = tag;
-		}
+        if ( !RadarDots.TryGetValue( player, out var tag ) )
+        {
+            tag = CreateRadarDot( player );
+            RadarDots[player] = tag;
+        }
 
-		// This is probably fucking awful maths but it works.
-		var difference = player.Position - localPlayer.Position;
-		var radarSize = 256f;
+        // This is probably fucking awful maths but it works.
+        var difference = player.Position - localPlayer.Position;
+        var radarSize = 256f;
 
-		var x = (radarSize / radarRange) * difference.x * 0.5f;
-		var y = (radarSize / radarRange) * difference.y * 0.5f;
+        var x = (radarSize / radarRange) * difference.x * 0.5f;
+        var y = (radarSize / radarRange) * difference.y * 0.5f;
 
-		var angle = (MathF.PI / 180) * (Camera.Rotation.Yaw() - 90f);
-		var x2 = x * MathF.Cos( angle ) + y * MathF.Sin( angle );
-		var y2 = y * MathF.Cos( angle ) - x *MathF.Sin( angle );
+        var angle = (MathF.PI / 180) * (Camera.Rotation.Yaw() - 90f);
+        var x2 = x * MathF.Cos( angle ) + y * MathF.Sin( angle );
+        var y2 = y * MathF.Cos( angle ) - x *MathF.Sin( angle );
 
-		tag.Style.Left = (radarSize / 2f) + x2;
-		tag.Style.Top = (radarSize / 2f) - y2;
-		tag.Style.Dirty();
+        tag.Style.Left = (radarSize / 2f) + x2;
+        tag.Style.Top = (radarSize / 2f) - y2;
+        tag.Style.Dirty();
 
-		return true;
-	}
+        return true;
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine( Game.LocalPawn, (Game.LocalPawn as HiddenPlayer)?.Team ?? default );
+    }
 }
