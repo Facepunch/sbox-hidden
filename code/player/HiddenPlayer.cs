@@ -645,10 +645,12 @@ namespace Facepunch.Hidden
 								*/
 							}
 
+							/*
 							var drip = Particles.Create( "particles/blood/blood_drip.vpcf", PickupEntity );
 							drip.SetEntity( 0, PickupEntity );
 							drip.SetPosition( 2, new Vector3( 60f ) );
 							AddBloodParticle( drip );
+							*/
 						}
 						else
 						{
@@ -1043,6 +1045,7 @@ namespace Facepunch.Hidden
 
 			if ( Team is IrisTeam && LifeState == LifeState.Alive && Health <= 90f )
 			{
+				/*
 				if ( HealthBloodDrip == null )
 				{
 					HealthBloodDrip = Particles.Create( "particles/blood/blood_drip.vpcf", this );
@@ -1050,6 +1053,7 @@ namespace Facepunch.Hidden
 				}
 
 				HealthBloodDrip.SetPosition( 2, new Vector3( 100f - Health ) );
+				*/
 			}
 			else
 			{
