@@ -10,7 +10,6 @@
 @inherits Panel
 
 @if ( Game.LocalPawn is not HiddenPlayer localPlayer ) return;
-@if ( localPlayer.Team is not IrisTeam ) return;
 
 <root class="radar">
     <div class="background"></div>
@@ -25,7 +24,12 @@
     {
         base.Tick();
 
-        SetClass( "hidden", Game.LocalPawn.LifeState != LifeState.Alive );
+        if ( Game.LocalPawn is not HiddenPlayer player ) return;
+
+        var isHidden = (player.LifeState != LifeState.Alive || player.Team is not IrisTeam);
+        SetClass( "hidden", isHidden );
+
+        if ( isHidden ) return;
 
         var deleteList = new List<HiddenPlayer>();
         var count = 0;
@@ -43,10 +47,10 @@
             }
         }
 
-        foreach ( var player in deleteList )
+        foreach ( var p in deleteList )
         {
-            RadarDots[player].Delete();
-            RadarDots.Remove( player );
+            RadarDots[p].Delete();
+            RadarDots.Remove( p );
         }
     }
 
