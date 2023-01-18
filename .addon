@@ -18,7 +18,7 @@
     "MapList": [],
     "MinPlayers": 0,
     "MaxPlayers": 32,
-    "MapSelect": "Unrestricted",
+    "MapSelect": "Tagged",
     "GameCategory": "Shooter",
     "GameSettings": {
       "hdn_friendly_fire": {
