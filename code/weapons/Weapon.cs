@@ -533,6 +533,7 @@ namespace Facepunch.Hidden
 			yield return Trace.Ray( start, end )
 				.UseHitboxes()
 				.Ignore( Owner )
+				.WithoutTags( "trigger" )
 				.Ignore( this )
 				.Size( radius )
 				.Run();

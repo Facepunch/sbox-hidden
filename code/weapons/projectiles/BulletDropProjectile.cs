@@ -140,6 +140,7 @@ namespace Facepunch.Hidden
 				.WorldAndEntities()
 				.UseHitboxes()
 				.WithAnyTags( "weapon", "player", "solid" )
+				.WithoutTags( "trigger" )
 				.Size( Radius )
 				.Ignore( this )
 				.Ignore( IgnoreEntity )

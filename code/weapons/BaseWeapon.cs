@@ -100,6 +100,7 @@ namespace Facepunch.Hidden
 			var trace = Trace.Ray( start, end )
 				.UseHitboxes()
 				.WithAnyTags( "solid", "player", "npc" )
+				.WithoutTags( "trigger" )
 				.Ignore( this )
 				.Size( radius );
 

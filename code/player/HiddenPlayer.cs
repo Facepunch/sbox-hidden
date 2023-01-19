@@ -948,6 +948,7 @@ namespace Facepunch.Hidden
 				var trace = Trace.Ray( position, position + rotation.Forward * 4096f )
 					.UseHitboxes()
 					.Radius( 2f )
+					.WithoutTags( "trigger" )
 					.Ignore( weapon )
 					.Ignore( this )
 					.Run();
