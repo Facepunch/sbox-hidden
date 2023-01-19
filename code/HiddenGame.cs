@@ -288,7 +288,7 @@ namespace Facepunch.Hidden
 				ImmersionPostProcessing.Vignette.Roundness = 0.7f;
 
 				ImmersionPostProcessing.FilmGrain.Response = 0.1f;
-				ImmersionPostProcessing.FilmGrain.Intensity = 0.02f;
+				ImmersionPostProcessing.FilmGrain.Intensity = 0.04f;
 			}
 
 			if ( player.IsSpectator && !isHiddenTeam )
