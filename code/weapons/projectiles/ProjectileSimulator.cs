@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace Facepunch.Hidden
 {
-	public partial class ProjectileSimulator
+	public partial class ProjectileSimulator : IValid
 	{
 		public List<BulletDropProjectile> List { get; private set; }
 		public Entity Owner { get; private set; }
+		public bool IsValid => Owner.IsValid();
 
 		public ProjectileSimulator( Entity owner )
 		{
@@ -36,21 +37,18 @@ namespace Facepunch.Hidden
 
 		public void Simulate()
 		{
-			using ( Entity.LagCompensation() )
+			for ( int i = List.Count - 1; i >= 0; i-- )
 			{
-				for ( int i = List.Count - 1; i >= 0; i-- )
+				var projectile = List[i];
+
+				if ( !projectile.IsValid() )
 				{
-					var projectile = List[i];
-
-					if ( !projectile.IsValid() )
-					{
-						List.RemoveAt( i );
-						continue;
-					}
-
-					if ( Prediction.FirstTime )
-						projectile.Simulate();
+					List.RemoveAt( i );
+					continue;
 				}
+
+				if ( Prediction.FirstTime )
+					projectile.Simulate();
 			}
 		}
 	}
