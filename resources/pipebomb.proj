@@ -1,0 +1,13 @@
+{
+  "FaceDirection": true,
+  "LifeTime": "3.00,5.00,0",
+  "Gravity": "15.00,50.00,0",
+  "Speed": "800.00,2000.00,0",
+  "Radius": 8,
+  "ModelName": "models/grenade/w_grenade.vmdl",
+  "ExplosionEffect": null,
+  "FollowEffect": null,
+  "TrailEffect": null,
+  "LaunchSound": null,
+  "HitSound": null
+}

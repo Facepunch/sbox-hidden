@@ -2,7 +2,7 @@
 
 namespace Facepunch.Hidden
 {
-	public abstract partial class Throwable<T> : BulletDropWeapon<T> where T : BulletDropProjectile, new()
+	public abstract partial class Throwable<T> : ProjectileWeapon<T> where T : Projectile, new()
 	{
 		public override string ImpactEffect => null;
 		public override string ViewModelPath => "models/grenade/fp_grenade.vmdl";
@@ -10,13 +10,9 @@ namespace Facepunch.Hidden
 		public override string MuzzleFlashEffect => null;
 		public override float PrimaryRate => 1f;
 		public override float SecondaryRate => 1f;
-		public override float Speed => 1300f;
-		public override float Gravity => 5f;
 		public override float InheritVelocity => 0f;
-		public override string ProjectileModel => string.Empty;
 		public override int ClipSize => 0;
 		public override float ReloadTime => 2.3f;
-		public override float ProjectileLifeTime => 4f;
 
 		public virtual float ThrowAnimationTime => 0.8f;
 		public virtual string ThrowSound => null;

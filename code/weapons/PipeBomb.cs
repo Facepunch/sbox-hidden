@@ -19,18 +19,13 @@ namespace Facepunch.Hidden
 	public partial class PipeBomb : Throwable<BouncingProjectile>
 	{
 		public override WeaponConfig Config => new PipeBombConfig();
-		//public override string TrailEffect => "particles/weapons/fireball/fireball_trail.vpcf";
-		public override string ProjectileModel => "models/grenade/w_grenade.vmdl";
+		public override string ProjectileData => "pipebomb";
 		public override string ThrowSound => "pipebomb.throw";
 		public override string DamageType => "blast";
 		public override float ProjectileStartRange => 100f;
-		public override float ProjectileLifeTime => 3f;
 		public override float ThrowAnimationTime => 0.5f;
-		public override string HitSound => null;
 		public override bool HasLaserDot => false;
 		public override bool HasFlashlight => false;
-		public override float Gravity => 15f;
-		public override float Speed => 800f;
 
 		public virtual float BlastRadius => 256f;
 
@@ -51,7 +46,6 @@ namespace Facepunch.Hidden
 			projectile.BounceSoundMinimumVelocity = 40f;
 			projectile.Bounciness = 0.7f;
 			projectile.BounceSound = "pipebomb.bounce";
-			projectile.FaceDirection = false;
 			projectile.FromWeapon = this;
 			projectile.Scale = 0.5f;
 
@@ -68,11 +62,11 @@ namespace Facepunch.Hidden
 
 				if ( Game.IsServer )
 				{
-					placeholder = new ModelEntity( ProjectileModel );
+					placeholder = new ModelEntity( projectile.Data.ModelName );
 					placeholder.Transform = projectile.Transform;
 				}
 
-				var position = projectile.Position - projectile.Velocity.Normal * projectile.Radius;
+				var position = projectile.Position - projectile.Velocity.Normal * projectile.Data.Radius;
 
 				Sound.FromWorld( "pipebomb.tick", position );
 

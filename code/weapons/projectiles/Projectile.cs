@@ -2,31 +2,38 @@
 using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.Hidden
 {
-	public partial class BulletDropProjectile : ModelEntity
+	public partial class Projectile : ModelEntity
 	{
-		[Net, Predicted] public string ExplosionEffect { get; set; } = "";
-		[Net, Predicted] public string LaunchSoundName { get; set; } = null;
-		[Net, Predicted] public string FollowEffect { get; set; } = "";
-		[Net, Predicted] public string TrailEffect { get; set; } = "";
-		[Net, Predicted] public string HitSound { get; set; } = "";
-		[Net, Predicted] public string ModelName { get; set; } = "";
+		public static T Create<T>( string dataName ) where T : Projectile, new()
+		{
+			var data = ResourceLibrary.GetAll<ProjectileData>()
+				.FirstOrDefault( d => d.ResourceName.ToLower() == dataName.ToLower() );
 
-		public Action<BulletDropProjectile, TraceResult> Callback { get; private set; }
+			if ( data == null )
+			{
+				throw new Exception( $"Unable to find Projectile Data by name {dataName}" );
+			}
+
+			var projectile = new T();
+			projectile.Data = data;
+			return projectile;
+		}
+
+		[Net, Predicted] public ProjectileData Data { get; set; }
+
+		public Action<Projectile, TraceResult> Callback { get; private set; }
 		public List<string> FlybySounds { get; set; }
 		public bool PlayFlybySounds { get; set; } = false;
 		public RealTimeUntil CanHitTime { get; set; } = 0.1f;
 		public ProjectileSimulator Simulator { get; set; }
-		public float? LifeTime { get; set; }
 		public string Attachment { get; set; } = null;
 		public Entity Attacker { get; set; } = null;
 		public bool ExplodeOnDestroy { get; set; } = true;
 		public Entity IgnoreEntity { get; set; }
-		public float Gravity { get; set; } = 10f;
-		public float Radius { get; set; } = 8f;
-		public bool FaceDirection { get; set; } = false;
 		public Vector3 StartPosition { get; private set; }
 		public bool Debug { get; set; } = false;
 
@@ -38,18 +45,19 @@ namespace Facepunch.Hidden
 		protected Sound LaunchSound { get; set; }
 		protected Particles Follower { get; set; }
 		protected Particles Trail { get; set; }
+		protected float LifeTime { get; set; }
+		protected float Gravity { get; set; }
 
-		public void Initialize( Vector3 start, Vector3 velocity, float radius, Action<BulletDropProjectile, TraceResult> callback = null )
+		public void Initialize( Vector3 start, Vector3 velocity, Action<Projectile, TraceResult> callback = null )
 		{
-			Initialize( start, velocity, callback );
-			Radius = radius;
-		}
+			Game.SetRandomSeed( Time.Tick );
 
-		public void Initialize( Vector3 start, Vector3 velocity, Action<BulletDropProjectile, TraceResult> callback = null )
-		{
-			if ( LifeTime.HasValue )
+			LifeTime = Data.LifeTime.GetValue();
+			Gravity = Data.Gravity.GetValue();
+
+			if ( LifeTime > 0f )
 			{
-				DestroyTime = LifeTime.Value;
+				DestroyTime = LifeTime;
 			}
 
 			InitialVelocity = velocity;
@@ -60,7 +68,7 @@ namespace Facepunch.Hidden
 			NextFlyby = 0.2f;
 			Position = start;
 
-			if ( FaceDirection )
+			if ( Data.FaceDirection )
 			{
 				Rotation = Rotation.LookAt( Velocity.Normal );
 			}
@@ -118,9 +126,9 @@ namespace Facepunch.Hidden
 
 		public virtual void CreateEffects()
 		{
-			if ( !string.IsNullOrEmpty( TrailEffect ) )
+			if ( !string.IsNullOrEmpty( Data.TrailEffect ) )
 			{
-				Trail = Particles.Create( TrailEffect, this );
+				Trail = Particles.Create( Data.TrailEffect, this );
 
 				if ( !string.IsNullOrEmpty( Attachment ) )
 					Trail.SetEntityAttachment( 0, this, Attachment );
@@ -128,28 +136,28 @@ namespace Facepunch.Hidden
 					Trail.SetEntity( 0, this );
 			}
 
-			if ( !string.IsNullOrEmpty( FollowEffect ) )
+			if ( !string.IsNullOrEmpty( Data.FollowEffect ) )
 			{
-				Follower = Particles.Create( FollowEffect, this );
+				Follower = Particles.Create( Data.FollowEffect, this );
 			}
 
-			if ( !string.IsNullOrEmpty( LaunchSoundName ) )
-				LaunchSound = Sound.FromWorld( LaunchSoundName, Position );
+			if ( !string.IsNullOrEmpty( Data.LaunchSound ) )
+				LaunchSound = Sound.FromWorld( Data.LaunchSound, Position );
 
-			if ( !string.IsNullOrEmpty( ModelName ) )
-				ModelEntity = new SceneObject( Game.SceneWorld, ModelName );
+			if ( !string.IsNullOrEmpty( Data.ModelName ) )
+				ModelEntity = new SceneObject( Game.SceneWorld, Data.ModelName );
 		}
 
 		public virtual void Simulate()
 		{
-			if ( FaceDirection )
+			if ( Data.FaceDirection )
 			{
 				Rotation = Rotation.LookAt( Velocity.Normal );
 			}
 
 			if ( Debug )
 			{
-				DebugOverlay.Sphere( Position, Radius, Game.IsClient ? Color.Blue : Color.Red );
+				DebugOverlay.Sphere( Position, Data.Radius, Game.IsClient ? Color.Blue : Color.Red );
 			}
 
 			var newPosition = GetTargetPosition();
@@ -159,14 +167,14 @@ namespace Facepunch.Hidden
 				.UseHitboxes()
 				.WithAnyTags( "weapon", "player", "solid" )
 				.WithoutTags( "trigger" )
-				.Size( Radius )
+				.Size( Data.Radius )
 				.Ignore( this )
 				.Ignore( IgnoreEntity )
 				.Run();
 
 			Position = trace.EndPosition;
 
-			if ( LifeTime.HasValue && DestroyTime )
+			if ( LifeTime > 0f && DestroyTime )
 			{
 				if ( ExplodeOnDestroy )
 				{
@@ -191,7 +199,7 @@ namespace Facepunch.Hidden
 			{
 				if ( NextFlyby && FlybySounds != null )
 				{
-					Weapons.PlayFlybySounds( Attacker, trace.StartPosition, trace.EndPosition, Radius, Radius * 4f, FlybySounds );
+					Weapons.PlayFlybySounds( Attacker, trace.StartPosition, trace.EndPosition, Data.Radius, Data.Radius * 4f, FlybySounds );
 					NextFlyby = Time.Delta * 2f;
 				}
 			}
@@ -232,9 +240,9 @@ namespace Facepunch.Hidden
 				return;
 			}
 
-			if ( !string.IsNullOrEmpty( ExplosionEffect ) )
+			if ( !string.IsNullOrEmpty( Data.ExplosionEffect ) )
 			{
-				var explosion = Particles.Create( ExplosionEffect );
+				var explosion = Particles.Create( Data.ExplosionEffect );
 
 				if ( explosion != null )
 				{
@@ -243,12 +251,12 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( !string.IsNullOrEmpty( HitSound ) )
-				Sound.FromWorld( HitSound, Position );
+			if ( !string.IsNullOrEmpty( Data.HitSound ) )
+				Sound.FromWorld( Data.HitSound, Position );
 		}
 
 		[Event.PreRender]
-		protected virtual void ClientTick()
+		protected virtual void PreRender()
 		{
 			if ( ModelEntity.IsValid() )
 			{

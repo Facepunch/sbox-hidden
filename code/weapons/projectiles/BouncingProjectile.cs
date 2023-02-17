@@ -2,7 +2,7 @@
 
 namespace Facepunch.Hidden
 {
-	public partial class BouncingProjectile : BulletDropProjectile
+	public partial class BouncingProjectile : Projectile
 	{
 		public float BounceSoundMinimumVelocity { get; set; }
 		public string BounceSound { get; set; }
@@ -34,7 +34,7 @@ namespace Facepunch.Hidden
 
 		protected override bool HasHitTarget( TraceResult trace )
 		{
-			if ( LifeTime.HasValue )
+			if ( LifeTime > 0f )
 			{
 				return false;
 			}

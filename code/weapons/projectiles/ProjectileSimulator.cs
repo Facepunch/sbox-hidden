@@ -5,7 +5,7 @@ namespace Facepunch.Hidden
 {
 	public partial class ProjectileSimulator : IValid
 	{
-		public List<BulletDropProjectile> List { get; private set; }
+		public List<Projectile> List { get; private set; }
 		public Entity Owner { get; private set; }
 		public bool IsValid => Owner.IsValid();
 
@@ -15,12 +15,12 @@ namespace Facepunch.Hidden
 			Owner = owner;
 		}
 
-		public void Add( BulletDropProjectile projectile )
+		public void Add( Projectile projectile )
 		{
 			List.Add( projectile );
 		}
 
-		public void Remove( BulletDropProjectile projectile )
+		public void Remove( Projectile projectile )
 		{
 			List.Remove( projectile );
 		}
