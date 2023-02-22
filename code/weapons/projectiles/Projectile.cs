@@ -50,8 +50,6 @@ namespace Facepunch.Hidden
 
 		public void Initialize( Vector3 start, Vector3 velocity, Action<Projectile, TraceResult> callback = null )
 		{
-			Game.SetRandomSeed( Time.Tick );
-
 			LifeTime = Data.LifeTime.GetValue();
 			Gravity = Data.Gravity.GetValue();
 

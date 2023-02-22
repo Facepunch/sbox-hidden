@@ -79,9 +79,12 @@ namespace Facepunch.Hidden
 
 				placeholder?.Delete();
 
-				if ( Game.IsClient ) return;
+				ScreenShake.DoRandomShake( position, BlastRadius, 3f );
 
-				DamageInRadius( position, BlastRadius, Config.Damage, 10f );
+				if ( Game.IsServer )
+				{
+					DamageInRadius( position, BlastRadius, Config.Damage, 10f );
+				}
 			}
 			catch ( TaskCanceledException )
 			{

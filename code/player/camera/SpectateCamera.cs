@@ -81,6 +81,8 @@ namespace Facepunch.Hidden
 
 			Camera.FieldOfView = Camera.FieldOfView.LerpTo( 50f, Time.Delta * 3f );
 			Camera.FirstPersonViewer = null;
+
+			ScreenShake.Apply();
 		}
 
 		private Vector3 GetSpectatePoint()

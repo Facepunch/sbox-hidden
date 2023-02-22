@@ -237,8 +237,8 @@ namespace Facepunch.Hidden
 			LightFlickers?.OnTick();
 		}
 
-		[Event.Tick.Client]
-		private void ClientTick()
+		[Event.Client.Frame]
+		private void OnFrame()
 		{
 			if ( Game.LocalPawn is not HiddenPlayer player )
 				return;
@@ -310,6 +310,11 @@ namespace Facepunch.Hidden
 				HealthPostProcessing.Vignette.Smoothness = 0.9f;
 				HealthPostProcessing.Vignette.Roundness = 0.5f;
 			}
+
+			var sum = ScreenShake.List.OfType<ScreenShake.Random>().Sum( s => (1f - s.Progress) );
+
+			ImmersionPostProcessing.Pixelation = 0.02f * sum;
+			ImmersionPostProcessing.ChromaticAberration.Scale += (0.05f * sum);
 		}
 
 		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )
