@@ -5,7 +5,7 @@ using Sandbox.Component;
 
 namespace Facepunch.Hidden
 {
-	class IrisTeam : BaseTeam
+	public class IrisTeam : BaseTeam
 	{
 		public override string HudClassName => "team_iris";
 		public override Color Color => Color.Parse( "#4a8a59" ).Value;

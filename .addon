@@ -131,6 +131,7 @@
     "DefaultLeaderboards": null,
     "Summary": "Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.",
     "Description": "Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.",
-    "Public": true
+    "Public": true,
+    "CsProjName": ""
   }
 }

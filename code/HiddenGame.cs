@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Facepunch.Hidden
 {
-	partial class HiddenGame : GameManager
+	public partial class HiddenGame : GameManager
 	{
 		public LightFlickers LightFlickers { get; set; }
 		public HiddenTeam HiddenTeam { get; set; }

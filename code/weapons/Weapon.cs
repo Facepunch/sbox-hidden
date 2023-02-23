@@ -1,5 +1,4 @@
-﻿using Gamelib.Utility;
-using Sandbox;
+﻿using Sandbox;
 using Sandbox.Utility;
 using System.Collections.Generic;
 
@@ -88,7 +87,7 @@ namespace Facepunch.Hidden
 
 		public float GetDamageFalloff( float distance, float damage )
 		{
-			return Weapons.GetDamageFalloff( distance, damage, DamageFalloffStart, DamageFalloffEnd );
+			return Util.Weapons.GetDamageFalloff( distance, damage, DamageFalloffStart, DamageFalloffEnd );
 		}
 
 		public virtual void Restock()
@@ -456,7 +455,7 @@ namespace Facepunch.Hidden
 				if ( !Game.IsServer )
 					continue;
 
-				Weapons.PlayFlybySounds( Owner, trace.Entity, trace.StartPosition, trace.EndPosition, bulletSize * 2f, bulletSize * 50f, FlybySounds );
+				Util.Weapons.PlayFlybySounds( Owner, trace.Entity, trace.StartPosition, trace.EndPosition, bulletSize * 2f, bulletSize * 50f, FlybySounds );
 
 				if ( trace.Entity.IsValid() )
 				{
