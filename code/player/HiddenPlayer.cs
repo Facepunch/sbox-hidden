@@ -919,10 +919,10 @@ namespace Facepunch.Hidden
 			{
 				if ( FlashEffect == null )
 				{
-					FlashEffect = Particles.Create( "particles/flashlight/flashlight.vpcf", weapon.EffectEntity, "laser" );
+					FlashEffect = Particles.Create( "particles/flashlight/flashlight.vpcf", weapon.EffectEntity, "muzzle" );
 				}
 
-				FlashEffect.SetEntityAttachment( 0, weapon.EffectEntity, "laser" );
+				FlashEffect.SetEntityAttachment( 0, weapon.EffectEntity, "muzzle" );
 				FlashEffect.SetPosition( 2, new Color( 0.9f, 0.87f, 0.6f ) );
 				FlashEffect.SetPosition( 3, new Vector3( 1f, 1f, 0f ) );
 			}
@@ -934,7 +934,7 @@ namespace Facepunch.Hidden
 
 			if ( weapon.IsValid() && LaserDot.IsValid() && LifeState == LifeState.Alive )
 			{
-				var attachment = weapon.EffectEntity.GetAttachment( "laser" );
+				var attachment = weapon.EffectEntity.GetAttachment( "laser" ) ?? weapon.EffectEntity.GetAttachment( "muzzle" );
 				if ( !attachment.HasValue ) return;
 
 				var position = Camera.Position;

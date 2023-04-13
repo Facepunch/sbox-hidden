@@ -46,7 +46,7 @@ namespace Facepunch.Hidden
 
 					if ( Game.IsServer )
 					{
-						var attachment = weapon.GetAttachment( "laser" );
+						var attachment = weapon.GetAttachment( "laser" ) ?? weapon.GetAttachment( "muzzle" );
 
 						if ( attachment.HasValue )
 						{
