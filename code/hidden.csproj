@@ -9,6 +9,7 @@
 		<NoWarn>1701;1702;1591;</NoWarn>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<DefineConstants>SANDBOX;ADDON;DEBUG</DefineConstants>
+		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,24 +29,24 @@
 	</ItemGroup>
 
   <PropertyGroup>
-	<OutputPath>C:\Users\Conna\Documents\sbox\game/.vs/output/</OutputPath>
-	<DocumentationFile>C:\Users\Conna\Documents\sbox\game/.vs/output/hidden.xml</DocumentationFile>
+	<OutputPath>..\..\../.vs/output/</OutputPath>
+	<DocumentationFile>..\..\../.vs/output/hidden.xml</DocumentationFile>
 	<RootNamespace>Sandbox</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="C:\Users\Conna\Documents\sbox\game\bin\managed\Sandbox.Generator.dll"/>
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.System.dll" />
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.Engine.dll" />
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.Game.dll" />
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.Event.dll" />
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.Bind.dll" />
-		<Reference Include="C:\Users\Conna\Documents\sbox\game\bin\managed/Sandbox.Reflection.dll" />
+		<Analyzer Include="..\..\..\bin\managed\Sandbox.Generator.dll"/>
+		<Reference Include="..\..\..\bin\managed/Sandbox.System.dll" />
+		<Reference Include="..\..\..\bin\managed/Sandbox.Engine.dll" />
+		<Reference Include="..\..\..\bin\managed/Sandbox.Game.dll" />
+		<Reference Include="..\..\..\bin\managed/Sandbox.Event.dll" />
+		<Reference Include="..\..\..\bin\managed/Sandbox.Bind.dll" />
+		<Reference Include="..\..\..\bin\managed/Sandbox.Reflection.dll" />
 	</ItemGroup>
 
   <ItemGroup>
-		<ProjectReference Include="C:\Users\Conna\Documents\sbox\game\addons\base\code\Base Library.csproj" />
+		<ProjectReference Include="S:\Steam\steamapps\common\sbox\addons\base\code\Base Library.csproj" />
 
   </ItemGroup>
 

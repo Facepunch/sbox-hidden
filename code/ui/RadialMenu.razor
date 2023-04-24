@@ -45,7 +45,7 @@
         public Action OnSelected { get; set; }
     }
 
-    public virtual InputButton Button => InputButton.Score;
+    public virtual string Button => "score";
     public virtual float OpenDelay => 0f;
 
     public List<Item> Items { get; private set; } = new();
@@ -155,7 +155,7 @@
                 Arrow.Style.Transform = tx;
             }
 
-            if ( HoveredItem != null && Input.Down( InputButton.PrimaryAttack ) )
+            if ( HoveredItem != null && Input.Down( "attack1" ) )
             {
                 HoveredItem.OnSelected?.Invoke();
                 HasPressedButton = false;
@@ -168,14 +168,14 @@
 
         if ( IsOpen || LastCloseTime < 0.1f )
         {
-            Input.ClearButton( InputButton.PrimaryAttack );
-            Input.ClearButton( InputButton.SecondaryAttack );
+            Input.Clear( "attack1" );
+            Input.Clear( "attack2" );
         }
 
         if ( IsOpen )
         {
             Input.StopProcessing = true;
-            Input.ClearButtons();
+            Input.ClearActions();
             Input.AnalogMove = Vector3.Zero;
         }
     }

@@ -15,6 +15,7 @@
   "HasCode": true,
   "CodePath": "code",
   "PackageReferences": [],
+  "EditorReferences": null,
   "Metadata": {
     "MapList": [],
     "MinPlayers": 0,

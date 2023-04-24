@@ -591,7 +591,7 @@ namespace Facepunch.Hidden
 				PickupEntityBody.Velocity = velocity.ClampLength( 400f );
 			}
 
-			if ( !Input.Pressed( InputButton.Use ) )
+			if ( !Input.Pressed( "use" ) )
 				return;
 
 			var entity = trace.Entity;

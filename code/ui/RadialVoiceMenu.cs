@@ -7,7 +7,7 @@ namespace Facepunch.Hidden
 	[StyleSheet( "/ui/RadialVoiceMenu.scss")]
 	public partial class RadialVoiceMenu : RadialMenu
 	{
-		public override InputButton Button => InputButton.View;
+		public override string Button => "view";
 
 		public override void Populate()
 		{

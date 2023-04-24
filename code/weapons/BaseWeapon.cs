@@ -53,7 +53,7 @@ namespace Facepunch.Hidden
 
 		public virtual bool CanReload()
 		{
-			if ( !Owner.IsValid() || !Input.Down( InputButton.Reload ) ) return false;
+			if ( !Owner.IsValid() || !Input.Down( "reload" ) ) return false;
 
 			return true;
 		}
@@ -65,7 +65,7 @@ namespace Facepunch.Hidden
 
 		public virtual bool CanPrimaryAttack()
 		{
-			if ( !Owner.IsValid() || !Input.Down( InputButton.PrimaryAttack ) ) return false;
+			if ( !Owner.IsValid() || !Input.Down( "attack1" ) ) return false;
 
 			var rate = PrimaryRate;
 			if ( rate <= 0 ) return true;
@@ -80,7 +80,7 @@ namespace Facepunch.Hidden
 
 		public virtual bool CanSecondaryAttack()
 		{
-			if ( !Owner.IsValid() || !Input.Down( InputButton.SecondaryAttack ) ) return false;
+			if ( !Owner.IsValid() || !Input.Down( "attack2" ) ) return false;
 
 			var rate = SecondaryRate;
 			if ( rate <= 0 ) return true;

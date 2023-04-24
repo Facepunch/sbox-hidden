@@ -35,27 +35,27 @@
 		{
 			if ( player.CurrentCamera is SpectateCamera )
 			{
-				AddHint( InputButton.PrimaryAttack, "Next" );
+				AddHint( "attack1", "Next" );
 			}
 			else if ( player.Team is HiddenTeam )
 			{
-				AddHint( InputButton.PrimaryAttack, "Slash or Feed on Corpse" );
-				AddHint( InputButton.SecondaryAttack, "Charge Instagib" );
-				UseHint = AddHint( InputButton.Use, "Grab, Throw, or Attach" );
-				RunHint = AddHint( InputButton.Run, "Leap" );
-				AddHint( InputButton.Jump, "Jump" );
+				AddHint( "attack1", "Slash or Feed on Corpse" );
+				AddHint( "attack2", "Charge Instagib" );
+				UseHint = AddHint( "use", "Grab, Throw, or Attach" );
+				RunHint = AddHint( "run", "Leap" );
+				AddHint( "jump", "Jump" );
 			}
 			else
 			{
-				AddHint( InputButton.PrimaryAttack, "Fire" );
-				AddHint( InputButton.Reload, "Reload" );
-				RunHint = AddHint( InputButton.Run, "Sprint" );
-				AddHint( InputButton.Jump, "Jump" );
+				AddHint( "attack1", "Fire" );
+				AddHint( "reload", "Reload" );
+				RunHint = AddHint( "run", "Sprint" );
+				AddHint( "jump", "Jump" );
 			}
 		}
 	}
 
-	private InputHint AddHint( InputButton button, string name )
+    private InputHint AddHint( string button, string name )
 	{
 		var hint = Container.AddChild<InputHint>();
 		hint.SetButton( button );

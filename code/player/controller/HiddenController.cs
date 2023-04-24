@@ -56,9 +56,9 @@ namespace Facepunch.Hidden
 
 		public override void HandleJumping()
 		{
-			if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
+			if ( AutoJump ? Input.Down( "jump" ) : Input.Pressed( "jump" ) )
 				CheckJumpButton();
-			else if ( Input.Pressed( InputButton.Run ) )
+			else if ( Input.Pressed( "run" ) )
 				CheckLeapButton();
 		}
 
@@ -80,7 +80,7 @@ namespace Facepunch.Hidden
 
 			if ( Player.IsFrozen )
 			{
-				if ( Input.Released( InputButton.Run ) || Player.Stamina <= 5 )
+				if ( Input.Released( "run" ) || Player.Stamina <= 5 )
 				{
 					Player.TimeSinceLastLeap = 0f;
 

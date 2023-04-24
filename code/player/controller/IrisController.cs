@@ -34,7 +34,7 @@ namespace Facepunch.Hidden
 				MaxWalkSpeed = 120f;
 			}
 
-			if ( Input.Down( InputButton.Run ) && Player.Velocity.Length >= SprintSpeed * 0.8f )
+			if ( Input.Down( "run" ) && Player.Velocity.Length >= SprintSpeed * 0.8f )
 			{
 				Player.StaminaRegenTime = 1f;
 				Player.Stamina = MathF.Max( Player.Stamina - (staminaLossPerSecond * Time.Delta), 0f );

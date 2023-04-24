@@ -89,12 +89,12 @@
 
 	private int SlotPressInput()
 	{
-		if ( Input.Pressed( InputButton.Slot1 ) ) return 1;
-		if ( Input.Pressed( InputButton.Slot2 ) ) return 2;
-		if ( Input.Pressed( InputButton.Slot3 ) ) return 3;
-		if ( Input.Pressed( InputButton.Slot4 ) ) return 4;
-		if ( Input.Pressed( InputButton.Slot5 ) ) return 5;
-		if ( Input.Pressed( InputButton.Slot6 ) ) return 6;
+		if ( Input.Pressed( "slot1" ) ) return 1;
+		if ( Input.Pressed( "slot2" ) ) return 2;
+		if ( Input.Pressed( "slot3" ) ) return 3;
+		if ( Input.Pressed( "slot4" ) ) return 4;
+		if ( Input.Pressed( "slot5" ) ) return 5;
+		if ( Input.Pressed( "slot6" ) ) return 6;
 
 		return -1;
 	}

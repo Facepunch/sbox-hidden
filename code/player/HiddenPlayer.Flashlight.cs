@@ -127,7 +127,7 @@ namespace Facepunch.Hidden
 
 			if ( weapon.HasFlashlight )
 			{
-				if ( Input.Released( InputButton.Flashlight ) )
+				if ( Input.Released( "flashlight" ) )
 				{
 					using ( Prediction.Off() )
 					{

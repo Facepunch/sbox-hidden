@@ -129,7 +129,7 @@ namespace Facepunch.Hidden
 		{
 			var player = cl.Pawn as HiddenPlayer;
 
-			if ( player.IsValid() && Input.Down( InputButton.Voice ) && player.LifeState == LifeState.Alive )
+			if ( player.IsValid() && Input.Down( "voice" ) && player.LifeState == LifeState.Alive )
 			{
 				// Show a voice list entry if we're holding down the voice button.
 				VoiceList.Current?.OnVoicePlayed( cl.SteamId, 0.5f );

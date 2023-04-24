@@ -135,7 +135,7 @@ namespace Facepunch.Hidden
 
 		public override void Simulate( HiddenPlayer player )
 		{
-			if ( Input.Pressed( InputButton.Drop ) )
+			if ( Input.Pressed( "drop" ) )
 			{
 				if ( player.Sense?.IsUsable( player ) == true )
 				{
@@ -143,7 +143,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Input.Pressed( InputButton.View ) )
+			if ( Input.Pressed( "view" ) )
 			{
 				if ( player.Scream?.IsUsable( player ) == true )
 				{
@@ -151,7 +151,7 @@ namespace Facepunch.Hidden
 				}
 			}
 
-			if ( Input.Down( InputButton.Run ) && !player.PickupEntity.IsValid() && player.TimeSinceDroppedEntity > 0.5f )
+			if ( Input.Down( "run" ) && !player.PickupEntity.IsValid() && player.TimeSinceDroppedEntity > 0.5f )
 			{
 				if ( player.Controller is not HiddenController controller )
 					return;

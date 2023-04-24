@@ -13,7 +13,7 @@ namespace Facepunch.Hidden
 
 			using ( Prediction.Off() )
 			{
-				if ( Input.Pressed( InputButton.Use ) )
+				if ( Input.Pressed( "use" ) )
 				{
 					Using = FindUsable();
 
@@ -24,7 +24,7 @@ namespace Facepunch.Hidden
 					}
 				}
 
-				if ( !Input.Down( InputButton.Use ) )
+				if ( !Input.Down( "use" ) )
 				{
 					StopUsing();
 					return;

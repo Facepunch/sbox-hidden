@@ -240,11 +240,11 @@ namespace Facepunch.Hidden
 			var ws = Duck.GetWishSpeed();
 			if ( ws >= 0 ) return ws;
 
-			if ( EnableSprinting && Input.Down( InputButton.Run ) )
+			if ( EnableSprinting && Input.Down( "run" ) )
 			{
 				return SprintSpeed;
 			}
-			if ( Input.Down( InputButton.Walk ) )
+			if ( Input.Down( "walk" ) )
 				return WalkSpeed * 0.5f;
 			
 			return WalkSpeed;
@@ -425,7 +425,7 @@ namespace Facepunch.Hidden
 
 		public virtual void CheckLadder()
 		{
-			if ( IsTouchingLadder && Input.Pressed( InputButton.Jump ) )
+			if ( IsTouchingLadder && Input.Pressed( "jump" ) )
 			{
 				Player.Velocity = LadderNormal * 100.0f;
 				IsTouchingLadder = false;
@@ -512,7 +512,7 @@ namespace Facepunch.Hidden
 
 		public virtual void HandleJumping()
 		{
-			if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
+			if ( AutoJump ? Input.Down( "jump" ) : Input.Pressed( "jump" ) )
 			{
 				CheckJumpButton();
 			}

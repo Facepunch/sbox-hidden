@@ -15,7 +15,7 @@
 @code
 {
     public Image Glyph { get; set; }
-    public InputButton Button { get; set; }
+    public string Button { get; set; }
     public string Text { get; set; }
     public Label ActionLabel { get; set; }
 
@@ -32,11 +32,11 @@
 
         if ( name == "btn" )
         {
-            SetButton( Enum.Parse<InputButton>( value, true ) );
+            SetButton( value );
         }
     }
 
-    public void SetButton( InputButton button )
+    public void SetButton( string button )
     {
         Button = button;
         IsSet = true;

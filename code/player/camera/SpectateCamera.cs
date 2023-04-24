@@ -38,7 +38,7 @@ namespace Facepunch.Hidden
 
 			if ( !IsHidden )
 			{
-				if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
+				if ( TargetPlayer == null || !TargetPlayer.IsValid() || Input.Pressed( "attack1" ) )
 				{
 					var players = HiddenGame.Entity.GetTeamPlayers<IrisTeam>( true );
 					var count = players.Count();
@@ -52,7 +52,7 @@ namespace Facepunch.Hidden
 					}
 				}
 
-				if ( CCTVEntity == null || !CCTVEntity.IsValid() || Input.Pressed( InputButton.PrimaryAttack ) )
+				if ( CCTVEntity == null || !CCTVEntity.IsValid() || Input.Pressed( "attack1" ) )
 				{
 					var cameras = CCTVEntities;
 
