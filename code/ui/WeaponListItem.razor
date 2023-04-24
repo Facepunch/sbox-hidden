@@ -52,7 +52,7 @@
             if ( !string.IsNullOrEmpty( KeyBind ) )
             {
                 SlotContainer.SetClass( "hidden", false );
-                Slot.Text = Input.GetKeyWithBinding( KeyBind ).ToUpper();
+                Slot.Text = Input.GetButtonOrigin( KeyBind ).ToUpper();
             }
             else
             {

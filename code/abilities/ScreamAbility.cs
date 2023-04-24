@@ -17,7 +17,7 @@ namespace Facepunch.Hidden
 
 		public override string GetKeybind()
 		{
-			return Input.GetKeyWithBinding( "iv_view" ).ToUpper();
+			return Input.GetButtonOrigin( "view" ).ToUpper();
 		}
 
 		protected override void OnUse( HiddenPlayer player )
