@@ -14,7 +14,9 @@
   ],
   "HasCode": true,
   "CodePath": "code",
-  "PackageReferences": [],
+  "PackageReferences": [
+    "conna.radial_menu"
+  ],
   "EditorReferences": null,
   "Metadata": {
     "MapList": [],
@@ -134,6 +136,7 @@
     "Summary": "Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.",
     "Description": "Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.",
     "Public": true,
-    "CsProjName": ""
+    "CsProjName": "",
+    "HttpAllowList": null
   }
 }

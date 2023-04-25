@@ -1,4 +1,4 @@
-﻿@import "RadialMenu.scss";
+﻿@import "BaseRadialMenu.scss";
 
 .radial-menu {
     border-color: rgba( seagreen 0.6 );
@@ -15,9 +15,6 @@
     }
 
     .center {
-        justify-content: center;
-        align-items: center;
-
         .info {
             .name {
                 font-family: Lexend;
