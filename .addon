@@ -7,11 +7,8 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": [
-    "/ui/*",
-    "/fonts/*",
-    "/radio/*"
-  ],
+  "Resources": "ui/*\nfonts/*\nradio/*",
+  "MenuResources": null,
   "HasCode": true,
   "CodePath": "code",
   "PackageReferences": [
@@ -137,6 +134,7 @@
     "Description": "Eliminate the crazy invisible lunatic with the knife, or be him and slay those trying to survive.",
     "Public": true,
     "CsProjName": "",
-    "HttpAllowList": null
+    "HttpAllowList": null,
+    "TickRate": 0
   }
 }

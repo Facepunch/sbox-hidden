@@ -13,16 +13,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Update="**\*.scss" DependentUpon="%(Filename).cs" />
-		<None Update="**\*.css" DependentUpon="%(Filename).cs" />
-		<None Update="**\*.sass" DependentUpon="%(Filename).cs" />
-		<None Update="**\*.html" DependentUpon="%(Filename).cs" />
-		<None Update="**\*.htm" DependentUpon="%(Filename).cs" />
+		
+		<None Update="**\*.cs.scss" DependentUpon="%(Filename)" />
+		<Compile Update="**\*.razor.cs" DependentUpon="%(Filename)" />
+		<None Update="**\*.razor.scss" DependentUpon="%(Filename)" />
+
 	</ItemGroup>
 
 	<ItemGroup>
 	  <AdditionalFiles Include="**/*.razor" />
 	</ItemGroup>
+
 
 	<ItemGroup>
 		<Using Include="Sandbox.Internal.GlobalGameNamespace" Static="true" />
