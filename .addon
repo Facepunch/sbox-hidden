@@ -135,6 +135,6 @@
     "Public": true,
     "CsProjName": "",
     "HttpAllowList": null,
-    "TickRate": 0
+    "TickRate": 50
   }
 }
